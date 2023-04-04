@@ -1,22 +1,22 @@
 #!/bin/bash
 
-: "
-DESC
-	My version of ask (http://djm.me/ask)
-INFO
-	LIB				base
-	FUNCTION		ask
-ARGS
-	[1]				message=${1}
-		> question to ask
-	[2]				default=${2-NULL}
-		> default value to return
-RETURN_VALUE
-	1 if user agree, 0 if not. if DEFAULT is not NULL and choice is not
-	y or n, DEFAULT is returned
-"
-function	base::ask()
+function	utils::ask()
 {
+	: "
+	DESC
+		My version of ask (http://djm.me/ask)
+	INFO
+		LIB				base
+		FUNCTION		ask
+	ARGS
+		[1]				message=${1}
+			> question to ask
+		[2]				default=${2-NULL}
+			> default value to return
+	RETURN_VALUE
+		1 if user agree, 0 if not. if DEFAULT is not NULL and choice is not
+		y or n, DEFAULT is returned
+	"
 	local message=$1
 	local default=${2-NULL}
 	local choice=""

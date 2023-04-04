@@ -1,42 +1,42 @@
 #!/bin/bash
 
-: "
-DESC
-					Log MSG into LOG_FILE (${LOG_FILE}) or STDOUT, or both;
-					according to print_out
-INFO
-	LIB				log
-	FUNCTION		print
-ARGS
-	[1]				msg
-	[2]				mode
-		> could be either:
-			- -1	no format
-			- 0		failed
-			- 1		success
-			- 2		info
-			- 3		warn
-	[3]				offset
-		> number of ${LOG_OFFSET_STR} to print
-	[4]				print_out
-		> could be either:
-			- 1		only print
-			- 2		only log
-			- 3		both
-RETURN_VALUE
-	None
-"
 function	log::print()
 {
+	: "
+	DESC
+						Log MSG into LOG_FILE (${LOG_FILE}) or STDOUT, or both;
+						according to print_out
+	INFO
+		LIB				log
+		FUNCTION		print
+	ARGS
+		[1]				msg
+		[2]				mode
+			> could be either:
+				- -1	no format
+				- 0		failed
+				- 1		success
+				- 2		info
+				- 3		warn
+		[3]				offset
+			> number of ${LOG_PAD_STR} to print
+		[4]				print_out
+			> could be either:
+				- 1		only print
+				- 2		only log
+				- 3		both
+	RETURN_VALUE
+		None
+	"
 	local	msg="${1}"
 	local	mode="${2:--1}"
 	local	offset="${3:-0}"
 	local	print_out="${4:-3}"
 	local	first_part
-	local	offset_tab
+	local	offset_tab=""
 
 	while [ "${offset}" -gt 0 ]; do
-		offset_tab="${offset_tab}${LOG_OFFSET_STR}"
+		offset_tab="${offset_tab}${LOG_PAD_STR}"
 		offset=$((${offset} - 1))
 	done
 	if [ "${mode}" == -1 ]; then
@@ -61,28 +61,31 @@ function	log::print()
 	fi
 }
 
-: "
-DESC
-					wrapper of log::print to print a section
-INFO
-	LIB				log
-	FUNCTION		main_title
-ARGS
-	[0]				MODE=${1:-1}
-RETURN_VALUE
-	None
-"
 function	log::main_title()
 {
-	local	msg="${1}"
+	: "
+	DESC
+						wrapper of log::print to print a section
+	INFO
+		LIB				log
+		FUNCTION		main_title
+	ARGS
+		[1]				msg=${1:-}
+		[2]				mode=${2:-3}
+		[3]				title_color=${3:-${LOG_TITLE_DEFAULT_COLOR}}
+	RETURN_VALUE
+		None
+	"
+	local	msg="${1:-}"
 	local	mode="${2:-3}"
+	local	title_color="${3:-${LOG_TITLE_DEFAULT_COLOR}}"
+	local	section_str=""
 	local	date
 	local	section
-	local	section_str
 	local	msg_len
 
 	printf -v vertical_offset "%0.s${HO}" $(seq 3 ${LOG_TITLE_LENGTH})
-	# Filter out all ansii color
+	# Filter out all ansi color
 	msg_len=$(printf "%b" "${msg}" | perl -pe 's|\001.*?\002||g' | wc -m)
 	center_off=$((${LOG_TITLE_LENGTH} - ${msg_len}))
 	center_splited=$(( (${center_off} - 2) / 2 ))
@@ -105,29 +108,33 @@ function	log::main_title()
 		printf -v CL[1] "%0.s " $(seq 1 ${center_splited})
 		printf -v CR[1] "%0.s " $(seq 1 ${center_splited}) 1
 	fi
-	section[0]="${LOG_TITLE_COLOR}${UL}${vertical_offset}${UR}\n"
-	section[1]="${VE}${CL[0]}${RST}${1}${LOG_TITLE_COLOR}${CR[0]}${VE}\n"
-	section[2]="${VE}${CL[1]}${RST}${date}${LOG_TITLE_COLOR}${CR[1]}${VE}\n"
+	section[0]="${title_color}${UL}${vertical_offset}${UR}\n"
+	section[1]="${VE}${CL[0]}${RST}${1}${title_color}${CR[0]}${VE}\n"
+	section[2]="${VE}${CL[1]}${RST}${date}${title_color}${CR[1]}${VE}\n"
 	section[3]="${LL}${vertical_offset}${LR}${RST}"
-	for index in $(seq 0 ${#section[@]}); do
+	for index in $(seq 0 $((${#section[@]} - 1))); do
 		section_str="${section_str}${section[${index}]}"
 	done
+	if [ "${USE_ENCL_ANSI}" == 1 ]; then
+		section_str=$(printf "%b" "${section_str}" | tr -d '\001\002')
+		color::toggle
+	fi
 	log::print "${section_str}" -1 0 "${mode}"
 }
 
-: "
-DESC
-					wrapper of log::print to print a new line
-INFO
-	LIB				log
-	FUNCTION		nl
-ARGS
-	[0]				MODE=${1:-1}
-RETURN_VALUE
-	None
-"
 function	log::nl()
 {
+	: "
+	DESC
+						wrapper of log::print to print a new line
+	INFO
+		LIB				log
+		FUNCTION		nl
+	ARGS
+		[0]				MODE=${1:-1}
+	RETURN_VALUE
+		None
+	"
 	local	mode="${1}"
 
 	echo_log 0 -1 "" ${mode}

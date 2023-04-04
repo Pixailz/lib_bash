@@ -1,0 +1,130 @@
+#!/bin/bash
+
+# Unicode char for a box
+HO="\xe2\x95\x90"	# ═
+VE="\xe2\x95\x91"	# ║
+UL="\xe2\x95\x94"	# ╔
+UR="\xe2\x95\x97"	# ╗
+LL="\xe2\x95\x9a"	# ╚
+LR="\xe2\x95\x9d"	# ╝
+
+BEG_ANSI="\001"
+END_ANSI="\002"
+
+function	color::toggle()
+{
+	: "
+	DESC
+						Activate all color variable, and toggle ansi char
+						surrounding with begin and end char, depending on mode
+						and USE_ENCL_ANSI
+	INFO
+		LIB				color
+		FUNCTION		toggle
+	ARGS
+		USE_ENCL_ANSI	${USE_ENCL_ANSI}
+		[1]				mode=${1:-0}
+			> activate or desactive surrounding ansi char, respectively, if mode
+			  equal 0 or 1
+		[2]				esc=${2:-${DEFAULT_ANSI_ESC}}
+			> provide an ansi esc_char, otherwise use default
+	RETURN_VALUE
+		None
+	"
+	local	mode="${1:-0}"
+	local	esc="${2:-${DEFAULT_ANSI_ESC}}"
+	local	end_esc=""
+
+	if [ "${mode}" == "${USE_ENCL_ANSI}" ]; then
+		echo "noting to do. returning"
+		return 0
+	else
+		if [ "${mode}" == 1 ]; then
+			esc="${BEG_ANSI}${esc}"
+			end_esc="${END_ANSI}"
+		fi
+	fi
+
+	# RESET
+	RST="${esc}0m${end_esc}"
+	# GREEN
+	G="${esc}38;5;82m${end_esc}"
+	# RED
+	R="${esc}38;5;196m${end_esc}"
+	# BLUE
+	B="${esc}38;5;75m${end_esc}"
+	# YELLO
+	Y="${esc}33m${end_esc}"
+	# ORANGE
+	O="${esc}38;5;214m${end_esc}"
+	# LIGHT GREEN
+	LG="${esc}92m${end_esc}"
+	# LIGHT YELLOW
+	LY="${esc}93m${end_esc}"
+	# LIGHT BLUE
+	LB="${esc}94m${end_esc}"
+	# LIGHT MAGENTA
+	LM="${esc}95m${end_esc}"
+	# LIGHT CYAN
+	LC="${esc}96m${end_esc}"
+
+	# BLINKING
+	BL="${esc}05m${end_esc}"
+	# BLINKING RED
+	BL_R="${BL}${R}"
+
+	P_INFO="${LC}[INFO]${RST}"
+	P_WARN="${O}[WARN]${RST}"
+	P_QUES="${B}[QUE?]${RST}"
+	P_PASS="${G}[PASS]${RST}"
+	P_FAIL="${R}[FAIL]${RST}"
+	P_ERRO="${R}[ERRO]${RST}"
+	SUCCESS="[${G}+${RST}]"
+	FAILED="[${R}-${RST}]"
+	INFO="[${B}*${RST}]"
+	WARN="[${O}*${RST}]"
+}
+
+USE_ENCL_ANSI=${USE_ENCL_ANSI:-None}
+
+color::toggle
+
+function	color::remove_color()
+{
+	: "
+	DESC
+						Set all color variable without color
+	INFO
+		LIB				color
+		FUNCTION		remove
+	ARGS
+		None
+	RETURN_VALUE
+		None
+	"
+	G=""
+	R=""
+	B=""
+	Y=""
+	O=""
+	LG=""
+	LY=""
+	LB=""
+	LM=""
+	LC=""
+	BL=""
+	BL_R=""
+	RST=""
+	P_INFO="[INFO]"
+	P_WARN="[WARN]"
+	P_QUES="[QUE?]"
+	P_PASS="[PASS]"
+	P_FAIL="[FAIL]"
+	P_ERRO="[ERRO]"
+	SUCCESS="[+]"
+	FAILED="[-]"
+	INFO="[*]"
+	WARN="[*]"
+}
+
+if [ ${NO_COLOR:-0} -eq 1 ]; then color::remove_color; fi
