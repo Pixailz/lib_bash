@@ -4,15 +4,17 @@ source ./.config
 
 function	test::print()
 {
-	print::info "${1}"
-	print::warn "${1}"
-	print::ques "${1}"
-	print::pass "${1}"
-	print::pass "${1}" 0
-	print::erro "${1}"
-	print::erro_parse "${1}"
-	print::errno_2 "${1}"
+	local	msg="${1:-}"
+
+	print::info "${msg}"
+	print::warn "${msg}"
+	print::ques "${msg}"
+	print::pass "${msg}"
+	print::pass "${msg}" 0
+	print::erro "${msg}"
+	print::erro_parse "${msg}"
+	print::errno_2 "${msg}"
 	print::pause
 }
 
-test::print ${@}
+test::print "${@}"
