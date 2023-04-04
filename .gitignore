@@ -1,2 +1,5 @@
 # exec log file
-exec.log
+*.log
+
+# tmp file
+
