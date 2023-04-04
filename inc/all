@@ -1,0 +1,14 @@
+#!/bin/bash
+
+: "
+${DIR_INC}/*
+	Include all lib, those include:
+		- ${DIR_INC}/base
+		- ${DIR_INC}/log
+		- ${DIR_INC}/progress_bar
+"
+
+# DEPENDENCIES
+source ${DIR_INC}/base
+source ${DIR_INC}/log
+# source ${DIR_INC}/progress_bar

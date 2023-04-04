@@ -1,17 +1,19 @@
 #!/bin/bash
 
+DIR_LIB_BASE="${DIR_SRC}/base"
+
 : "
-${DIR_INC}/base
+${DIR_LIB_BASE}/
 	Base include file, those include:
-		- ${DIR_SRC}/base/color
-		- ${DIR_SRC}/base/print
+		- ${DIR_LIB_BASE}/color
+		- ${DIR_LIB_BASE}/print
+		- ${DIR_LIB_BASE}/base
 "
 
-[ "${INC_BASE}" ] && return
+[ "${INC_PROT_BASE:-0}" == 1 ] && return
 
-INC_BASE=1
+source ${DIR_LIB_BASE}/color
+source ${DIR_LIB_BASE}/print
+source ${DIR_LIB_BASE}/utils
 
-source ${DIR_SRC}/color
-source ${DIR_SRC}/print
-source ${DIR_SRC}/ask
-source ${DIR_SRC}/log
+INC_PROT_BASE=1
