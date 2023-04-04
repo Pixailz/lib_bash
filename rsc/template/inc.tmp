@@ -1,0 +1,5 @@
+#!/bin/bash
+
+[ "${INC_NAME}" ] && return
+
+INC_NAME="true"

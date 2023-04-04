@@ -1,0 +1,84 @@
+#!/bin/bash
+
+ESC="\001\033["
+END_ESC="\002"
+
+# GREEN
+G="${ESC}38;5;82m${END_ESC}"
+# RED
+R="${ESC}38;5;196m${END_ESC}"
+# BLUE
+B="${ESC}38;5;75m${END_ESC}"
+# YELLO
+Y="${ESC}33m${END_ESC}"
+# ORANGE
+O="${ESC}38;5;214m${END_ESC}"
+# LIGHT GREEN
+LG="${ESC}92m${END_ESC}"
+# LIGHT YELLOW
+LY="${ESC}93m${END_ESC}"
+# LIGHT BLUE
+LB="${ESC}94m${END_ESC}"
+# LIGHT MAGENTA
+LM="${ESC}95m${END_ESC}"
+# LIGHT CYAN
+LC="${ESC}96m${END_ESC}"
+
+# BLINKING
+BL="${ESC}05m${END_ESC}"
+# BLINKING RED
+BL_R="${BL}${R}"
+# RESET
+RST="${ESC}0m${END_ESC}"
+
+P_INFO="${LC}[INFO]${RST}"
+P_WARN="${O}[WARN]${RST}"
+P_QUES="${B}[QUE?]${RST}"
+P_PASS="${G}[PASS]${RST}"
+P_FAIL="${R}[FAIL]${RST}"
+P_ERRO="${R}[ERRO]${RST}"
+SUCCESS="[${G}+${RST}]"
+FAILED="[${R}-${RST}]"
+INFO="[${B}*${RST}]"
+WARN="[${O}*${RST}]"
+
+HO="\xe2\x95\x90"
+VE="\xe2\x95\x91"
+UL="\xe2\x95\x94"
+UR="\xe2\x95\x97"
+LL="\xe2\x95\x9a"
+LR="\xe2\x95\x9d"
+
+
+
+: "
+Set all color variable without color
+"
+function	color::remove_color()
+{
+	G=""
+	R=""
+	B=""
+	Y=""
+	O=""
+	LG=""
+	LY=""
+	LB=""
+	LM=""
+	LC=""
+	BL=""
+	BL_R=""
+	RST=""
+	P_INFO="[INFO]"
+	P_WARN="[WARN]"
+	P_QUES="[QUE?]"
+	P_PASS="[PASS]"
+	P_FAIL="[FAIL]"
+	P_ERRO="[ERRO]"
+	SUCCESS="[+]"
+	FAILED="[-]"
+	INFO="[*]"
+	WARN="[*]"
+}
+
+[ "${NO_COLOR}" == 1 ] && color::remove_color

@@ -1,0 +1,29 @@
+#!/bin/bash
+
+: "
+DESC
+					print pass or fail according to MODE, then print MSG
+INFO
+	LIB				template
+	FUNCTION		pass
+ARGS
+	[1]				MSG=${1}
+	[2]				MODE=${2:-1}
+		> maybe 0 to fail or 1 to pass, default to 1
+RETURN_VALUE
+	None
+"
+function	template::pass()
+{
+	local	MSG="${1}"
+	local	MODE="${2:-1}"
+	local	SUFFIX
+
+	if [ ${MODE} == 0 ]; then
+		printf "[FAIL] %b\n" "${MSG}"
+	else
+		printf "[PASS] %b\n" "${MSG}"
+	fi
+}
+
+template::pass "this is a test"

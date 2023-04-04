@@ -1,0 +1,18 @@
+#!/bin/bash
+
+source ./.config
+
+function	test::print()
+{
+	print::info "${1}"
+	print::warn "${1}"
+	print::ques "${1}"
+	print::pass "${1}"
+	print::pass "${1}" 0
+	print::erro "${1}"
+	print::erro_parse "${1}"
+	print::errno_2 "${1}"
+	print::pause
+}
+
+test::print ${@}

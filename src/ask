@@ -1,0 +1,52 @@
+#!/bin/bash
+
+: "
+DESC
+	My version of ask (http://djm.me/ask)
+INFO
+	LIB				base
+	FUNCTION		ask
+ARGS
+	[1]				message=${1}
+		> question to ask
+	[2]				default=${2-NULL}
+		> default value to return
+RETURN_VALUE
+	1 if user agree, 0 if not. if DEFAULT is not NULL and choice is not
+	y or n, DEFAULT is returned
+"
+function	base::ask()
+{
+	local message=$1
+	local default=${2-NULL}
+	local choice=""
+
+	while true; do
+		# set default prompt according to $default
+		if [ ${default} == "y" ]; then
+			p_ques "${message} (Y/n)  " 1
+		elif [ ${default} == "n" ]; then
+			p_ques "${message} (y/N)  " 1
+		else
+			p_ques "${message} (y/n)  " 1
+		fi
+		# read on char
+		read -n 1 choice
+		# make char lower
+		choice="${choice,,}"
+		# if choice is not empty, print return line
+		[ ${choice} ] && printf "\n"
+		case ${choice} in
+			y) return 1 ;;
+			n) return 0 ;;
+			*)  if [ "${default}" == 'y' ]; then
+					return 1
+				elif [ "${default}" == 'n' ]; then
+					return 0
+				else
+					p_warn "[${choice}] wrong choice (y|n)"
+				fi
+				;;
+		esac
+	done
+}

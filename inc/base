@@ -1,0 +1,17 @@
+#!/bin/bash
+
+: "
+${DIR_INC}/base
+	Base include file, those include:
+		- ${DIR_SRC}/base/color
+		- ${DIR_SRC}/base/print
+"
+
+[ "${INC_BASE}" ] && return
+
+INC_BASE=1
+
+source ${DIR_SRC}/color
+source ${DIR_SRC}/print
+source ${DIR_SRC}/ask
+source ${DIR_SRC}/log

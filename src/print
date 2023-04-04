@@ -1,0 +1,144 @@
+#!/bin/bash
+
+: "
+DESC
+	Print some information
+INFO
+	LIB				print
+	FUNCTION		info
+ARGS
+	None
+RETURN_VALUE
+	None
+"
+function	print::info()
+{
+	printf "%b %b%b\n" "${P_INFO}" "${1}" "${RST}"
+}
+
+: "
+DESC
+	Print a warning message
+INFO
+	LIB				print
+	FUNCTION		warn
+ARGS
+	None
+RETURN_VALUE
+	None
+"
+function	print::warn()
+{
+	printf "%b %b%b\n" "${P_WARN}" "${1}" "${RST}"
+}
+
+: "
+DESC
+	Print question message
+INFO
+	LIB				print
+	FUNCTION		ques
+ARGS
+	None
+RETURN_VALUE
+	None
+"
+function	print::ques()
+{
+	printf "%b %b%b\n" "${P_QUES}" "${1}" "${RST}"
+}
+
+: "
+DESC
+	Print pass or failed message, default to pass
+INFO
+	LIB				print
+	FUNCTION		pass
+ARGS
+	[1]				msg=${1}
+	[2]				have_pass=${2:-1}
+RETURN_VALUE
+	None
+"
+function	print::pass()
+{
+	local	msg="${1}"
+	local	have_pass="${2:-1}"
+	local	suffix
+
+	[ ${have_pass} == 0 ] && suffix=${P_FAIL} || suffix=${P_PASS}
+	printf "%b %b%b\n" ${suffix} "${msg}" ${RST}
+}
+
+: "
+DESC
+	Print error and quit
+INFO
+	LIB				print
+	FUNCTION		erro
+ARGS
+	[1]				msg=${1}
+RETURN_VALUE
+	None
+"
+function	print::erro()
+{
+	local	msg=${1}
+
+	printf "%b %b%b\n" "${P_ERRO}" "${msg}" "${RST}"
+}
+
+: "
+DESC
+	Print parsing error, tips for calling help then exit
+INFO
+	LIB				print
+	FUNCTION		erro_parse
+ARGS
+	SCRIPT_NAME		${SCRIPT_NAME}
+	[1]				msg=${1}
+RETURN_VALUE
+	None
+"
+function	print::erro_parse()
+{
+	local	msg="${1}"
+
+	printf "%s : %b\n" "${SCRIPT_NAME}" "${msg}"
+	printf "Try '%s --help' for more information.\n" "${SCRIPT_NAME}"
+}
+
+: "
+DESC
+	Error message for not founding a file
+INFO
+	LIB				print
+	FUNCTION		errno_2
+ARGS
+	[1]				file_path=${1}
+RETURN_VALUE
+	None
+"
+function	print::errno_2()
+{
+	local	file_path="${1}"
+
+	print::warn "No such file or directory (${O}${1}${RST})."
+}
+
+: "
+DESC
+	Print pause message and wait
+INFO
+	LIB				print
+	FUNCTION		pause
+ARGS
+	None
+RETURN_VALUE
+	None
+"
+function	print::pause()
+{
+	print::info "Press [Enter] to continue.."
+	read readEnterkey
+}

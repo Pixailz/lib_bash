@@ -1,0 +1,10 @@
+#!/bin/bash
+
+source ./.config
+
+function	main::entry()
+{
+	log::main_title "${R}BIG${RST} ${B}TITLE${RST}" 3
+}
+
+main::entry ${@}
