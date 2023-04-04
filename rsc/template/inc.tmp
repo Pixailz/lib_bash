@@ -1,5 +1,17 @@
 #!/bin/bash
 
-[ "${INC_NAME}" ] && return
+: "
+${DIR_INC}/template
+	log include file, those include:
+		- ${DIR_SRC}/log/utils
+depend on ${DIR_INC}/base
+"
 
-INC_NAME="true"
+# DEPENDENCIES
+source ${DIR_INC}/base
+
+[ "${INC_PROT_TEMPLATE:-0}" == 1 ] && return
+
+source ${DIR_SRC}/log/utils
+
+INC_PROT_TEMPLATE=1
