@@ -2,4 +2,5 @@
 *.log
 
 # tmp file
-
+src/android/file/*
+!src/android/file/.gitkeep
