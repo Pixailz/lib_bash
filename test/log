@@ -51,11 +51,11 @@ function	test::log()
 	log::main_title "THIS IS A TITLE" 1 "${O}"
 
 	# print main_title with colors in title
-	## have to toggle ANSI enclosing one by pass one to color::toggle
-	color::toggle 1
+	## have to toggle ANSI enclosing one by pass one to ansi::toggle
+	ansi::toggle 1
 	log::main_title "${R}BIG${RST} ${B}TITLE${RST}" 3
 	## disable ANSI enclosing
-	color::toggle
+	ansi::toggle
 }
 
 test::log

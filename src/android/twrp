@@ -1,0 +1,30 @@
+#!/bin/bash
+
+function	twrp::install()
+{
+	: "
+	DESC
+						guided install twrp
+	INFO
+		LIB				twrp
+		FUNCTION		install
+	ARGS
+		[1]				twrp_boot=${1:-${DFLT_TWRP_BOOT}}
+		[2]				twrp_installer=${2:-${DFLT_TWRP_INST}}
+	RETURN_VALUE
+		None
+	"
+	local	twrp_boot="${1:-${DFLT_TWRP_BOOT}}"
+	local	twrp_installer="${2:-${DFLT_TWRP_INST}}"
+
+	adb::set_status 6
+	print::info "Booting from file ${twrp_boot}"
+	${FASTBOOT} boot ${twrp_boot}
+	adb::wait_for "Waiting for you to put the phone on sideload" 4
+	print::info "Sideloading ${twrp_installer}"
+	${ADB} sideload ${twrp_installer}
+	sleep 2
+	adb::reboot 3
+	adb::wait_for "Rebooting to recovery to make change effective" 3
+	print::pass "TWRP installed successfully !"
+}

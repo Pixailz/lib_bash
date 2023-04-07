@@ -13,7 +13,7 @@ function	print::info()
 	RETURN_VALUE
 		None
 	"
-	printf "%b %b%b\n" "${P_INFO}" "${1}" "${RST}"
+	printf "%b %b%b\n" "${P_INFO}" "${1:-}" "${RST}"
 }
 
 function	print::warn()
@@ -29,7 +29,7 @@ function	print::warn()
 	RETURN_VALUE
 		None
 	"
-	printf "%b %b%b\n" "${P_WARN}" "${1}" "${RST}"
+	printf "%b %b%b\n" "${P_WARN}" "${1:-}" "${RST}"
 }
 
 function	print::ques()
@@ -45,7 +45,7 @@ function	print::ques()
 	RETURN_VALUE
 		None
 	"
-	printf "%b %b%b\n" "${P_QUES}" "${1}" "${RST}"
+	printf "%b %b%b\n" "${P_QUES}" "${1:-}" "${RST}"
 }
 
 function	print::pass()
@@ -57,12 +57,12 @@ function	print::pass()
 		LIB				print
 		FUNCTION		pass
 	ARGS
-		[1]				msg=${1}
+		[1]				msg=${1:-}
 		[2]				have_pass=${2:-1}
 	RETURN_VALUE
 		None
 	"
-	local	msg="${1}"
+	local	msg="${1:-}"
 	local	have_pass="${2:-1}"
 	local	suffix
 
@@ -79,11 +79,11 @@ function	print::erro()
 		LIB				print
 		FUNCTION		erro
 	ARGS
-		[1]				msg=${1}
+		[1]				msg=${1:-}
 	RETURN_VALUE
 		None
 	"
-	local	msg=${1}
+	local	msg=${1:-}
 
 	printf "%b %b%b\n" "${P_ERRO}" "${msg}" "${RST}"
 }
@@ -98,11 +98,11 @@ function	print::erro_parse()
 		FUNCTION		erro_parse
 	ARGS
 		SCRIPT_NAME		${SCRIPT_NAME}
-		[1]				msg=${1}
+		[1]				msg=${1:-}
 	RETURN_VALUE
 		None
 	"
-	local	msg="${1}"
+	local	msg="${1:-}"
 
 	printf "%s : %b\n" "${SCRIPT_NAME}" "${msg}"
 	printf "Try '%s --help' for more information.\n" "${SCRIPT_NAME}"
@@ -121,7 +121,7 @@ function	print::errno_2()
 	RETURN_VALUE
 		None
 	"
-	local	file_path="${1}"
+	local	file_path="${1:-}"
 
 	print::warn "No such file or directory (${O}${1}${RST})."
 }

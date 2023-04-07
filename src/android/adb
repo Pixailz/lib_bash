@@ -1,0 +1,408 @@
+#!/bin/bash
+
+## UTILS
+
+function	adb::loop_set_status()
+{
+	: "
+	INFO
+		LIB				adb
+		FUNCTION		loop_twrp
+		DESC			None
+		ARGS			None
+		RETURN_VALUE	None
+	"
+	local	loop=1
+	local	choice
+	local	choices=(
+		"NOT CONNECTED"
+		"NORMAL"
+		"RECOVERY"
+		"SIDELOAD"
+		"FASTBOOT"
+		"RETURN"
+	)
+
+	printf "${CLR_SCR_CUR_HOM}"
+	adb::get_status_str
+	printf "Phone currently in '%s'(%d)\n" "${CURR_STATUS_STR}" "${CURR_STATUS}"
+	utils::choice "SET_STATUS\n" "${choices[@]}"
+	choice="${?}"
+	case "${choice}" in
+		1|2|3|4) adb::set_status "${choice}" ; print::pause ;;
+		5) adb::set_status "${choice}" ; print::pause ;;
+	esac
+}
+
+function	adb::loop_twrp()
+{
+	: "
+	INFO
+		LIB				adb
+		FUNCTION		loop_twrp
+		DESC			None
+		ARGS			None
+		RETURN_VALUE	None
+	"
+	local	loop=1
+	local	choice
+	local	choices=(
+		"INSTALL"
+		"RETURN"
+	)
+
+	printf "${CLR_SCR_CUR_HOM}"
+	adb::get_status_str
+	printf "Phone currently in '%s'(%d)\n" "${CURR_STATUS_STR}" "${CURR_STATUS}"
+	utils::choice "TWR\n" "${choices[@]}"
+	choice="${?}"
+	case "${choice}" in
+		1) twrp::install ; print::pause ;;
+	esac
+}
+
+function	adb::loop()
+{
+	: "
+	INFO
+		LIB				adb
+		FUNCTION		loop
+		DESC			a loop to interact with the various fonction in adb::
+		ARGS			None
+		RETURN_VALUE	None
+	"
+	local	loop=1
+	local	choices=(
+		"TWRP"
+		"SET_STATUS"
+		"EXIT"
+	)
+
+	while true; do
+		printf "${CLR_SCR_CUR_HOM}"
+		adb::get_status_str
+		printf "Phone currently in '%s'(%d)\n" "${CURR_STATUS_STR}" "${CURR_STATUS}"
+		utils::choice "Main Menu\n" "${choices[@]}"
+		case ${?} in
+			1) adb::loop_twrp ;;
+			2) adb::loop_set_status ;;
+			3) break ;;
+		esac
+	done
+}
+
+function	adb::install()
+{
+	: "
+	INFO
+		LIB				adb
+		FUNCTION		install
+		DESC			guided install platform tool
+		ARGS			None
+		RETURN_VALUE	None
+	"
+	if [ ! -f "${ADB}" ]; then
+		utils::ask "platform tool not found do you wan't to install it ?" "y"
+		print::info "installing adb\n"
+		if [ "${?}" -eq 0 ]; then
+			print::pass "Installing platform tool"
+			curl -L https://dl.google.com/android/repository/platform-tools-latest-linux.zip \
+					--output platform-tools-latest-linux.zip
+			unzip -o platform-tools-latest-linux.zip -d "${DIR_ANDROID}/file"
+		else
+			print::pass "aborting" 0
+		fi
+	fi
+}
+
+function	adb::get_phone()
+{
+	: "
+	INFO
+		LIB				adb
+		FUNCTION		get_phone
+		DESC			get a phone connected
+		ARGS			None
+		RETURN_VALUE	None
+	"
+	adb::get_status
+	if [ "${CURR_STATUS}" -eq 1 ]; then
+		print::warn "Phone not connected, maybe check that ADB IS ENABLE in developper settings"
+		adb::wait_for_not "Waiting for you to connect to phone" 1
+		print::pass "Phone connected !"
+	fi
+	if [ "${CURR_STATUS}" -eq 5 ]; then
+		adb::wait_for_not "Phone not authorized, check the popup or recovery settings to enable it." 5
+	fi
+	print::pass "Phone connected !"
+}
+
+function	adb::wipe_data()
+{
+	: "
+	INFO
+		LIB				adb
+		FUNCTION		get_status
+		DESC			BECAREFULL, Wipe all data from phone
+		ARGS			None
+		RETURN_VALUE	None
+	"
+	adb::get_status
+	if [ ${?} != 6 ]; then
+		${ADB} wait-for-any
+		printf "Reboot to bootloader\n"
+		${ADB} reboot bootloader
+	fi
+	${FASTBOOT} -w
+	${FASTBOOT} reboot
+}
+
+function	adb::reboot()
+{
+	local	mode="${1:-2}"
+
+	adb::get_status
+	case "${CURR_STATUS}" in
+		2|3)
+			case "${mode}" in
+				2) ${ADB} reboot ; adb::wait_for_booted ;;
+				3) ${ADB} reboot recovery ;;
+				4) ${ADB} reboot sideload ;;
+				6) ${ADB} reboot bootloader ;;
+			esac
+		;;
+		6)
+			case "${mode}" in
+				2) ${FASTBOOT} reboot ; adb::wait_for_booted ;;
+				3) ${FASTBOOT} reboot recovery ;;
+				6) ${FASTBOOT} reboot bootloader ;;
+			esac
+		;;
+	esac
+}
+
+### STATUS
+
+function	adb::get_status()
+{
+	: "
+	INFO
+		LIB				adb
+		FUNCTION		get_status
+		DESC			get_status from connected phone using adb
+		ARGS 			None
+		RETURN_VALUE	1		Not connected
+						2		Normal
+						3		Recovery
+						4		Sideload
+						5		Unauthorized
+						6		Fastboot
+	"
+	local	adb_devices="$(${ADB} devices | sed -nE 's|^[0-9a-f]{4,8}\s*([a-z]*)$|\1|p')"
+	local	fastboot_devices="$(${FASTBOOT} devices | sed -nE 's|^[0-9a-f]{4,8}\s*([a-z]*)$|\1|p')"
+	local	mode
+
+	[ -z "${adb_devices}" -a -z "${fastboot_devices}" ] && export CURR_STATUS=1
+
+	mode="${adb_devices:-${fastboot_devices}}"
+
+	case ${mode} in
+		device)			export CURR_STATUS=2;;
+		recovery)		export CURR_STATUS=3;;
+		sideload)		export CURR_STATUS=4;;
+		unauthorized)	export CURR_STATUS=5;;
+		fastboot)		export CURR_STATUS=6;;
+	esac
+}
+
+function	adb::get_status_str()
+{
+	: "
+
+	INFO
+		LIB				adb
+		FUNCTION		print_status
+		DESC			print status return from adb::get_status
+		ARGS			None
+		RETURN_VALUE	CURR_STATUS_STR
+							> possible value:
+							1		Not connected
+							2		Normal
+							3		Recovery
+							4		Sideload
+							5		Unauthorized
+							6		Fastboot
+	"
+	adb::get_status
+	case "${CURR_STATUS}" in
+		1) CURR_STATUS_STR="Not connected"	;;
+		2) CURR_STATUS_STR="Normal"			;;
+		3) CURR_STATUS_STR="Recovery"	 	;;
+		4) CURR_STATUS_STR="Sideload"		;;
+		5) CURR_STATUS_STR="Unauthorized"	;;
+		6) CURR_STATUS_STR="Fastboot"		;;
+	esac
+}
+
+function	adb::set_status()
+{
+	: "
+	INFO
+		LIB				adb
+		FUNCTION		set_status
+		DESC			set status to connected phone using adb
+		ARGS			[1]
+							state=${1:-}
+							>	possible value are:
+							1		Not connected
+							2		Normal
+							3		Recovery
+							4		Sideload
+							6		Fastboot
+		RETURN_VALUE	None
+	"
+	local	mode="${1:-2}"
+	local	mode_str="${2:-None}"
+	local	have_to_reboot=0
+
+	adb::get_status
+	if [ "${CURR_STATUS}" -eq "${mode}" ]; then
+		adb::get_status_str
+		print::warn "Phone already in '${CURR_STATUS_STR}' state"
+	else
+		if [ "${mode}" -eq 1 ]; then
+			adb::wait_for "Waiting for you to unplug the phone" 1
+		elif [ "${mode}" -eq 5 ]; then
+			return
+		else
+			while [ "${CURR_STATUS}" -ne "${mode}" ]; do
+				case "${CURR_STATUS}" in
+					1) adb::wait_for_not "Waiting for the phone" 1 ;;
+					2) adb::reboot "${mode}" ;;
+					3) adb::reboot "${mode}" ;;
+					4) adb::wait_for_not "Waiting for you to quit sideload mode" 4 ;;
+					5) adb::get_phone ;;
+					6) adb::reboot "${mode}" ;;
+				esac
+				sleep "${TTS_ADB}"
+				adb::get_status
+			done
+		fi
+		adb::get_status_str
+		print::pass "Phone set to '${CURR_STATUS_STR}' state"
+	fi
+}
+
+### WAIT_FOR
+
+function	adb::wait_for()
+{
+	: "
+	INFO
+		LIB				adb
+		FUNCTION		wait_for
+		DESC			print message and wait for a state
+		ARGS			[1]
+							msg=${1:-}
+						[2]
+							state=${2:-}
+							>	possible value are:
+							1		Not connected
+							2		Normal
+							3		Recovery
+							4		Sideload
+							5		Unauthorized
+							6		Fastboot
+		RETURN_VALUE	None
+	"
+	local	msg="${1:-}"
+	local	state="${2:-}"
+	local	curr_state
+	local	dot="."
+
+	print::info "${msg}${dot}"
+	adb::get_status
+	while [ "${CURR_STATUS}" -ne "${state}" ]; do
+		printf "${MOV_BEG_DEL_LIN}"
+		print::info "${msg}${dot}"
+		case "${dot}" in
+			".") dot=".." ;; "..") dot="...";; "...") dot=".";;
+		esac
+		sleep "${TTS_ADB}"
+		adb::get_status
+	done
+}
+
+function	adb::wait_for_not()
+{
+	: "
+	INFO
+		LIB				adb
+		FUNCTION		wait_for
+		DESC			print message and wait for none a state
+		ARGS			[1]
+							msg=${1:-}
+						[2]
+							state=${2:-}
+								>	possible value are:
+								1		Not connected
+								2		Normal
+								3		Recovery
+								4		Sideload
+								5		Unauthorized
+								6		Fastboot
+	"
+	local	msg="${1:-}"
+	local	state="${2:-}"
+	local	curr_state
+	local	dot="."
+
+	print::info "${msg}${dot}"
+	adb::get_status
+	while [ "${CURR_STATUS}" -eq "${state}" ]; do
+		printf "${MOV_BEG_DEL_LIN}"
+		print::info "${msg}${dot}"
+		case "${dot}" in
+			".") dot=".." ;; "..") dot="...";; "...") dot=".";;
+		esac
+		sleep "${TTS_ADB}"
+		adb::get_status
+	done
+}
+
+function	adb::wait_for_booted()
+{
+	: "
+	INFO
+		LIB				adb
+		FUNCTION		wait_for_booted
+		DESC			This state is special, rebooting to normal make the
+						phone available earlier than expected, have to get
+						sys.boot_completed propriety to check if phone have done
+						the booting section
+		ARGS			None
+		RETURN_VALUE	None
+	"
+	local	curr_state
+	local	dot="."
+
+	adb::get_status
+	if [ ${CURR_STATUS} -eq 5 ]; then
+		print::erro "device unauthorized."
+		return 0
+	fi
+	adb::wait_for "Waiting for device to get sparkles of life" 2
+	printf "\n"
+	curr_state=$(${ADB} shell getprop sys.boot_completed)
+	while [ "${curr_state}" != "1" ]; do
+		printf "${MOV_BEG_DEL_LIN}"
+		print::info "Waiting for device to boot${dot}"
+		case "${dot}" in
+			".") dot=".." ;; "..") dot="...";; "...") dot=".";;
+		esac
+		sleep "${TTS_ADB}"
+		curr_state=$(${ADB} shell getprop sys.boot_completed)
+	done
+}
+
+adb::install

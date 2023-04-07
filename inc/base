@@ -5,14 +5,14 @@ DIR_LIB_BASE="${DIR_SRC}/base"
 : "
 ${DIR_LIB_BASE}/
 	Base include file, those include:
-		- ${DIR_LIB_BASE}/color
+		- ${DIR_LIB_BASE}/ansi
 		- ${DIR_LIB_BASE}/print
 		- ${DIR_LIB_BASE}/base
 "
 
 [ "${INC_PROT_BASE:-0}" == 1 ] && return
 
-source ${DIR_LIB_BASE}/color
+source ${DIR_LIB_BASE}/ansi
 source ${DIR_LIB_BASE}/print
 source ${DIR_LIB_BASE}/utils
 

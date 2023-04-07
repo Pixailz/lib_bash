@@ -12,3 +12,20 @@ My library for bash scripts / progams
 1. make traps for cleaning stuff, handling error
 2. parse arg with getopts
 3. progress_bar
+
+
+### ANDROID
+
+####  FULL STEP, FOR A WEAPONIZED PHONE
+
+1. install twrp
+4. install system
+5. boot, and do install "Welcome" page
+6. reboot **to** twrp
+7. install magisk
+8. install nethunter
+
+#### TODO
+
+1. make my own nethunter kernel
+2. build nethunter package for android 13 lineage

@@ -1,0 +1,20 @@
+#!/bin/bash
+
+: "
+${DIR_INC}/android
+	android include file, those include:
+		- ${DIR_SRC}/android/adb
+		- ${DIR_SRC}/android/twrp
+depend on ${DIR_INC}/base
+"
+
+# DEPENDENCIES
+source ${DIR_INC}/base
+
+[ "${INC_PROT_ANDROID:-0}" == 1 ] && return
+
+source ${DIR_SRC}/android/.config
+source ${DIR_SRC}/android/adb
+source ${DIR_SRC}/android/twrp
+
+INC_PROT_ANDROID=1

@@ -117,7 +117,7 @@ function	log::main_title()
 	done
 	if [ "${USE_ENCL_ANSI}" == 1 ]; then
 		section_str=$(printf "%b" "${section_str}" | tr -d '\001\002')
-		color::toggle
+		ansi::toggle
 	fi
 	log::print "${section_str}" -1 0 "${mode}"
 }

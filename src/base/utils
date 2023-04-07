@@ -11,24 +11,24 @@ function	utils::ask()
 	ARGS
 		[1]				message=${1}
 			> question to ask
-		[2]				default=${2-NULL}
+		[2]				default=${2:-NULL}
 			> default value to return
 	RETURN_VALUE
 		1 if user agree, 0 if not. if DEFAULT is not NULL and choice is not
 		y or n, DEFAULT is returned
 	"
 	local message=$1
-	local default=${2-NULL}
+	local default=${2:-NULL}
 	local choice=""
 
 	while true; do
 		# set default prompt according to $default
 		if [ ${default} == "y" ]; then
-			p_ques "${message} (Y/n)  " 1
+			print::ques "${message} (Y/n)  " 1
 		elif [ ${default} == "n" ]; then
-			p_ques "${message} (y/N)  " 1
+			print::ques "${message} (y/N)  " 1
 		else
-			p_ques "${message} (y/n)  " 1
+			print::ques "${message} (y/n)  " 1
 		fi
 		# read on char
 		read -n 1 choice
@@ -44,9 +44,52 @@ function	utils::ask()
 				elif [ "${default}" == 'n' ]; then
 					return 0
 				else
-					p_warn "[${choice}] wrong choice (y|n)"
+					print::warn "[${choice}] wrong choice (y|n)"
 				fi
 				;;
 		esac
+	done
+}
+
+function	utils::choice()
+{
+	local	title="${1:-None}"
+	local	tmp="${@:2}"
+	local	choice
+	declare -a choices=(${tmp})
+	local	choices_length="${#choices[@]}"
+	local	choice_length="${#choices_length}"
+	local	index
+	local	index_plus_one
+	local	padding
+
+	while true; do
+		printf "%b" "${title}"
+		index=0
+		for item in ${@:2}; do
+			let "index_plus_one=index+1"
+			printf "\t[${R}%0${choice_length}d${RST}] %b\n" "${index_plus_one}" "${item}"
+			index="${index_plus_one}"
+		done
+		read -p "choice> "		\
+			 -n "${choice_length}"	\
+			 choice
+		printf "\n"
+		if [[ ${choice} =~ ^[0-9]+$ ]]; then
+			if [ "${choice}" -ge 1 -a "${choice}" -le "${choices_length}" ]; then
+				return ${choice}
+			else
+				case "${choice_length}" in
+					1) padding="";;
+					2) padding="0";;
+					3) padding="00";;
+				esac
+				print::erro "wrong choice, choose between (${padding}1-${choices_length})"
+				print::pause
+			fi
+		else
+			print::erro "wrong choice, choose a numeric number"
+			print::pause
+		fi
 	done
 }
