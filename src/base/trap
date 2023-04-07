@@ -1,6 +1,18 @@
 #!/bin/bash
 
-function	trap::pass()
+TRAP_ARG_EXIT="${TRAP_ARG_EXIT:-false}"
+TRAP_ARG_DEBUG="${TRAP_ARG_DEBUG:-false}"
+TRAP_ARG_RETURN="${TRAP_ARG_RETURN:-false}"
+TRAP_ARG_ERROR="${TRAP_ARG_ERROR:-false}"
+
+function	trap::enable()
 {
 
+	local	func="${1}"
+	local	func="${2:None}"
+
+	[ "${TRAP_ARG_EXIT}" ] && trap exit(0)
+	[ "${TRAP_ARG_DEBUG}" ] && trap
+	[ "${TRAP_ARG_RETURN}" ] && trap
+	[ "${TRAP_ARG_ERROR}" ] && trap
 }

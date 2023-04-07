@@ -3,19 +3,16 @@
 function	utils::ask()
 {
 	: "
-	DESC
-		My version of ask (http://djm.me/ask)
 	INFO
 		LIB				base
 		FUNCTION		ask
-	ARGS
-		[1]				message=${1}
-			> question to ask
-		[2]				default=${2:-NULL}
-			> default value to return
-	RETURN_VALUE
-		1 if user agree, 0 if not. if DEFAULT is not NULL and choice is not
-		y or n, DEFAULT is returned
+		DESC			My version of ask (http://djm.me/ask)
+		ARGS			[1] message=${1}
+							> question to ask
+						[2] default=${2:-NULL}
+							> default value to return
+		RETURN_VALUE	1 if user agree, 0 if not. if DEFAULT is not NULL and
+						choice is not y or n, DEFAULT is returned
 	"
 	local message=$1
 	local default=${2:-NULL}
@@ -53,6 +50,20 @@ function	utils::ask()
 
 function	utils::choice()
 {
+	: "
+	INFO
+		LIB				utils
+		FUNCTION		choice
+		DESC			prompt for all choice, read for user input. if correct
+						index is provided or q, to return, then return choice.
+						otherwise re prompt for a good choice
+		ARGS			[1] title=${1:-None}
+						[2] return_title=${2:-Return}
+							> str to print for 'returning'
+						[@:3] tmp=${@:3}
+							> from the 3 to the last argument provided
+		RETURN_VALUE	index or 255 for returning
+	"
 	local	title="${1:-None}"
 	local	return_title="${2:-Return}"
 	local	tmp="${@:3}"

@@ -11,22 +11,19 @@ LR="\xe2\x95\x9d"	# ╝
 function	ansi::toggle()
 {
 	: "
-	DESC
-						Activate all color variable, and toggle ansi char
-						surrounding with begin and end char, depending on mode
-						and USE_ENCL_ANSI
 	INFO
 		LIB				ansi
 		FUNCTION		toggle
-	ARGS
-		USE_ENCL_ANSI	${USE_ENCL_ANSI}
-		[1]				mode=${1:-0}
-			> activate or desactive surrounding ansi char, respectively, if mode
-			  equal 0 or 1
-		[2]				esc=${2:-${DEFAULT_ANSI_ESC}}
-			> provide an ansi esc_char, otherwise use default
-	RETURN_VALUE
-		None
+		DESC			Activate all color variable, and toggle ansi char
+						surrounding with begin and end char, depending on mode
+						and USE_ENCL_ANSI
+		ARGS			USE_ENCL_ANSI=${USE_ENCL_ANSI}
+						[1] mode=${1:-0}
+							> activate or desactive surrounding ansi char,
+							if mode equal 0 or 1 respectively
+						[2] esc=${2:-${DEFAULT_ANSI_ESC}}
+							> provide an ansi esc_char, otherwise use default
+		RETURN_VALUE	None
 	"
 	local	mode="${1:-0}"
 	local	esc="${2:-${DEFAULT_ANSI_ESC}}"
@@ -94,16 +91,13 @@ function	ansi::toggle()
 function	ansi::move_up_del_print()
 {
 	: "
-	DESC
-						Move up N time AND del N line, with ansi char
 	INFO
 		LIB				ansi
 		FUNCTION		move_up_del_print
-	ARGS
-		[1]				msg=${1:-}
-		[2]				number=${2:-1}
-	RETURN_VALUE
-		None
+		DESC			Move up N time AND del N line, with ansi char
+		ARGS			[1] msg=${1:-}
+						[2] number=${2:-1}
+		RETURN_VALUE	None
 	"
 	local	msg="${1:-}"
 	local	number="${2:-1}"
@@ -119,15 +113,12 @@ function	ansi::move_up_del_print()
 function	ansi::remove_color()
 {
 	: "
-	DESC
-						Set all color variable without color
 	INFO
 		LIB				ansi
 		FUNCTION		remove
-	ARGS
-		None
-	RETURN_VALUE
-		None
+		DESC			Set all color variable without color
+	ARGS				None
+	RETURN_VALUE		None
 	"
 	G=""
 	R=""

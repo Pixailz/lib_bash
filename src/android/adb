@@ -29,7 +29,7 @@ function	adb::loop_set_status()
 	choice="${?}"
 	case "${choice}" in
 		1|2|3|4) adb::set_status "${choice}" ; print::pause ;;
-		5) adb::set_status "${choice}" ; print::pause ;;
+		5) adb::set_status 6 ; print::pause ;;
 	esac
 }
 
@@ -156,6 +156,15 @@ function	adb::wipe_data()
 
 function	adb::reboot()
 {
+	: "
+	INFO
+		LIB				adb
+		FUNCTION		reboot
+		DESC			reboot to specified mode
+		ARGS			[1] mode=${1:-2}
+							> possible value specified value at adb::get_status
+		RETURN_VALUE	None
+	"
 	local	mode="${1:-2}"
 
 	adb::get_status
@@ -222,13 +231,7 @@ function	adb::get_status_str()
 		DESC			print status return from adb::get_status
 		ARGS			None
 		RETURN_VALUE	CURR_STATUS_STR
-							> possible value:
-							1		Not connected
-							2		Normal
-							3		Recovery
-							4		Sideload
-							5		Unauthorized
-							6		Fastboot
+							> possible value specified value at adb::get_status
 	"
 	adb::get_status
 	case "${CURR_STATUS}" in
@@ -248,14 +251,8 @@ function	adb::set_status()
 		LIB				adb
 		FUNCTION		set_status
 		DESC			set status to connected phone using adb
-		ARGS			[1]
-							state=${1:-}
-							>	possible value are:
-							1		Not connected
-							2		Normal
-							3		Recovery
-							4		Sideload
-							6		Fastboot
+		ARGS			[1] state=${1:-}
+							> possible value specified value at adb::get_status
 		RETURN_VALUE	None
 	"
 	local	mode="${1:-2}"
@@ -299,17 +296,9 @@ function	adb::wait_for()
 		LIB				adb
 		FUNCTION		wait_for
 		DESC			print message and wait for a state
-		ARGS			[1]
-							msg=${1:-}
-						[2]
-							state=${2:-}
-							>	possible value are:
-							1		Not connected
-							2		Normal
-							3		Recovery
-							4		Sideload
-							5		Unauthorized
-							6		Fastboot
+		ARGS			[1] msg=${1:-}
+						[2] state=${2:-}
+							> possible value specified value at adb::get_status
 		RETURN_VALUE	None
 	"
 	local	msg="${1:-}"
@@ -337,17 +326,9 @@ function	adb::wait_for_not()
 		LIB				adb
 		FUNCTION		wait_for
 		DESC			print message and wait for none a state
-		ARGS			[1]
-							msg=${1:-}
-						[2]
-							state=${2:-}
-								>	possible value are:
-								1		Not connected
-								2		Normal
-								3		Recovery
-								4		Sideload
-								5		Unauthorized
-								6		Fastboot
+		ARGS			[1] msg=${1:-}
+						[2] state=${2:-}
+							> possible value specified value at adb::get_status
 	"
 	local	msg="${1:-}"
 	local	state="${2:-}"

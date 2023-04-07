@@ -3,15 +3,12 @@
 function	print::info()
 {
 	: "
-	DESC
-		Print some information
 	INFO
 		LIB				print
 		FUNCTION		info
-	ARGS
-		None
-	RETURN_VALUE
-		None
+		DESC			Print some information
+		ARGS			None
+		RETURN_VALUE	None
 	"
 	printf "%b %b%b\n" "${P_INFO}" "${1:-}" "${RST}"
 }
@@ -19,15 +16,12 @@ function	print::info()
 function	print::warn()
 {
 	: "
-	DESC
-		Print a warning message
 	INFO
 		LIB				print
 		FUNCTION		warn
-	ARGS
-		None
-	RETURN_VALUE
-		None
+		DESC			Print a warning message
+		ARGS			None
+		RETURN_VALUE	None
 	"
 	printf "%b %b%b\n" "${P_WARN}" "${1:-}" "${RST}"
 }
@@ -35,15 +29,12 @@ function	print::warn()
 function	print::ques()
 {
 	: "
-	DESC
-		Print question message
 	INFO
 		LIB				print
 		FUNCTION		ques
-	ARGS
-		None
-	RETURN_VALUE
-		None
+		DESC			Print question message
+		ARGS			None
+		RETURN_VALUE	None
 	"
 	printf "%b %b%b\n" "${P_QUES}" "${1:-}" "${RST}"
 }
@@ -51,16 +42,13 @@ function	print::ques()
 function	print::pass()
 {
 	: "
-	DESC
-		Print pass or failed message, default to pass
 	INFO
 		LIB				print
 		FUNCTION		pass
-	ARGS
-		[1]				msg=${1:-}
-		[2]				have_pass=${2:-1}
-	RETURN_VALUE
-		None
+		DESC			Print pass or failed message, default to pass
+		ARGS			[1] msg=${1:-}
+						[2] have_pass=${2:-1}
+		RETURN_VALUE	None
 	"
 	local	msg="${1:-}"
 	local	have_pass="${2:-1}"
@@ -73,15 +61,12 @@ function	print::pass()
 function	print::erro()
 {
 	: "
-	DESC
-		Print error and quit
 	INFO
 		LIB				print
 		FUNCTION		erro
-	ARGS
-		[1]				msg=${1:-}
-	RETURN_VALUE
-		None
+		DESC			Print error and quit
+		ARGS			[1] msg=${1:-}
+		RETURN_VALUE	None
 	"
 	local	msg=${1:-}
 
@@ -91,16 +76,13 @@ function	print::erro()
 function	print::erro_parse()
 {
 	: "
-	DESC
-		Print parsing error, tips for calling help then exit
 	INFO
 		LIB				print
 		FUNCTION		erro_parse
-	ARGS
-		SCRIPT_NAME		${SCRIPT_NAME}
-		[1]				msg=${1:-}
-	RETURN_VALUE
-		None
+		DESC			Print parsing error, tips for calling help then exit
+		ARGS			SCRIPT_NAME=${SCRIPT_NAME}
+						[1] msg=${1:-}
+		RETURN_VALUE	None
 	"
 	local	msg="${1:-}"
 
@@ -111,15 +93,12 @@ function	print::erro_parse()
 function	print::errno_2()
 {
 	: "
-	DESC
-		Error message for not founding a file
 	INFO
 		LIB				print
 		FUNCTION		errno_2
-	ARGS
-		[1]				file_path=${1}
-	RETURN_VALUE
-		None
+		DESC			Error message for not founding a file
+		ARGS			[1] file_path=${1}
+		RETURN_VALUE	None
 	"
 	local	file_path="${1:-}"
 
@@ -129,15 +108,12 @@ function	print::errno_2()
 function	print::pause()
 {
 	: "
-	DESC
-		Print pause message and wait
 	INFO
 		LIB				print
 		FUNCTION		pause
-	ARGS
-		None
-	RETURN_VALUE
-		None
+		DESC			Print pause message and wait
+		ARGS			None
+		RETURN_VALUE	None
 	"
 	print::info "Press [Enter] to continue.."
 	read readEnterkey

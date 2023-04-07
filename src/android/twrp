@@ -3,16 +3,13 @@
 function	twrp::install()
 {
 	: "
-	DESC
-						guided install twrp
 	INFO
 		LIB				twrp
 		FUNCTION		install
-	ARGS
-		[1]				twrp_boot=${1:-${DFLT_TWRP_BOOT}}
-		[2]				twrp_installer=${2:-${DFLT_TWRP_INST}}
-	RETURN_VALUE
-		None
+		DESC			guided install twrp
+		ARGS			[1] twrp_boot=${1:-${DFLT_TWRP_BOOT}}
+						[2] twrp_installer=${2:-${DFLT_TWRP_INST}}
+		RETURN_VALUE	None
 	"
 	local	twrp_boot="${1:-${DFLT_TWRP_BOOT}}"
 	local	twrp_installer="${2:-${DFLT_TWRP_INST}}"
