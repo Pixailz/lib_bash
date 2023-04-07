@@ -20,13 +20,12 @@ function	adb::loop_set_status()
 		"RECOVERY"
 		"SIDELOAD"
 		"FASTBOOT"
-		"RETURN"
 	)
 
 	printf "${CLR_SCR_CUR_HOM}"
 	adb::get_status_str
 	printf "Phone currently in '%s'(%d)\n" "${CURR_STATUS_STR}" "${CURR_STATUS}"
-	utils::choice "SET_STATUS\n" "${choices[@]}"
+	utils::choice "SET_STATUS\n" "RETURN" "${choices[@]}"
 	choice="${?}"
 	case "${choice}" in
 		1|2|3|4) adb::set_status "${choice}" ; print::pause ;;
@@ -48,13 +47,12 @@ function	adb::loop_twrp()
 	local	choice
 	local	choices=(
 		"INSTALL"
-		"RETURN"
 	)
 
 	printf "${CLR_SCR_CUR_HOM}"
 	adb::get_status_str
 	printf "Phone currently in '%s'(%d)\n" "${CURR_STATUS_STR}" "${CURR_STATUS}"
-	utils::choice "TWR\n" "${choices[@]}"
+	utils::choice "TWR\n" "RETURN" "${choices[@]}"
 	choice="${?}"
 	case "${choice}" in
 		1) twrp::install ; print::pause ;;
@@ -75,18 +73,17 @@ function	adb::loop()
 	local	choices=(
 		"TWRP"
 		"SET_STATUS"
-		"EXIT"
 	)
 
 	while true; do
 		printf "${CLR_SCR_CUR_HOM}"
 		adb::get_status_str
 		printf "Phone currently in '%s'(%d)\n" "${CURR_STATUS_STR}" "${CURR_STATUS}"
-		utils::choice "Main Menu\n" "${choices[@]}"
+		utils::choice "Main Menu\n" "EXIT" "${choices[@]}"
 		case ${?} in
 			1) adb::loop_twrp ;;
 			2) adb::loop_set_status ;;
-			3) break ;;
+			255) break ;;
 		esac
 	done
 }

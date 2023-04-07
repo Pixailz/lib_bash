@@ -54,7 +54,8 @@ function	utils::ask()
 function	utils::choice()
 {
 	local	title="${1:-None}"
-	local	tmp="${@:2}"
+	local	return_title="${2:-Return}"
+	local	tmp="${@:3}"
 	local	choice
 	declare -a choices=(${tmp})
 	local	choices_length="${#choices[@]}"
@@ -66,11 +67,12 @@ function	utils::choice()
 	while true; do
 		printf "%b" "${title}"
 		index=0
-		for item in ${@:2}; do
+		for item in "${choices[@]}"; do
 			let "index_plus_one=index+1"
 			printf "\t[${R}%0${choice_length}d${RST}] %b\n" "${index_plus_one}" "${item}"
 			index="${index_plus_one}"
 		done
+		printf "\n\t[${R}q${RST}]%s\n\n" "${return_title}"
 		read -p "choice> "		\
 			 -n "${choice_length}"	\
 			 choice
@@ -87,8 +89,10 @@ function	utils::choice()
 				print::erro "wrong choice, choose between (${padding}1-${choices_length})"
 				print::pause
 			fi
+		elif [ "${choice,,}" == "q" ]; then
+			return 255
 		else
-			print::erro "wrong choice, choose a numeric number"
+			print::erro "wrong choice, choose a numeric number or q to return"
 			print::pause
 		fi
 	done
