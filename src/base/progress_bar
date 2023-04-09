@@ -1,0 +1,86 @@
+#!/bin/bash
+
+PB_LEN=40
+PB_FULL="█"
+PB_HEAD="▒"
+PB_EMPTY=" "
+PB_COLOR="${LC}"
+
+PB_BEGIN_TS=""
+PB_LENGTH=""
+PB_INDEX=""
+
+function	pb::done()
+{
+	: "
+	INFO
+		LIB				pb
+		FUNCTION		done
+		DESC			print done message and elapsed time from last pb::init
+		ARGS			[1] title=${1:-None}
+		RETURN_VALUE	None
+	"
+	local	title="${1:-None}"
+	local	elapsed=$(($(date +"%s%3N") - ${PB_BEGIN_TS}))
+
+	printf "${MOV_BEG_DEL_LIN}${MOV_BEG_DEL_LIN}"
+	printf "(${B}%${#PB_LENGTH}d${RST}/${R}%d${RST}) " "${PB_INDEX}" "${PB_LENGTH}"
+	printf "%s: ${G}DONE${RST} " "${title}"
+	printf "(${R}elapsed${RST}: %dms)\n" "${elapsed}"
+}
+
+function	pb::print()
+{
+	: "
+	INFO
+		LIB				pb
+		FUNCTION		init
+		DESC			print progress bar according to the given filename
+		ARGS			[1] filename=${1}
+		RETURN_VALUE	None
+	"
+	local	filename="${1}"
+	((PB_INDEX++))
+	local	curr_pourcentage=$(((${PB_INDEX} * 100) / ${PB_LENGTH}))
+	local	nb_full=$(((${curr_pourcentage} * ${PB_LEN}) / 100 ))
+	local	nb_empty=$((${PB_LEN} - ${nb_full}))
+	local	pb_full
+	local	pb_empty=""
+
+
+	if [ ${curr_pourcentage} -eq 100 ]; then
+		pb_full="$(printf "${PB_FULL}%.0s" $(seq 1 ${PB_LEN}) 1)"
+	else
+		pb_full="$(printf "${PB_FULL}%.0s" $(seq 1 ${nb_full}))${PB_HEAD}"
+		pb_empty="$(printf "${PB_EMPTY}%.0s" $(seq 1 ${nb_empty}))"
+	fi
+
+	case "${#curr_pourcentage}" in
+		1) curr_pourcentage="  ${curr_pourcentage}% " ;;
+		2) curr_pourcentage=" ${curr_pourcentage}% " ;;
+		3) curr_pourcentage="${curr_pourcentage}% " ;;
+	esac
+
+	if [ ${PB_INDEX} -ne 1 ]; then
+		printf "${MOV_BEG_DEL_LIN}${MOV_BEG_DEL_LIN}"
+	fi
+	printf "(${B}%${#PB_LENGTH}d${RST}/${R}%d${RST}) %s\n" "${PB_INDEX}" "${PB_LENGTH}" "${filename}"
+	printf "%s[${PB_COLOR}%s${RST}]\n" "${curr_pourcentage}" "${pb_full}${pb_empty}"
+}
+
+function	pb::init()
+{
+	: "
+	INFO
+		LIB				pb
+		FUNCTION		init
+		DESC			init progress bar
+		ARGS			[1] PB_ARRAY=${@}
+							> all choices
+		RETURN_VALUE	None
+	"
+	local	choices=(${@})
+	PB_BEGIN_TS=$(date +"%s%3N")
+	PB_LENGTH=${#choices[@]}
+	PB_INDEX=0
+}

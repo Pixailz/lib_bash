@@ -2,7 +2,7 @@
 
 source ./.config
 
-function	main::entry()
+function	test::progress_bar()
 {
 	choices=(
 		"first"
@@ -42,4 +42,4 @@ function	main::entry()
 	pb::done "Test"
 }
 
-main::entry ${@}
+test::progress_bar

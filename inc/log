@@ -3,7 +3,7 @@
 : "
 ${DIR_INC}/log
 	log include file, those include:
-		- ${DIR_SRC}/log/utils
+		- ${DIR_SRC}/log
 depend on ${DIR_INC}/base
 "
 
@@ -12,6 +12,6 @@ source ${DIR_INC}/base
 
 [ "${INC_PROT_LOG:-0}" == 1 ] && return
 
-source ${DIR_SRC}/log/utils
+source ${DIR_SRC}/log
 
 INC_PROT_LOG=1

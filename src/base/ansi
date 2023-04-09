@@ -8,6 +8,10 @@ UR="\xe2\x95\x97"	# ╗
 LL="\xe2\x95\x9a"	# ╚
 LR="\xe2\x95\x9d"	# ╝
 
+USE_ENCL_ANSI=${USE_ENCL_ANSI:-0}
+
+NO_COLOR=${NO_COLOR:-0}
+
 function	ansi::toggle()
 {
 	: "
@@ -31,14 +35,9 @@ function	ansi::toggle()
 	local	beg_ansi="\001"
 	local	end_ansi="\002"
 
-	if [ "${mode}" == "${USE_ENCL_ANSI}" ]; then
-		echo "noting to do. returning"
-		return 0
-	else
-		if [ "${mode}" == 1 ]; then
-			esc="${beg_ansi}${esc}"
-			end_esc="${end_ansi}"
-		fi
+	if [ "${mode}" == 1 ]; then
+		esc="${beg_ansi}${esc}"
+		end_esc="${end_ansi}"
 	fi
 
 	# RESET
@@ -145,8 +144,6 @@ function	ansi::remove_color()
 	WARN="[*]"
 }
 
-if [ ${NO_COLOR:-0} -eq 1 ]; then ansi::remove_color; fi
-
-USE_ENCL_ANSI=${USE_ENCL_ANSI:-None}
+if [ "${NO_COLOR}" -eq 1 ]; then ansi::remove_color; fi
 
 ansi::toggle
