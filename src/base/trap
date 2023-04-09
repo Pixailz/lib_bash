@@ -7,7 +7,17 @@ TRAP_ARG_ERROR="${TRAP_ARG_ERROR:-false}"
 
 function	trap::enable()
 {
-
+	: "
+	INFO
+		LIB				template
+		FUNCTION		pass
+		DESC			print pass or fail according to MODE, then print MSG
+		ARGS			[1] MSG=${1}
+						[2] MODE=${2:-1}
+							> maybe 0 to fail or 1 to pass, default to 1
+		RETURN_VALUE	STATUS
+							> if failed set STATUS to FAILED
+	"
 	local	func="${1}"
 	local	func="${2:None}"
 
