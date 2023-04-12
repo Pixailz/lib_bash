@@ -4,10 +4,13 @@
 
 ## BASE
 
-NO_COLOR=0
+NO_ANSI=0
 DEFAULT_ANSI_ESC="\x1b["
 BEG_ANSI="\001"
 END_ANSI="\002"
+
+LOAD_TTS=0.2
+DOWN_TTS=0.2
 
 ## set enclosed ansi char, help to count printable character displayed, for
 ## centered text for exemple
@@ -32,6 +35,8 @@ ANSI=(
 		# MODIFIER
 	["BL"]="05m"		# BLINKING
 		# CURSOR THING
+	["ENA_CUR"]="?25h"
+	["DIS_CUR"]="?25l"
 	["DEL_LIN"]="2K"
 	["MOV_1UP"]="1F"
 	["CLR_SCR"]="2J"

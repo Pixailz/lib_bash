@@ -18,7 +18,7 @@ function	ansi::toggle_color()
 						[2] esc=${2:-${DEFAULT_ANSI_ESC}}
 							> provide an ansi esc_char, otherwise use default
 	"
-	local	no_color="${NO_COLOR:-0}"
+	local	no_ansi="${NO_ANSI:-0}"
 	local	surrounding_mode="${1:-${USE_ENCL_ANSI}}"
 	local	esc="${2:-${DEFAULT_ANSI_ESC}}"
 	local	end_esc=""
@@ -27,7 +27,7 @@ function	ansi::toggle_color()
 		esc="${BEG_ANSI}${esc}"
 		end_esc="${END_ANSI}"
 	fi
-	if [ "${no_color}" -eq 0 ]; then
+	if [ "${no_ansi}" -eq 0 ]; then
 		for key in ${!ANSI[@]}; do
 			export "${key}"="${esc}${ANSI[${key}]}${end_esc}"
 		done
@@ -175,6 +175,56 @@ function	ansi::print()
 		end_esc="${END_ANSI}"
 	fi
 	printf "%b" "${esc}${code}${end_esc}"
+}
+
+function	ansi::load()
+{
+	: "
+	INFO
+		LIB				ansi
+		FUNCTION		load
+		DESC			animation for downloading, at pos x,y
+		ARGS			[1] title=${1:-}
+						[2] mode=${2:-0}
+							> could be either 1 or 0, right to left or left
+							to right
+						[3] pos_x=${3:-0}
+						[4] pos_y=${4:-}
+							> if arg not provided, set pos_y to the CUR_POS_Y
+							returned by ansi::get_cursor_pos
+	"
+	local	title="${1:-}"
+	local	mode="${2:-0}"
+	local	pos_x="${3:-0}"
+	local	pos_y="${4:-}"
+	local	curr_char_var="DOWN_00"
+
+	if [ -z "${pos_y}" ]; then
+		ansi::get_cursor_pos
+		pos_y="${CUR_POS_Y}"
+	fi
+	((pos_x++))
+	ansi::set_cursor_pos "$((${pos_x} + 1))" "${pos_y}"
+	printf "${title}"
+	ansi::print "${ANSI["DIS_CUR"]}"
+	trap "ansi::print '${ANSI['ENA_CUR']}'; exit 130" SIGINT
+	while true; do
+		ansi::set_cursor_pos "${pos_x}" "${pos_y}"
+		case ${curr_char_var} in
+			DOWN_00)  curr_char_var="DOWN_1${mode}" ;;
+			DOWN_1*) curr_char_var="DOWN_20" ;;
+			DOWN_20)  curr_char_var="DOWN_3${mode}" ;;
+			DOWN_3*) curr_char_var="DOWN_40" ;;
+			DOWN_40)  curr_char_var="DOWN_5${mode}" ;;
+			DOWN_5*) curr_char_var="DOWN_60" ;;
+			DOWN_60)  curr_char_var="DOWN_7${mode}" ;;
+			DOWN_7*) curr_char_var="DOWN_80" ;;
+			DOWN_80)  curr_char_var="DOWN_00" ;;
+		esac
+		printf "%b" "${!curr_char_var}"
+		sleep ${DOWN_TTS}
+	done
+	ansi::print "${ANSI["ENA_CUR"]}"
 }
 
 ansi::toggle_color

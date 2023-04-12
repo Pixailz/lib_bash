@@ -101,7 +101,7 @@ function	parse::entry()
 						REQUIRED
 						OPTIONAL
 						DEBUG
-						NO_COLOR
+						NO_ANSI
 	"
 	local	args="${@}"
 
@@ -118,7 +118,7 @@ function	parse::entry()
 		case "${1:-}" in
 			'--version') ${PARSE_FUNC_VERSION} ; exit ;;
 			'-h'|'--help') ${PARSE_FUNC_HELP} ; exit ;;
-			'--no-color') NO_COLOR=1;;
+			'--no-color') NO_ANSI=1;;
 			'--required-opt')
 				print::info "set-var"
 				shift

@@ -2,45 +2,9 @@
 
 ## ⚠️ TEST ZONE ⚠️
 
-function	ansi::download()
-{
-	: "
-	INFO
-		LIB				ansi
-		FUNCTION		download
-		DESC			template function with no goal
-		ARGS			[1] msg=${1}
-						[2] mode=${2:-1}
-							> could be either 1 or 0, right to left or left
-							to right
-		RETURN_VALUE	STATUS
-							> if failed set STATUS to FAILED, else pass
-	"
-	local	mode="${1:-0}"
-	local	pos_x="${2:-}"
-	local	pos_y="${3:-}"
-	local	curr_char_var="DOWN_0${mode}"
-
-	# [ ! -z "${pos_x}" ] &&
-	# [ ! -z ]
-	while true; do
-		case ${!curr_char_var} in
-			DOWN_0*) current_char_var="DOWN_1${mode}" ;;
-			DOWN_1*) current_char_var="DOWN_2${mode}" ;;
-			DOWN_2*) current_char_var="DOWN_3${mode}" ;;
-			DOWN_3*) current_char_var="DOWN_4${mode}" ;;
-			DOWN_4*) current_char_var="DOWN_5${mode}" ;;
-			DOWN_5*) current_char_var="DOWN_6${mode}" ;;
-			DOWN_6*) current_char_var="DOWN_7${mode}" ;;
-			DOWN_7*) current_char_var="DOWN_8${mode}" ;;
-			DOWN_8*) current_char_var="DOWN_0${mode}" ;;
-		esac
-	done
-}
-
 function	test::entry()
 {
-	printf "test\n"
+	ansi::load "test" "0" "6"
 }
 
 ## ⚠️ END TEST ZONE ⚠️
@@ -49,5 +13,4 @@ source ./.config
 
 parse::entry ${@}
 
-# ansi::download
 test::entry
