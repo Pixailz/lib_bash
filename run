@@ -4,7 +4,11 @@
 
 function	test::entry()
 {
-	ansi::load "test" "0" "6"
+	if [ ${#} -eq 0 ]; then
+		ansi::load "test loading" "6"
+	else
+		ansi::down "test downloading" "0" "6"
+	fi
 }
 
 ## ⚠️ END TEST ZONE ⚠️
@@ -13,4 +17,4 @@ source ./.config
 
 parse::entry ${@}
 
-test::entry
+test::entry ${@}

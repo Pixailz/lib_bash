@@ -22,7 +22,7 @@ ANSI=(
 	["RST"]="0m"		# RESET
 	["G"]="38;5;82m"	# GREEN
 	["R"]="38;5;196m"	# RED
-	["B"]="38;5;196m"	# BLUE
+	["B"]="34m"	# BLUE
 	["Y"]="33m"			# YELLOW
 	["C"]="36m"			# CYAN
 	["M"]="35m"			# MAGENTA
@@ -60,6 +60,9 @@ BOX_UR="╗"
 BOX_LL="╚"
 BOX_LR="╝"
 
+# BRAILLE CHAR
+# https://www.compart.com/fr/unicode/block/U+2800
+
 DOWN_80="⣿"
 DOWN_70="⣷"
 DOWN_71="⣾"
@@ -74,12 +77,11 @@ DOWN_10="⡀"
 DOWN_11="⢀"
 DOWN_00="⠀"
 
-LOAD_8=""
-LOAD_7=""
-LOAD_6=""
-LOAD_5="⣷"
-LOAD_4="⣾"
-LOAD_3=""
-LOAD_2=""
-LOAD_1=""
-LOAD_0=""
+LOAD_7="⡿"
+LOAD_6="⣟"
+LOAD_5="⣯"
+LOAD_4="⣷"
+LOAD_3="⣾"
+LOAD_2="⣽"
+LOAD_1="⣻"
+LOAD_0="⢿"

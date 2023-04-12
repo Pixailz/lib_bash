@@ -10,8 +10,6 @@ My library for bash scripts / progams
 ## TODO
 
 1. make traps for cleaning stuff, handling error
-2. do loading bar with braille pattern (docker_like_load, docker_like_download)
-   > refs [here](https://www.compart.com/fr/unicode/block/U+2800)
 
 ### ANDROID
 

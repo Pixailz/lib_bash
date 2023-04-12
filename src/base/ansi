@@ -59,7 +59,9 @@ function	ansi::toggle_color()
 
 	# OTHER LIB
 	PB_COLOR="${LC}"
-	LOG_TITLE_DEFAULT_COLOR=${G}
+	LOG_TITLE_DEFAULT_COLOR="${G}"
+	DOWN_COLOR="${O}"
+	LOAD_COLOR="${C}"
 }
 
 function	ansi::move_up_del_print()
@@ -177,12 +179,12 @@ function	ansi::print()
 	printf "%b" "${esc}${code}${end_esc}"
 }
 
-function	ansi::load()
+function	ansi::down()
 {
 	: "
 	INFO
 		LIB				ansi
-		FUNCTION		load
+		FUNCTION		down
 		DESC			animation for downloading, at pos x,y
 		ARGS			[1] title=${1:-}
 						[2] mode=${2:-0}
@@ -207,9 +209,9 @@ function	ansi::load()
 	ansi::set_cursor_pos "$((${pos_x} + 1))" "${pos_y}"
 	printf "${title}"
 	ansi::print "${ANSI["DIS_CUR"]}"
-	trap "ansi::print '${ANSI['ENA_CUR']}'; exit 130" SIGINT
+	trap "ansi::print '${ANSI['ENA_CUR']}\n'; exit" SIGINT SIGQUIT
+	ansi::set_cursor_pos "${pos_x}" "${pos_y}"
 	while true; do
-		ansi::set_cursor_pos "${pos_x}" "${pos_y}"
 		case ${curr_char_var} in
 			DOWN_00)  curr_char_var="DOWN_1${mode}" ;;
 			DOWN_1*) curr_char_var="DOWN_20" ;;
@@ -221,10 +223,59 @@ function	ansi::load()
 			DOWN_7*) curr_char_var="DOWN_80" ;;
 			DOWN_80)  curr_char_var="DOWN_00" ;;
 		esac
-		printf "%b" "${!curr_char_var}"
+		printf "%b" "${DOWN_COLOR}${!curr_char_var}${RST}"
+		ansi::print "1D"
 		sleep ${DOWN_TTS}
 	done
 	ansi::print "${ANSI["ENA_CUR"]}"
+	trap - SIGINT SIGQUIT
+}
+
+function	ansi::load()
+{
+	: "
+	INFO
+		LIB				ansi
+		FUNCTION		load
+		DESC			animation for downloading, at pos x,y
+		ARGS			[1] title=${1:-}
+						[2] pos_x=${2:-0}
+						[3] pos_y=${3:-}
+							> if arg not provided, set pos_y to the CUR_POS_Y
+							returned by ansi::get_cursor_pos
+	"
+	local	title="${1:-}"
+	local	pos_x="${2:-0}"
+	local	pos_y="${3:-}"
+	local	curr_char_var="LOAD_0"
+
+	if [ -z "${pos_y}" ]; then
+		ansi::get_cursor_pos
+		pos_y="${CUR_POS_Y}"
+	fi
+	((pos_x++))
+	ansi::set_cursor_pos "$((${pos_x} + 1))" "${pos_y}"
+	printf "${title}"
+	trap "ansi::print '${ANSI['ENA_CUR']}\n'; exit" SIGINT SIGQUIT
+	ansi::print "${ANSI["DIS_CUR"]}"
+	ansi::set_cursor_pos "${pos_x}" "${pos_y}"
+	while true; do
+		case ${curr_char_var} in
+			LOAD_0) curr_char_var="LOAD_1" ;;
+			LOAD_1) curr_char_var="LOAD_2" ;;
+			LOAD_2) curr_char_var="LOAD_3" ;;
+			LOAD_3) curr_char_var="LOAD_4" ;;
+			LOAD_4) curr_char_var="LOAD_5" ;;
+			LOAD_5) curr_char_var="LOAD_6" ;;
+			LOAD_6) curr_char_var="LOAD_7" ;;
+			LOAD_7) curr_char_var="LOAD_0" ;;
+		esac
+		printf "%b" "${LOAD_COLOR}${!curr_char_var}${RST}"
+		ansi::print "1D"
+		sleep ${LOAD_TTS}
+	done
+	ansi::print "${ANSI["ENA_CUR"]}"
+	trap - SIGINT SIGQUIT
 }
 
 ansi::toggle_color
