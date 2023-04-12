@@ -1,7 +1,6 @@
 #!/bin/bash
 
-source ./.config
-
+## ⚠️ TEST ZONE ⚠️
 LOAD_DL="\xe2\x96\x96"	# ▖
 LOAD_DR="\xe2\x96\x97"	# ▗
 LOAD_UL="\xe2\x96\x98"	# ▘
@@ -17,7 +16,7 @@ function	load::load_dot()
 	local	title="${1}"
 	local	curr_char="${LOAD_DL}"
 
-	printf "\n"
+	printf "\x0a"
 	while true; do
 		ansi::move_up_del_print " ${curr_char} ${title}\n"
 		case "${curr_char}" in
@@ -30,9 +29,8 @@ function	load::load_dot()
 	done
 }
 
-function	main::entry()
-{
-	load::load_dot "test"
-}
+## ⚠️ END TEST ZONE ⚠️
 
-main::entry ${@}
+source ./.config
+
+parse::entry ${@}
