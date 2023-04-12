@@ -25,7 +25,6 @@ function	log::print()
 								- 1		only print
 								- 2		only log
 								- 3		both
-	RETURN_VALUE		None
 	"
 	local	msg="${1:-}"
 	local	mode="${2:--1}"

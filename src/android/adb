@@ -8,9 +8,7 @@ function	adb::loop_set_status()
 	INFO
 		LIB				adb
 		FUNCTION		loop_twrp
-		DESC			None
-		ARGS			None
-		RETURN_VALUE	None
+		DESC			a loop to interact with the status of your phone
 	"
 	local	loop=1
 	local	choice
@@ -39,9 +37,7 @@ function	adb::loop_twrp()
 	INFO
 		LIB				adb
 		FUNCTION		loop_twrp
-		DESC			None
-		ARGS			None
-		RETURN_VALUE	None
+		DESC			a loop to interact with the various fonction in twrp::
 	"
 	local	loop=1
 	local	choice
@@ -66,8 +62,6 @@ function	adb::loop()
 		LIB				adb
 		FUNCTION		loop
 		DESC			a loop to interact with the various fonction in adb::
-		ARGS			None
-		RETURN_VALUE	None
 	"
 	local	loop=1
 	local	choices=(
@@ -95,8 +89,6 @@ function	adb::install()
 		LIB				adb
 		FUNCTION		install
 		DESC			guided install platform tool
-		ARGS			None
-		RETURN_VALUE	None
 	"
 	if [ ! -f "${ADB}" ]; then
 		utils::ask "platform tool not found do you wan't to install it ?" "y"
@@ -119,8 +111,6 @@ function	adb::get_phone()
 		LIB				adb
 		FUNCTION		get_phone
 		DESC			get a phone connected
-		ARGS			None
-		RETURN_VALUE	None
 	"
 	adb::get_status
 	if [ "${CURR_STATUS}" -eq 1 ]; then
@@ -141,8 +131,6 @@ function	adb::wipe_data()
 		LIB				adb
 		FUNCTION		get_status
 		DESC			BECAREFULL, Wipe all data from phone
-		ARGS			None
-		RETURN_VALUE	None
 	"
 	adb::get_status
 	if [ ${?} != 6 ]; then
@@ -163,7 +151,6 @@ function	adb::reboot()
 		DESC			reboot to specified mode
 		ARGS			[1] mode=${1:-2}
 							> possible value specified value at adb::get_status
-		RETURN_VALUE	None
 	"
 	local	mode="${1:-2}"
 
@@ -196,7 +183,6 @@ function	adb::get_status()
 		LIB				adb
 		FUNCTION		get_status
 		DESC			get_status from connected phone using adb
-		ARGS 			None
 		RETURN_VALUE	1		Not connected
 						2		Normal
 						3		Recovery
@@ -229,7 +215,6 @@ function	adb::get_status_str()
 		LIB				adb
 		FUNCTION		print_status
 		DESC			print status return from adb::get_status
-		ARGS			None
 		RETURN_VALUE	CURR_STATUS_STR
 							> possible value specified value at adb::get_status
 	"
@@ -253,7 +238,6 @@ function	adb::set_status()
 		DESC			set status to connected phone using adb
 		ARGS			[1] state=${1:-}
 							> possible value specified value at adb::get_status
-		RETURN_VALUE	None
 	"
 	local	mode="${1:-2}"
 	local	mode_str="${2:-None}"
@@ -299,7 +283,6 @@ function	adb::wait_for()
 		ARGS			[1] msg=${1:-}
 						[2] state=${2:-}
 							> possible value specified value at adb::get_status
-		RETURN_VALUE	None
 	"
 	local	msg="${1:-}"
 	local	state="${2:-}"
@@ -358,8 +341,6 @@ function	adb::wait_for_booted()
 						phone available earlier than expected, have to get
 						sys.boot_completed propriety to check if phone have done
 						the booting section
-		ARGS			None
-		RETURN_VALUE	None
 	"
 	local	curr_state
 	local	dot="."
@@ -370,7 +351,7 @@ function	adb::wait_for_booted()
 		return 0
 	fi
 	adb::wait_for "Waiting for device to get sparkles of life" 2
-	printf "\n"
+	printf "\x0a"
 	curr_state=$(${ADB} shell getprop sys.boot_completed)
 	while [ "${curr_state}" != "1" ]; do
 		printf "${MOV_BEG_DEL_LIN}"

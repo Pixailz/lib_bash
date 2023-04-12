@@ -32,7 +32,7 @@ function	utils::ask()
 		# make char lower
 		choice="${choice,,}"
 		# if choice is not empty, print return line
-		[ ${choice} ] && printf "\n"
+		[ ${choice} ] && printf "\x0a"
 		case ${choice} in
 			y) return 1 ;;
 			n) return 0 ;;
@@ -87,7 +87,7 @@ function	utils::choice()
 		read -p "choice> "		\
 			 -n "${choice_length}"	\
 			 choice
-		printf "\n"
+		printf "\x0a"
 		if [[ ${choice} =~ ^[0-9]+$ ]]; then
 			if [ "${choice}" -ge 1 -a "${choice}" -le "${choices_length}" ]; then
 				return ${choice}

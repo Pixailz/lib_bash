@@ -19,7 +19,6 @@ function	ansi::toggle_color()
 							if mode equal 0 or 1 respectively
 						[2] esc=${3:-${DEFAULT_ANSI_ESC}}
 							> provide an ansi esc_char, otherwise use default
-		RETURN_VALUE	None
 	"
 	local	no_color="${NO_COLOR:-0}"
 	local	surrounding_mode="${1:-0}"
@@ -71,7 +70,6 @@ function	ansi::move_up_del_print()
 		DESC			Move up N time AND del N line, with ansi char
 		ARGS			[1] msg=${1:-}
 						[2] number=${2:-1}
-		RETURN_VALUE	None
 	"
 	local	msg="${1:-}"
 	local	number="${2:-1}"

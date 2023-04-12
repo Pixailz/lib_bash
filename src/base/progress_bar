@@ -10,7 +10,6 @@ function	pb::done()
 		FUNCTION		done
 		DESC			print done message and elapsed time from last pb::init
 		ARGS			[1] title=${1:-None}
-		RETURN_VALUE	None
 	"
 	local	title="${1:-None}"
 	local	elapsed=$(($(date +"%s%3N") - ${PB_BEGIN_TS}))
@@ -29,7 +28,6 @@ function	pb::print()
 		FUNCTION		init
 		DESC			print progress bar according to the given filename
 		ARGS			[1] filename=${1}
-		RETURN_VALUE	None
 	"
 	local	filename="${1}"
 	((PB_INDEX++))
@@ -69,7 +67,6 @@ function	pb::init()
 		DESC			init progress bar
 		ARGS			[1] PB_ARRAY=${@}
 							> all choices
-		RETURN_VALUE	None
 	"
 	local	choices=(${@})
 	PB_BEGIN_TS=$(date +"%s%3N")

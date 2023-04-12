@@ -7,8 +7,6 @@ function	print::info()
 		LIB				print
 		FUNCTION		info
 		DESC			Print some information
-		ARGS			None
-		RETURN_VALUE	None
 	"
 	printf "%b %b%b\n" "${P_INFO}" "${1:-}" "${RST}"
 }
@@ -20,8 +18,6 @@ function	print::warn()
 		LIB				print
 		FUNCTION		warn
 		DESC			Print a warning message
-		ARGS			None
-		RETURN_VALUE	None
 	"
 	printf "%b %b%b\n" "${P_WARN}" "${1:-}" "${RST}"
 }
@@ -33,8 +29,6 @@ function	print::ques()
 		LIB				print
 		FUNCTION		ques
 		DESC			Print question message
-		ARGS			None
-		RETURN_VALUE	None
 	"
 	printf "%b %b%b\n" "${P_QUES}" "${1:-}" "${RST}"
 }
@@ -48,7 +42,6 @@ function	print::pass()
 		DESC			Print pass or failed message, default to pass
 		ARGS			[1] msg=${1:-}
 						[2] have_pass=${2:-1}
-		RETURN_VALUE	None
 	"
 	local	msg="${1:-}"
 	local	have_pass="${2:-1}"
@@ -66,7 +59,6 @@ function	print::erro()
 		FUNCTION		erro
 		DESC			Print error and quit
 		ARGS			[1] msg=${1:-}
-		RETURN_VALUE	None
 	"
 	local	msg=${1:-}
 
@@ -82,7 +74,6 @@ function	print::erro_parse()
 		DESC			Print parsing error, tips for calling help then exit
 		ARGS			SCRIPT_NAME=${SCRIPT_NAME}
 						[1] msg=${1:-}
-		RETURN_VALUE	None
 	"
 	local	msg="${1:-}"
 
@@ -98,7 +89,6 @@ function	print::errno_2()
 		FUNCTION		errno_2
 		DESC			Error message for not founding a file
 		ARGS			[1] file_path=${1}
-		RETURN_VALUE	None
 	"
 	local	file_path="${1:-}"
 
@@ -112,8 +102,6 @@ function	print::pause()
 		LIB				print
 		FUNCTION		pause
 		DESC			Print pause message and wait
-		ARGS			None
-		RETURN_VALUE	None
 	"
 	print::info "Press [Enter] to continue.."
 	read readEnterkey
