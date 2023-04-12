@@ -1,0 +1,840 @@
+#!/bin/bash
+
+#>#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#
+#> CONFIG
+
+# BASE
+## DEBUG MODE
+[ "${DEBUG:-0}" -ne 0 ] && set -x
+## STRICT MODE
+## Exit on non zero return code
+# set -e				keep annoying me when return status like value
+## Unknown Var
+set -u
+## if a command in a pipe failed
+set -o pipefail
+## Setting IFS (Internal Field Separator), disable considering word separated by space
+IFS=$'\n\t'
+
+# DIR
+DIR_BASE=${DIR_BASE:-.}
+DIR_TMP=${DIR_BASE}/.tmp
+
+# OTHER
+SCRIPT_NAME=${BASH_SOURCE[0]//.*\//}
+SCRIPT_VERSION="0.0.1"
+SCRIPT_AUTHOR="Pixailz"
+SCRIPT_LINK="https://github.com/Pixailz/lib_bash"
+
+[ -d .git ] && SCRIPT_LASTUPDATED=$(git log -1 --date=format:"%x %X" --format=%cd)
+
+# ANSI CONFIG
+NO_COLOR=0
+DEFAULT_ANSI_ESC="\033["
+
+## set enclosed ansi char, help to count printable character displayed, for
+## centered text for exemple
+USE_ENCL_ANSI=0
+
+declare -gA ANSI
+ANSI=(
+		# COLOR
+	["RST"]="0m"		# RESET
+	["G"]="38;5;82m"	# GREEN
+	["R"]="38;5;196m"	# RED
+	["B"]="38;5;196m"	# BLUE
+	["Y"]="33m"			# YELLOW
+	["C"]="36m"			# CYAN
+	["M"]="35m"			# MAGENTA
+	["O"]="38;5;214m"	# ORANGE
+	["LG"]="92m"		# LIGHT GREEN
+	["LY"]="93m"		# LIGHT_YELLOW
+	["LB"]="94m"		# LIGHT_BLUE
+	["LM"]="95m"		# LIGHT_MAGENTA
+	["LC"]="96m"		# LIGHT_CYAN
+		# MODIFIER
+	["BL"]="05m"		# BLINKING
+		# CURSOR THING
+	["DEL_LIN"]="2K"
+	["MOV_1UP"]="1F"
+	["CLR_SCR"]="2J"
+	["CUR_HOME"]="H"
+)
+
+### Unicode char for a box
+HO="\xe2\x95\x90"	# ═
+VE="\xe2\x95\x91"	# ║
+UL="\xe2\x95\x94"	# ╔
+UR="\xe2\x95\x97"	# ╗
+LL="\xe2\x95\x9a"	# ╚
+LR="\xe2\x95\x9d"	# ╝
+
+# CONFIG PROGRESS BAR CONFIG
+PB_LEN=40
+PB_FULL="█"
+PB_HEAD="▒"
+PB_EMPTY=" "
+
+# CONFIG PARSING
+PARSE_OPT_SHORT="vh"
+PARSE_OPT_LONG="help,version,vv,vvv,no-color,required-opt:,optional-opt::"
+
+PARSE_COL_LONG=14
+PARSE_COL_DESC=30
+PARSE_COL_LAST_SEC=20
+
+PARSE_FUNC_HELP="parse::usage"
+PARSE_FUNC_VERSION="parse::print_infos"
+PARSE_FUNC_INVALID_OPT="parse::invalid"
+
+# CONFIG LOG
+LOG_FILE="${DIR_BASE}/exec.log"
+LOG_TITLE_LENGTH=40
+#LOG_PAD_STR="___"
+#LOG_PAD_STR="..."
+#LOG_PAD_STR="   "
+#LOG_PAD_STR="[+]"
+#LOG_PAD_STR=" + "
+LOG_PAD_STR="   "
+
+#<
+#<#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#
+
+#>#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#
+#> ANSI STUFF
+
+function	ansi::toggle_color()
+{
+	: "
+	INFO
+		LIB				ansi
+		FUNCTION		toggle_surrounding
+		DESC			Activate all color variable, and toggle ansi char
+						surrounding with begin and end char, depending on mode
+						and USE_ENCL_ANSI
+		ARGS			USE_ENCL_ANSI=${USE_ENCL_ANSI}
+						[1] enable=${2:-0}
+							> activate or desactive color
+						[1] surrounding_mode=${2:-0}
+							> activate or desactive surrounding ansi char,
+							if mode equal 0 or 1 respectively
+						[2] esc=${3:-${DEFAULT_ANSI_ESC}}
+							> provide an ansi esc_char, otherwise use default
+	"
+	local	no_color="${NO_COLOR:-0}"
+	local	surrounding_mode="${1:-0}"
+	local	esc="${2:-${DEFAULT_ANSI_ESC}}"
+	local	end_esc=""
+	local	beg_ansi="\001"
+	local	end_ansi="\002"
+
+	if [ "${surrounding_mode}" -eq 1 ]; then
+		esc="${beg_ansi}${esc}"
+		end_esc="${end_ansi}"
+	fi
+	if [ "${no_color}" -eq 0 ]; then
+		for key in ${!ANSI[@]}; do
+			export "${key}"="${esc}${ANSI[${key}]}${end_esc}"
+		done
+	else
+		for key in ${!ANSI[@]}; do
+			export "${key}"=""
+		done
+	fi
+
+	# COMPOSITE
+	BL_R="${BL}${R}"
+
+	P_INFO="[${LC}INFO ${RST}]"
+	P_WARN="[${O}WARN ${RST}]"
+	P_QUES="[${B}QUEST${RST}]"
+	P_PASS="[${G}PASS ${RST}]"
+	P_FAIL="[${R}FAIL${RST}]"
+	P_ERRO="[${R}ERROR${RST}]"
+	P_USAGE="[${G}USAGE${RST}]"
+
+	SUCCESS="[${G}+${RST}]"
+	FAILED="[${R}-${RST}]"
+	INFO="[${B}*${RST}]"
+	WARN="[${O}*${RST}]"
+
+	MOV_BEG_DEL_LIN="${MOV_1UP}${DEL_LIN}"
+	CLR_SCR_CUR_HOM="${CLR_SCR}${CUR_HOME}"
+
+	# OTHER LIB
+	PB_COLOR="${LC}"
+	LOG_TITLE_DEFAULT_COLOR=${G}
+}
+
+function	ansi::move_up_del_print()
+{
+	: "
+	INFO
+		LIB				ansi
+		FUNCTION		move_up_del_print
+		DESC			Move up N time AND del N line, with ansi char
+		ARGS			[1] msg=${1:-}
+						[2] number=${2:-1}
+	"
+	local	msg="${1:-}"
+	local	number="${2:-1}"
+	local	index=0
+
+	while [ "${index}" -ne "${number}" ]; do
+		printf "%b" "${MOV_BEG_DEL_LIN}"
+		((index++))
+	done
+	printf "%b" "${msg}"
+}
+
+function	ansi::print_col()
+{
+	: "
+	INFO
+		LIB				ansi
+		FUNCTION		print_col
+		DESC			move to the N column and print a msg
+		ARGS			[1] msg=${1:-}
+						[2] col=${2:-0}
+	"
+	local	msg="${1:-}"
+	local	col="${2:-0}"
+
+	ansi::goto_col "${col}"
+	printf "%b" "${msg}"
+}
+
+function	ansi::goto_col()
+{
+	: "
+	INFO
+		LIB				ansi
+		FUNCTION		goto_col
+		DESC			move to the N column on the same line
+		ARGS			[1] col=${1:-0}
+	"
+	local	col="${1:-}"
+
+	printf "${DEFAULT_ANSI_ESC}%dG" "${col}"
+}
+
+ansi::toggle_color
+
+#<
+#<#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#
+
+#>#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#
+#> PRINTING STUFF
+
+function	print::info()
+{
+	: "
+	INFO
+		LIB				print
+		FUNCTION		info
+		DESC			Print some information
+	"
+	printf "%b %b%b\n" "${P_INFO}" "${1:-}" "${RST}"
+}
+
+function	print::warn()
+{
+	: "
+	INFO
+		LIB				print
+		FUNCTION		warn
+		DESC			Print a warning message
+	"
+	printf "%b %b%b\n" "${P_WARN}" "${1:-}" "${RST}"
+}
+
+function	print::ques()
+{
+	: "
+	INFO
+		LIB				print
+		FUNCTION		ques
+		DESC			Print question message
+	"
+	printf "%b %b%b\n" "${P_QUES}" "${1:-}" "${RST}"
+}
+
+function	print::pass()
+{
+	: "
+	INFO
+		LIB				print
+		FUNCTION		pass
+		DESC			Print pass or failed message, default to pass
+		ARGS			[1] msg=${1:-}
+						[2] have_pass=${2:-1}
+	"
+	local	msg="${1:-}"
+	local	have_pass="${2:-1}"
+	local	suffix
+
+	[ ${have_pass} == 0 ] && suffix=${P_FAIL} || suffix=${P_PASS}
+	printf "%b %b%b\n" ${suffix} "${msg}" ${RST}
+}
+
+function	print::erro()
+{
+	: "
+	INFO
+		LIB				print
+		FUNCTION		erro
+		DESC			Print error and quit
+		ARGS			[1] msg=${1:-}
+	"
+	local	msg=${1:-}
+
+	printf "%b %b%b\n" "${P_ERRO}" "${msg}" "${RST}"
+}
+
+function	print::erro_parse()
+{
+	: "
+	INFO
+		LIB				print
+		FUNCTION		erro_parse
+		DESC			Print parsing error, tips for calling help then exit
+		ARGS			SCRIPT_NAME=${SCRIPT_NAME}
+						[1] msg=${1:-}
+	"
+	local	msg="${1:-}"
+
+	printf "%s : %b\n" "${SCRIPT_NAME}" "${msg}"
+	printf "Try '%s --help' for more information.\n" "${SCRIPT_NAME}"
+}
+
+function	print::errno_2()
+{
+	: "
+	INFO
+		LIB				print
+		FUNCTION		errno_2
+		DESC			Error message for not founding a file
+		ARGS			[1] file_path=${1}
+	"
+	local	file_path="${1:-}"
+
+	print::warn "No such file or directory (${O}${1}${RST})."
+}
+
+function	print::pause()
+{
+	: "
+	INFO
+		LIB				print
+		FUNCTION		pause
+		DESC			Print pause message and wait
+	"
+	print::info "Press [Enter] to continue.."
+	read readEnterkey
+}
+
+#<
+#<#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#
+
+#>#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#
+#> UTILS
+
+function	utils::ask()
+{
+	: "
+	INFO
+		LIB				base
+		FUNCTION		ask
+		DESC			My version of ask (http://djm.me/ask)
+		ARGS			[1] message=${1}
+							> question to ask
+						[2] default=${2:-NULL}
+							> default value to return
+		RETURN_VALUE	1 if user agree, 0 if not. if DEFAULT is not NULL and
+						choice is not y or n, DEFAULT is returned
+	"
+	local message=$1
+	local default=${2:-NULL}
+	local choice=""
+
+	while true; do
+		# set default prompt according to $default
+		if [ ${default} == "y" ]; then
+			print::ques "${message} (Y/n)  " 1
+		elif [ ${default} == "n" ]; then
+			print::ques "${message} (y/N)  " 1
+		else
+			print::ques "${message} (y/n)  " 1
+		fi
+		# read on char
+		read -n 1 choice
+		# make char lower
+		choice="${choice,,}"
+		# if choice is not empty, print return line
+		[ ${choice} ] && printf "\x0a"
+		case ${choice} in
+			y) return 1 ;;
+			n) return 0 ;;
+			*)  if [ "${default}" == 'y' ]; then
+					return 1
+				elif [ "${default}" == 'n' ]; then
+					return 0
+				else
+					print::warn "[${choice}] wrong choice (y|n)"
+				fi
+				;;
+		esac
+	done
+}
+
+function	utils::choice()
+{
+	: "
+	INFO
+		LIB				utils
+		FUNCTION		choice
+		DESC			prompt for all choice, read for user input. if correct
+						index is provided or q, to return, then return choice.
+						otherwise re prompt for a good choice
+		ARGS			[1] title=${1:-None}
+						[2] return_title=${2:-Return}
+							> str to print for 'returning'
+						[@:3] tmp=${@:3}
+							> from the 3 to the last argument provided
+		RETURN_VALUE	index or 255 for returning
+	"
+	local	title="${1:-None}"
+	local	return_title="${2:-Return}"
+	local	tmp="${@:3}"
+	local	choice
+	declare -a choices=(${tmp})
+	local	choices_length="${#choices[@]}"
+	local	choice_length="${#choices_length}"
+	local	index
+	local	index_plus_one
+	local	padding
+
+	while true; do
+		printf "%b" "${title}"
+		index=0
+		for item in "${choices[@]}"; do
+			let "index_plus_one=index+1"
+			printf "\t[${R}%0${choice_length}d${RST}] %b\n" "${index_plus_one}" "${item}"
+			index="${index_plus_one}"
+		done
+		printf "\n\t[${R}q${RST}]%s\n\n" "${return_title}"
+		read -p "choice> "		\
+			 -n "${choice_length}"	\
+			 choice
+		printf "\x0a"
+		if [[ ${choice} =~ ^[0-9]+$ ]]; then
+			if [ "${choice}" -ge 1 -a "${choice}" -le "${choices_length}" ]; then
+				return ${choice}
+			else
+				case "${choice_length}" in
+					1) padding="";;
+					2) padding="0";;
+					3) padding="00";;
+				esac
+				print::erro "wrong choice, choose between (${padding}1-${choices_length})"
+				print::pause
+			fi
+		elif [ "${choice,,}" == "q" ]; then
+			return 255
+		else
+			print::erro "wrong choice, choose a numeric number or q to return"
+			print::pause
+		fi
+	done
+}
+
+#<
+#<#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#
+
+#>#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#
+#> PROGRESS BAR
+
+function	pb::done()
+{
+	: "
+	INFO
+		LIB				pb
+		FUNCTION		done
+		DESC			print done message and elapsed time from last pb::init
+		ARGS			[1] title=${1:-None}
+	"
+	local	title="${1:-None}"
+	local	elapsed=$(($(date +"%s%3N") - ${PB_BEGIN_TS}))
+
+	printf "${MOV_BEG_DEL_LIN}${MOV_BEG_DEL_LIN}"
+	printf "(${B}%${#PB_LENGTH}d${RST}/${R}%d${RST}) " "${PB_INDEX}" "${PB_LENGTH}"
+	printf "%s: ${G}DONE${RST} " "${title}"
+	printf "(${R}elapsed${RST}: %dms)\n" "${elapsed}"
+}
+
+function	pb::print()
+{
+	: "
+	INFO
+		LIB				pb
+		FUNCTION		init
+		DESC			print progress bar according to the given filename
+		ARGS			[1] filename=${1}
+	"
+	local	filename="${1}"
+	((PB_INDEX++))
+	local	curr_pourcentage=$(((${PB_INDEX} * 100) / ${PB_LENGTH}))
+	local	nb_full=$(((${curr_pourcentage} * ${PB_LEN}) / 100 ))
+	local	nb_empty=$((${PB_LEN} - ${nb_full}))
+	local	pb_full
+	local	pb_empty=""
+
+
+	if [ ${curr_pourcentage} -eq 100 ]; then
+		pb_full="$(printf "${PB_FULL}%.0s" $(seq 1 ${PB_LEN}) 1)"
+	else
+		pb_full="$(printf "${PB_FULL}%.0s" $(seq 1 ${nb_full}))${PB_HEAD}"
+		pb_empty="$(printf "${PB_EMPTY}%.0s" $(seq 1 ${nb_empty}))"
+	fi
+
+	case "${#curr_pourcentage}" in
+		1) curr_pourcentage="  ${curr_pourcentage}% " ;;
+		2) curr_pourcentage=" ${curr_pourcentage}% " ;;
+		3) curr_pourcentage="${curr_pourcentage}% " ;;
+	esac
+
+	if [ ${PB_INDEX} -ne 1 ]; then
+		printf "${MOV_BEG_DEL_LIN}${MOV_BEG_DEL_LIN}"
+	fi
+	printf "(${B}%${#PB_LENGTH}d${RST}/${R}%d${RST}) %s\n" "${PB_INDEX}" "${PB_LENGTH}" "${filename}"
+	printf "%s[${PB_COLOR}%s${RST}]\n" "${curr_pourcentage}" "${pb_full}${pb_empty}"
+}
+
+function	pb::init()
+{
+	: "
+	INFO
+		LIB				pb
+		FUNCTION		init
+		DESC			init progress bar
+		ARGS			[1] PB_ARRAY=${@}
+							> all choices
+	"
+	local	choices=(${@})
+	PB_BEGIN_TS=$(date +"%s%3N")
+	PB_LENGTH=${#choices[@]}
+	PB_INDEX=0
+}
+
+#<
+#<#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#
+
+#>#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#
+#> PARSING
+
+function	parse::print_usage()
+{
+	: "
+	INFO
+		LIB				parse
+		FUNCTION		print_usage
+		DESC			print line for parse::usage function
+		ARGS			PARSE_COL_LONG=${PARSE_COL_LONG}
+							> position of the long argument
+						PARSE_COL_DESC=${PARSE_COL_DESC}
+							> position of the description
+						[1] opt_short=${1:-}
+						[2] opt_long=${2:-1}
+						[3] desc=(${@:3})
+	"
+	local		opt_short="${1:-}"
+	local		opt_long="${2:-}"
+	local		desc=(${@:3})
+
+	[ ! -z "${opt_short}" ] && printf "\t\t-%s," "${opt_short}"
+	ansi::goto_col ${PARSE_COL_LONG}
+	[ ! -z "${opt_long}" ] && printf "--" "--" && printf "%s" "${opt_long}"
+	for line in ${desc[@]}; do
+		ansi::print_col "${line}\n" ${PARSE_COL_DESC}
+	done
+}
+
+function	parse::print_infos()
+{
+	: "
+	INFO
+		LIB				parse
+		FUNCTION		print_infos
+		DESC			print infos about the script
+	"
+
+	printf "${SUCCESS} Author: "
+	ansi::print_col "${SCRIPT_AUTHOR}\n" "${PARSE_COL_LAST_SEC}"
+	printf "${SUCCESS} Version:"
+	ansi::print_col "${SCRIPT_VERSION}\n" "${PARSE_COL_LAST_SEC}"
+	if [ ! -z ${SCRIPT_LASTUPDATED:-} ]; then
+		printf "${SUCCESS} Last updated:"
+		ansi::print_col "${SCRIPT_LASTUPDATED}\n" "${PARSE_COL_LAST_SEC}"
+	fi
+	printf "${SUCCESS} See Also:"
+	ansi::print_col "${SCRIPT_LINK}\n" "${PARSE_COL_LAST_SEC}"
+}
+
+function	parse::usage()
+{
+	: "
+	INFO
+		LIB				parse
+		FUNCTION		usage
+		DESC			print usage and exit with non zero
+	"
+	printf "%b: ${SCRIPT_NAME} " "${P_USAGE}"
+	printf "[-hv]\n\n"
+	printf "\t1. Base\n"
+	parse::print_usage "h" "help" "Display the help then exit."
+	parse::print_usage "" "version" "Display the version then exit."
+	parse::print_usage "" "no-color" "disable all color"
+	parse::print_usage "v" "" "Set verbose mode to 1 (Normal)"
+	parse::print_usage "vv" "" "Set verbose mode to 2 (Include)"
+	parse::print_usage "vvv" "" "Set verbose mode to 3 (Not used)"
+	printf "\x0a"
+	parse::print_infos
+	exit
+}
+
+function	parse::version()
+{
+	: "
+	INFO
+		LIB				parse
+		FUNCTION		version
+		DESC			print version and exit
+	"
+	printf "${SUCCESS} Version:"
+	ansi::print_col "${SCRIPT_VERSION}\n" "${PARSE_COL_LAST_SEC}"
+	exit
+}
+
+function	parse::entry()
+{
+	: "
+	INFO
+		LIB				parse
+		FUNCTION		entry
+		DESC			parse args according
+		ARGS			SCRIPT_NAME=${SCRIPT_NAME}
+						PARSE_OPT_SHORT=${PARSE_OPT_SHORT}
+						PARSE_OPT_LONG=${PARSE_OPT_LONG}
+						PARSE_FUNC_VERSION=${PARSE_FUNC_VERSION}
+						PARSE_FUNC_HELP=${PARSE_FUNC_HELP}
+		RETURN_VALUE	return set or not set variable, according to your use
+						REQUIRED
+						OPTIONAL
+						DEBUG
+						NO_COLOR
+	"
+	local	args="${@}"
+
+	TEMP=$(getopt --name "${SCRIPT_NAME}"										\
+				  --alternative													\
+				  --shell bash													\
+				  --options ${PARSE_OPT_SHORT}									\
+				  --longoptions ${PARSE_OPT_LONG}								\
+				  -- "${args}"													)
+
+	eval set -- "${TEMP}"
+	unset TEMP
+	while true; do
+		case "${1:-}" in
+			'--version') ${PARSE_FUNC_VERSION} ; exit ;;
+			'-h'|'--help') ${PARSE_FUNC_HELP} ; exit ;;
+			'--no-color') NO_COLOR=1;;
+			'--required-opt')
+				print::info "set-var"
+				shift
+				REQUIRED=${1:-DEFAULT_VALUE}
+			;;
+			'--optional-opt')
+				print::info "set-var"
+				shift
+				OPTIONAL=${1:-DEFAULT_VALUE}
+			;;
+			'-v') DEBUG=1 ;;
+			'--vv') DEBUG=2 ;;
+			'--vvv') DEBUG=3 ;;
+			'--')
+				shift
+				break
+			;;
+			*)
+				print::warn "Internal error"
+				break
+			;;
+		esac
+		shift
+	done
+	print::info "Remaining args"
+	while [ -v 1 ]  && [ ! -z "${1}" ]; do
+		print::info "${1}"
+		shift
+	done
+}
+
+#<
+#<#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#
+
+#>#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#
+#> LOG SOME STUFF
+
+function	log::print()
+{
+	: "
+	INFO
+		LIB				log
+		FUNCTION		print
+		DESC			Log MSG into LOG_FILE (${LOG_FILE}) or STDOUT, or both;
+						according to print_out
+		ARGS			[1] msg=${1:-}
+						[2] mode=${2:--1}
+							> could be either:
+								- -1	no format
+								- 0		failed
+								- 1		success
+								- 2		info
+								- 3		warn
+						[3] offset=${3:-0}
+							> number of ${LOG_PAD_STR} to print
+						[4] print_out=${4:-3}
+							> could be either:
+								- 1		only print
+								- 2		only log
+								- 3		both
+	"
+	local	msg="${1:-}"
+	local	mode="${2:--1}"
+	local	offset="${3:-0}"
+	local	print_out="${4:-3}"
+	local	first_part
+	local	offset_tab=""
+
+	while [ "${offset}" -gt 0 ]; do
+		offset_tab="${offset_tab}${LOG_PAD_STR}"
+		offset=$((${offset} - 1))
+	done
+	if [ "${mode}" == -1 ]; then
+		first_part="${msg}"
+	elif [ "${mode}" == 0 ]; then
+		first_part="${FAILED}${msg}"
+	elif [ "${mode}" == 1 ]; then
+		first_part="${SUCCESS}${msg}"
+	elif [ "${mode}" == 2 ]; then
+		first_part="${INFO}${msg}"
+	elif [ "${mode}" == 3 ]; then
+		first_part="${WARN}${msg}"
+	fi
+	msg=$(printf "%s" "${first_part}" | sed "s|^|${offset_tab}|")
+	if [ "${print_out}" == 1 ]; then
+		printf "%b\n" "${msg}"
+	elif [ "${print_out}" == 2 ]; then
+		printf "%b\n" "${msg}" >> ${LOG_FILE}
+	elif [ "${print_out}" == 3 ]; then
+		printf "%b\n" "${msg}"
+		printf "%b\n" "${msg}" >> ${LOG_FILE}
+	fi
+}
+
+function	log::main_title()
+{
+	: "
+	INFO
+		LIB				log
+		FUNCTION		main_title
+		DESC			wrapper of log::print to print a section
+		ARGS			[1] msg=${1:-}
+						[2] mode=${2:-3}
+						[3] title_color=${3:-${LOG_TITLE_DEFAULT_COLOR}}
+		RETURN_VALUE	None
+	"
+	local	msg="${1:-}"
+	local	mode="${2:-3}"
+	local	title_color="${3:-${LOG_TITLE_DEFAULT_COLOR}}"
+	local	section_str=""
+	local	date
+	local	section
+	local	msg_len
+
+	printf -v vertical_offset "%0.s${HO}" $(seq 3 ${LOG_TITLE_LENGTH})
+	# Filter out all ansi color
+	msg_len=$(printf "%b" "${msg}" | perl -pe 's|\001.*?\002||g' | wc -m)
+	center_off=$((${LOG_TITLE_LENGTH} - ${msg_len}))
+	center_splited=$(( (${center_off} - 2) / 2 ))
+	if [ $(( ${center_off} % 2)) == 0 ]; then
+		printf -v CL[0] "%0.s " $(seq 1 ${center_splited})
+		printf -v CR[0] "%0.s " $(seq 1 ${center_splited})
+	else
+		printf -v CL[0] "%0.s " $(seq 1 ${center_splited})
+		printf -v CR[0] "%0.s " $(seq 1 ${center_splited}) 1
+	fi
+
+	printf -v date " %(%X %x)T"
+
+	center_off=$((${LOG_TITLE_LENGTH} - ${#date}))
+	center_splited=$(( (${center_off} - 2) / 2 ))
+	if [ $(( ${center_off} % 2)) == 0 ]; then
+		printf -v CL[1] "%0.s " $(seq 1 ${center_splited})
+		printf -v CR[1] "%0.s " $(seq 1 ${center_splited})
+	else
+		printf -v CL[1] "%0.s " $(seq 1 ${center_splited})
+		printf -v CR[1] "%0.s " $(seq 1 ${center_splited}) 1
+	fi
+	section[0]="${title_color}${UL}${vertical_offset}${UR}\n"
+	section[1]="${VE}${CL[0]}${RST}${1}${title_color}${CR[0]}${VE}\n"
+	section[2]="${VE}${CL[1]}${RST}${date}${title_color}${CR[1]}${VE}\n"
+	section[3]="${LL}${vertical_offset}${LR}${RST}"
+	for index in $(seq 0 $((${#section[@]} - 1))); do
+		section_str="${section_str}${section[${index}]}"
+	done
+	if [ "${USE_ENCL_ANSI}" == 1 ]; then
+		section_str=$(printf "%b" "${section_str}" | tr -d '\001\002')
+		ansi::toggle
+	fi
+	log::print "${section_str}" -1 0 "${mode}"
+}
+
+function	log::nl()
+{
+	: "
+	INFO
+		LIB				log
+		FUNCTION		nl
+		DESC			wrapper of log::print to print a new line
+		ARGS			[0] MODE=${1:-1}
+		RETURN_VALUE	None
+	"
+	local	mode="${1}"
+
+	echo_log 0 -1 "" ${mode}
+}
+
+#<
+#<#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#
+
+#>#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#
+#> main
+
+function	main::entry()
+{
+	choices=(
+		"test1"
+		"test2"
+		"test3"
+	)
+	utils::choice "test\n" "${choices[@]}"
+	print::info "Hello World"
+}
+
+parse::entry "${@}"
+main::entry
+
+#<
+#<#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#
