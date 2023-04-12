@@ -1,0 +1,10 @@
+PARSE_OPT_SHORT="vh"
+PARSE_OPT_LONG="help,version,vv,vvv,no-color,required-opt:,optional-opt::"
+
+PARSE_COL_LONG=14
+PARSE_COL_DESC=30
+PARSE_COL_LAST_SEC=20
+
+PARSE_FUNC_HELP="parse::usage"
+PARSE_FUNC_VERSION="parse::print_infos"
+PARSE_FUNC_INVALID_OPT="parse::invalid"
