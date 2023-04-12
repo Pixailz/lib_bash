@@ -2,44 +2,37 @@
 
 source ./.config
 
+LOAD_DL="\xe2\x96\x96"	# ▖
+LOAD_DR="\xe2\x96\x97"	# ▗
+LOAD_UL="\xe2\x96\x98"	# ▘
+LOAD_UR="\xe2\x96\x9d"	# ▝
+
+# LOAD_DL="\xe2\x96\x9c"	# ▜
+# LOAD_DR="\xe2\x96\x9b"	# ▛
+# LOAD_UL="\xe2\x96\x9f"	# ▟
+# LOAD_UR="\xe2\x96\x99"	# ▙
+
+function	load::load_dot()
+{
+	local	title="${1}"
+	local	curr_char="${LOAD_DL}"
+
+	printf "\n"
+	while true; do
+		ansi::move_up_del_print " ${curr_char} ${title}\n"
+		case "${curr_char}" in
+			"${LOAD_DL}") curr_char="${LOAD_DR}";;
+			"${LOAD_DR}") curr_char="${LOAD_UR}";;
+			"${LOAD_UR}") curr_char="${LOAD_UL}";;
+			"${LOAD_UL}") curr_char="${LOAD_DL}";;
+		esac
+		sleep 0.2
+	done
+}
+
 function	main::entry()
 {
-	choices=(
-		"first"
-		"second"
-		"third"
-		"fourth"
-		"fifth"
-		"sixth"
-		"seventh"
-		"eigth"
-		"nineth"
-		"tenth"
-		"elventh"
-		"tweleveth"
-		"thirteenth"
-		"jskladnfkjsdnfkjsdnffirst"
-		"jskladnfkjsdnfkjsdnfsecond"
-		"jskladnfkjsdnfkjsdnfthird"
-		"jskladnfkjsdnfkjsdnffourth"
-		"jskladnfkjsdnfkjsdnffifth"
-		"jskladnfkjsdnfkjsdnfsixth"
-		"jskladnfkjsdnfkjsdnfseventh"
-		"jskladnfkjsdnfkjsdnfeigth"
-		"jskladnfkjsdnfkjsdnfnineth"
-		"jskladnfkjsdnfkjsdnftenth"
-		"jskladnfkjsdnfkjsdnfelventh"
-		"jskladnfkjsdnfkjsdnftweleveth"
-		"jskladnfkjsdnfkjsdnfthirteenth"
-	)
-
-	pb::init "${choices[@]}"
-
-	for item in "${choices[@]}"; do
-		pb::print "${item}"
-		sleep 0.1
-	done
-	pb::done "Test"
+	load::load_dot "test"
 }
 
 main::entry ${@}
