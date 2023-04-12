@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# ANSI CHAR CONFIG
+
+## BASE
+
+NO_COLOR=0
+DEFAULT_ANSI_ESC="\033["
+
+## set enclosed ansi char, help to count printable character displayed, for
+## centered text for exemple
+USE_ENCL_ANSI=0
+
+declare -gA ANSI
+ANSI=(
+		# COLOR
+	["RST"]="0m"		# RESET
+	["G"]="38;5;82m"	# GREEN
+	["R"]="38;5;196m"	# RED
+	["B"]="38;5;196m"	# BLUE
+	["Y"]="33m"			# YELLOW
+	["C"]="36m"			# CYAN
+	["M"]="35m"			# MAGENTA
+	["O"]="38;5;214m"	# ORANGE
+	["LG"]="92m"		# LIGHT GREEN
+	["LY"]="93m"		# LIGHT_YELLOW
+	["LB"]="94m"		# LIGHT_BLUE
+	["LM"]="95m"		# LIGHT_MAGENTA
+	["LC"]="96m"		# LIGHT_CYAN
+		# MODIFIER
+	["BL"]="05m"		# BLINKING
+		# CURSOR THING
+	["DEL_LIN"]="2K"
+	["MOV_1UP"]="1F"
+	["CLR_SCR"]="2J"
+	["CUR_HOME"]="H"
+)
+
+### Unicode char for a box
+HO="\xe2\x95\x90"	# ═
+VE="\xe2\x95\x91"	# ║
+UL="\xe2\x95\x94"	# ╔
+UR="\xe2\x95\x97"	# ╗
+LL="\xe2\x95\x9a"	# ╚
+LR="\xe2\x95\x9d"	# ╝

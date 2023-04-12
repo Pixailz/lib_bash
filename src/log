@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source ${DIR_INC}/.config.log
+
 function	log::print()
 {
 	: "
