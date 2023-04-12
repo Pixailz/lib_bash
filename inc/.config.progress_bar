@@ -6,7 +6,6 @@ PB_LEN=40
 PB_FULL="█"
 PB_HEAD="▒"
 PB_EMPTY=" "
-PB_COLOR="${LC}"
 
 PB_BEGIN_TS=""
 PB_LENGTH=""

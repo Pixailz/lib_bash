@@ -50,7 +50,7 @@ function	ansi::toggle_color()
 	P_QUES="[${B}QUEST${RST}]"
 	P_PASS="[${G}PASS ${RST}]"
 	P_FAIL="[${R}FAIL${RST}]"
-	P_ERROR="[${R}ERROR${RST}]"
+	P_ERRO="[${R}ERROR${RST}]"
 	P_USAGE="[${G}USAGE${RST}]"
 
 	SUCCESS="[${G}+${RST}]"
@@ -60,6 +60,10 @@ function	ansi::toggle_color()
 
 	MOV_BEG_DEL_LIN="${MOV_1UP}${DEL_LIN}"
 	CLR_SCR_CUR_HOM="${CLR_SCR}${CUR_HOME}"
+
+	# OTHER LIB
+	PB_COLOR="${LC}"
+	LOG_TITLE_DEFAULT_COLOR=${G}
 }
 
 function	ansi::move_up_del_print()
