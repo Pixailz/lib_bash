@@ -11,25 +11,21 @@ function	ansi::toggle_color()
 		DESC			Activate all color variable, and toggle ansi char
 						surrounding with begin and end char, depending on mode
 						and USE_ENCL_ANSI
-		ARGS			USE_ENCL_ANSI=${USE_ENCL_ANSI}
-						[1] enable=${2:-0}
-							> activate or desactive color
-						[1] surrounding_mode=${2:-0}
+		ARGS			USE_ENCL_ANSI=
+						[1] surrounding_mode=${1:-${USE_ENCL_ANSI}}
 							> activate or desactive surrounding ansi char,
 							if mode equal 0 or 1 respectively
-						[2] esc=${3:-${DEFAULT_ANSI_ESC}}
+						[2] esc=${2:-${DEFAULT_ANSI_ESC}}
 							> provide an ansi esc_char, otherwise use default
 	"
 	local	no_color="${NO_COLOR:-0}"
-	local	surrounding_mode="${1:-0}"
+	local	surrounding_mode="${1:-${USE_ENCL_ANSI}}"
 	local	esc="${2:-${DEFAULT_ANSI_ESC}}"
 	local	end_esc=""
-	local	beg_ansi="\001"
-	local	end_ansi="\002"
 
 	if [ "${surrounding_mode}" -eq 1 ]; then
-		esc="${beg_ansi}${esc}"
-		end_esc="${end_ansi}"
+		esc="${BEG_ANSI}${esc}"
+		end_esc="${END_ANSI}"
 	fi
 	if [ "${no_color}" -eq 0 ]; then
 		for key in ${!ANSI[@]}; do
@@ -100,22 +96,85 @@ function	ansi::print_col()
 	local	msg="${1:-}"
 	local	col="${2:-0}"
 
-	ansi::goto_col "${col}"
+	ansi::set_cursor_pos "${col}"
 	printf "%b" "${msg}"
 }
 
-function	ansi::goto_col()
+function	ansi::set_cursor_pos()
 {
 	: "
 	INFO
 		LIB				ansi
-		FUNCTION		goto_col
-		DESC			move to the N column on the same line
-		ARGS			[1] col=${1:-0}
+		FUNCTION		set_cursor_pos
+		DESC			move cursor at X or Y or both, pos on the screen
+		ARGS			[1] pos_x=${1:-}
+						[2] pos_y=${2:-}
 	"
-	local	col="${1:-}"
+	local	pos_x="${1:-}"
+	local	pos_y="${2:-}"
+	local	cur_pos_x
+	local	cur_pos_y
 
-	printf "${DEFAULT_ANSI_ESC}%dG" "${col}"
+	if [ ! -z "${pos_x}" -a -z "${pos_y}" ]; then
+		ansi::get_cursor_pos
+		pos_x="${pos_x}"
+		pos_y="${CUR_POS_Y}"
+	elif [ ! -z "${pos_y}" -a -z "${pos_x}" ]; then
+		ansi::get_cursor_pos
+		pos_x="${CUR_POS_X}"
+		pos_y="${pos_y}"
+	elif [ -z "${pos_x}" -a -z "${pos_y}" ]; then
+		ansi::get_cursor_pos
+		pos_x="${CUR_POS_X}"
+		pos_y="${CUR_POS_Y}"
+	else
+		pos_x="${pos_x}"
+		pos_y="${pos_y}"
+	fi
+	ansi::print "${pos_y};${pos_x}H"
+}
+
+function	ansi::get_cursor_pos()
+{
+	: "
+	INFO
+		LIB				ansi
+		FUNCTION		get_cursor_pos
+		DESC			retrieve cursor pos from tty
+		RETURN_VALUE	CUR_POS_X
+						CUR_POS_Y
+	"
+	local	oldstty
+
+	exec < /dev/tty
+	oldstty=$(stty -g)
+	stty raw -echo min 0
+	tput u7
+	IFS=';' read -r -d R -a pos
+	stty "${oldstty}"
+	CUR_POS_X=$((${pos[1]}))
+	CUR_POS_Y=$((${pos[0]:2}))			# strip off the esc-[
+}
+
+function	ansi::print()
+{
+	: "
+	INFO
+		LIB				ansi
+		FUNCTION		print
+		DESC			print ansi code
+		ARGS			[1] code=${1}
+						[2] esc=${2:-${DEFAULT_ANSI_ESC}}
+	"
+	local	code="${1}"
+	local	esc="${2:-${DEFAULT_ANSI_ESC}}"
+	local	end_esc=""
+
+	if [ "${USE_ENCL_ANSI}" -eq 1 ]; then
+		esc="${BEG_ANSI}${esc}"
+		end_esc="${END_ANSI}"
+	fi
+	printf "%b" "${esc}${code}${end_esc}"
 }
 
 ansi::toggle_color

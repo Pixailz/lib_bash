@@ -1,32 +1,46 @@
 #!/bin/bash
 
 ## ⚠️ TEST ZONE ⚠️
-LOAD_DL="\xe2\x96\x96"	# ▖
-LOAD_DR="\xe2\x96\x97"	# ▗
-LOAD_UL="\xe2\x96\x98"	# ▘
-LOAD_UR="\xe2\x96\x9d"	# ▝
 
-# LOAD_DL="\xe2\x96\x9c"	# ▜
-# LOAD_DR="\xe2\x96\x9b"	# ▛
-# LOAD_UL="\xe2\x96\x9f"	# ▟
-# LOAD_UR="\xe2\x96\x99"	# ▙
-
-function	load::load_dot()
+function	ansi::download()
 {
-	local	title="${1}"
-	local	curr_char="${LOAD_DL}"
+	: "
+	INFO
+		LIB				ansi
+		FUNCTION		download
+		DESC			template function with no goal
+		ARGS			[1] msg=${1}
+						[2] mode=${2:-1}
+							> could be either 1 or 0, right to left or left
+							to right
+		RETURN_VALUE	STATUS
+							> if failed set STATUS to FAILED, else pass
+	"
+	local	mode="${1:-0}"
+	local	pos_x="${2:-}"
+	local	pos_y="${3:-}"
+	local	curr_char_var="DOWN_0${mode}"
 
-	printf "\x0a"
+	# [ ! -z "${pos_x}" ] &&
+	# [ ! -z ]
 	while true; do
-		ansi::move_up_del_print " ${curr_char} ${title}\n"
-		case "${curr_char}" in
-			"${LOAD_DL}") curr_char="${LOAD_DR}";;
-			"${LOAD_DR}") curr_char="${LOAD_UR}";;
-			"${LOAD_UR}") curr_char="${LOAD_UL}";;
-			"${LOAD_UL}") curr_char="${LOAD_DL}";;
+		case ${!curr_char_var} in
+			DOWN_0*) current_char_var="DOWN_1${mode}" ;;
+			DOWN_1*) current_char_var="DOWN_2${mode}" ;;
+			DOWN_2*) current_char_var="DOWN_3${mode}" ;;
+			DOWN_3*) current_char_var="DOWN_4${mode}" ;;
+			DOWN_4*) current_char_var="DOWN_5${mode}" ;;
+			DOWN_5*) current_char_var="DOWN_6${mode}" ;;
+			DOWN_6*) current_char_var="DOWN_7${mode}" ;;
+			DOWN_7*) current_char_var="DOWN_8${mode}" ;;
+			DOWN_8*) current_char_var="DOWN_0${mode}" ;;
 		esac
-		sleep 0.2
 	done
+}
+
+function	test::entry()
+{
+	printf "test\n"
 }
 
 ## ⚠️ END TEST ZONE ⚠️
@@ -34,3 +48,6 @@ function	load::load_dot()
 source ./.config
 
 parse::entry ${@}
+
+# ansi::download
+test::entry

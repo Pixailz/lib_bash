@@ -21,8 +21,8 @@ function	parse::print_usage()
 	local		opt_long="${2:-}"
 	local		desc=(${@:3})
 
-	[ ! -z "${opt_short}" ] && printf "\t\t-%s," "${opt_short}"
-	ansi::goto_col ${PARSE_COL_LONG}
+	[ ! -z "${opt_short}" ] && printf "        -%s," "${opt_short}"
+	ansi::set_cursor_pos ${PARSE_COL_LONG}
 	[ ! -z "${opt_long}" ] && printf "--" "--" && printf "%s" "${opt_long}"
 	for line in ${desc[@]}; do
 		ansi::print_col "${line}\n" ${PARSE_COL_DESC}
@@ -60,7 +60,7 @@ function	parse::usage()
 	"
 	printf "%b: ${SCRIPT_NAME} " "${P_USAGE}"
 	printf "[-hv]\n\n"
-	printf "\t1. Base\n"
+	printf "    1. Base\n"
 	parse::print_usage "h" "help" "Display the help then exit."
 	parse::print_usage "" "version" "Display the version then exit."
 	parse::print_usage "" "no-color" "disable all color"

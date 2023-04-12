@@ -20,7 +20,7 @@ My library for bash scripts / progams
 1. install twrp
 4. install system
 5. boot, and do install "Welcome" page
-6. reboot **to** twrp
+6. reboot to twrp
 7. install magisk
 8. install nethunter
 

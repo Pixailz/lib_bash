@@ -5,11 +5,13 @@
 ## BASE
 
 NO_COLOR=0
-DEFAULT_ANSI_ESC="\033["
+DEFAULT_ANSI_ESC="\x1b["
+BEG_ANSI="\001"
+END_ANSI="\002"
 
 ## set enclosed ansi char, help to count printable character displayed, for
 ## centered text for exemple
-USE_ENCL_ANSI=0
+USE_ENCL_ANSI=1
 
 declare -gA ANSI
 ANSI=(
@@ -36,10 +38,43 @@ ANSI=(
 	["CUR_HOME"]="H"
 )
 
-### Unicode char for a box
-HO="\xe2\x95\x90"	# ═
-VE="\xe2\x95\x91"	# ║
-UL="\xe2\x95\x94"	# ╔
-UR="\xe2\x95\x97"	# ╗
-LL="\xe2\x95\x9a"	# ╚
-LR="\xe2\x95\x9d"	# ╝
+## UNICODE CHAR
+
+### Box char
+# BOX_HO="\xe2\x95\x90"	# ═
+# BOX_VE="\xe2\x95\x91"	# ║
+# BOX_UL="\xe2\x95\x94"	# ╔
+# BOX_UR="\xe2\x95\x97"	# ╗
+# BOX_LL="\xe2\x95\x9a"	# ╚
+# BOX_LR="\xe2\x95\x9d"	# ╝
+
+BOX_HO="═"
+BOX_VE="║"
+BOX_UL="╔"
+BOX_UR="╗"
+BOX_LL="╚"
+BOX_LR="╝"
+
+DOWN_80="⣿"
+DOWN_70="⣷"
+DOWN_71="⣾"
+DOWN_60="⣶"
+DOWN_50="⣦"
+DOWN_51="⣴"
+DOWN_40="⣤"
+DOWN_30="⣄"
+DOWN_31="⣠"
+DOWN_20="⣀"
+DOWN_10="⡀"
+DOWN_11="⢀"
+DOWN_00="⠀"
+
+LOAD_8=""
+LOAD_7=""
+LOAD_6=""
+LOAD_5="⣷"
+LOAD_4="⣾"
+LOAD_3=""
+LOAD_2=""
+LOAD_1=""
+LOAD_0=""

@@ -79,7 +79,7 @@ function	log::main_title()
 	local	section
 	local	msg_len
 
-	printf -v vertical_offset "%0.s${HO}" $(seq 3 ${LOG_TITLE_LENGTH})
+	printf -v vertical_offset "%0.s${BOX_HO}" $(seq 3 ${LOG_TITLE_LENGTH})
 	# Filter out all ansi color
 	msg_len=$(printf "%b" "${msg}" | perl -pe 's|\001.*?\002||g' | wc -m)
 	center_off=$((${LOG_TITLE_LENGTH} - ${msg_len}))
@@ -103,16 +103,16 @@ function	log::main_title()
 		printf -v CL[1] "%0.s " $(seq 1 ${center_splited})
 		printf -v CR[1] "%0.s " $(seq 1 ${center_splited}) 1
 	fi
-	section[0]="${title_color}${UL}${vertical_offset}${UR}\n"
-	section[1]="${VE}${CL[0]}${RST}${1}${title_color}${CR[0]}${VE}\n"
-	section[2]="${VE}${CL[1]}${RST}${date}${title_color}${CR[1]}${VE}\n"
-	section[3]="${LL}${vertical_offset}${LR}${RST}"
+	section[0]="${title_color}${BOX_UL}${vertical_offset}${BOX_UR}\n"
+	section[1]="${BOX_VE}${CL[0]}${RST}${1}${title_color}${CR[0]}${BOX_VE}\n"
+	section[2]="${BOX_VE}${CL[1]}${RST}${date}${title_color}${CR[1]}${BOX_VE}\n"
+	section[3]="${BOX_LL}${vertical_offset}${BOX_LR}${RST}"
 	for index in $(seq 0 $((${#section[@]} - 1))); do
 		section_str="${section_str}${section[${index}]}"
 	done
 	if [ "${USE_ENCL_ANSI}" == 1 ]; then
 		section_str=$(printf "%b" "${section_str}" | tr -d '\001\002')
-		ansi::toggle
+		ansi::toggle_color
 	fi
 	log::print "${section_str}" -1 0 "${mode}"
 }
@@ -129,5 +129,5 @@ function	log::nl()
 	"
 	local	mode="${1}"
 
-	echo_log 0 -1 "" ${mode}
+	log::print "" -1 0 ${mode}
 }
