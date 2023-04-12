@@ -1,6 +1,6 @@
 # exec log file
 *.log
-!src/.config.log
+!inc/.config.log
 
 # tmp file
 src/android/file/*
