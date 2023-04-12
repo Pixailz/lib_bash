@@ -1,7 +1,0 @@
-#!/bin/bash
-
-export DIR_BASE=./lib_bash
-
-source ${DIR_BASE}/.config
-
-eval ${@:2}

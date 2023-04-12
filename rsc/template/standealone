@@ -1,9 +1,8 @@
 #!/bin/bash
 
 #>#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#
-#> CONFIG
+#> BASE CONFIG
 
-# BASE
 ## DEBUG MODE
 [ "${DEBUG:-0}" -ne 0 ] && set -x
 ## STRICT MODE
@@ -76,8 +75,8 @@ PB_HEAD="▒"
 PB_EMPTY=" "
 
 # CONFIG PARSING
-PARSE_OPT_SHORT="vh"
-PARSE_OPT_LONG="help,version,vv,vvv,no-color,required-opt:,optional-opt::"
+PARSE_OPT_SHORT="h"
+PARSE_OPT_LONG="help,version,no-color,"
 
 PARSE_COL_LONG=14
 PARSE_COL_DESC=30
@@ -217,8 +216,6 @@ function	ansi::goto_col()
 
 	printf "${DEFAULT_ANSI_ESC}%dG" "${col}"
 }
-
-ansi::toggle_color
 
 #<
 #<#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#
@@ -649,16 +646,6 @@ function	parse::entry()
 			'--version') ${PARSE_FUNC_VERSION} ; exit ;;
 			'-h'|'--help') ${PARSE_FUNC_HELP} ; exit ;;
 			'--no-color') NO_COLOR=1;;
-			'--required-opt')
-				print::info "set-var"
-				shift
-				REQUIRED=${1:-DEFAULT_VALUE}
-			;;
-			'--optional-opt')
-				print::info "set-var"
-				shift
-				OPTIONAL=${1:-DEFAULT_VALUE}
-			;;
 			'-v') DEBUG=1 ;;
 			'--vv') DEBUG=2 ;;
 			'--vvv') DEBUG=3 ;;
@@ -822,18 +809,15 @@ function	log::nl()
 #>#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#
 #> main
 
+# CONFIG
+
 function	main::entry()
 {
-	choices=(
-		"test1"
-		"test2"
-		"test3"
-	)
-	utils::choice "test\n" "${choices[@]}"
 	print::info "Hello World"
 }
 
 parse::entry "${@}"
+ansi::toggle_color
 main::entry
 
 #<

@@ -1,0 +1,66 @@
+#!/bin/bash
+
+function	template::template_with_args_return()
+{
+	: "
+	INFO
+		LIB				template
+		FUNCTION		template_with_args_return
+		DESC			template function with no goal
+		ARGS			[1] MSG=${1}
+						[2] MODE=${2:-1}
+							> maybe 0 to fail or 1 to pass, default to 1
+		RETURN_VALUE	STATUS
+							> if failed set STATUS to FAILED, else pass
+	"
+	local	MSG="${1}"
+	local	MODE="${2:-1}"
+
+	if [ ${MODE} == 0 ]; then
+		printf "[FAIL] %b\n" "${MSG}"
+		STATUS="FAILED"
+	else
+		printf "[PASS] %b\n" "${MSG}"
+		STATUS="PASS"
+	fi
+}
+
+function	template::template_with_args()
+{
+	: "
+	INFO
+		LIB				template
+		FUNCTION		template_with_args
+		DESC			template function with no goal
+		ARGS			[1] MSG=${1}
+						[2] MODE=${2:-1}
+							> maybe 0 to fail or 1 to pass, default to 1
+	"
+	local	MSG="${1}"
+	local	MODE="${2:-1}"
+	local	SUFFIX
+
+	if [ ${MODE} == 0 ]; then
+		printf "[FAIL] %b\n" "${MSG}"
+	else
+		printf "[PASS] %b\n" "${MSG}"
+	fi
+}
+
+function	template::template_with_return_value()
+{
+	: "
+	INFO
+		LIB				template
+		FUNCTION		template_with_args
+		DESC			template function with no goal
+		RETURN_VALUE	STATUS
+							> if failed set STATUS to FAILED
+						[?] RETURN_VALUE
+							> always 0
+	"
+
+	[ -f /root ] && STATUS=1 || STATUS=0
+	return 0
+}
+
