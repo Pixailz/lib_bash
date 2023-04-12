@@ -45,12 +45,13 @@ function	ansi::toggle_color()
 
 	BL_R="${BL}${R}"
 
-	P_INFO="${LC}[INFO]${RST}"
-	P_WARN="${O}[WARN]${RST}"
-	P_QUES="${B}[QUE?]${RST}"
-	P_PASS="${G}[PASS]${RST}"
-	P_FAIL="${R}[FAIL]${RST}"
-	P_ERRO="${R}[ERRO]${RST}"
+	P_INFO="[${LC}INFO ${RST}]"
+	P_WARN="[${O}WARN ${RST}]"
+	P_QUES="[${B}QUEST${RST}]"
+	P_PASS="[${G}PASS ${RST}]"
+	P_FAIL="[${R}FAIL${RST}]"
+	P_ERROR="[${R}ERROR${RST}]"
+	P_USAGE="[${G}USAGE${RST}]"
 
 	SUCCESS="[${G}+${RST}]"
 	FAILED="[${R}-${RST}]"
@@ -80,6 +81,37 @@ function	ansi::move_up_del_print()
 		((index++))
 	done
 	printf "%b" "${msg}"
+}
+
+function	ansi::print_col()
+{
+	: "
+	INFO
+		LIB				ansi
+		FUNCTION		print_col
+		DESC			move to the N column and print a msg
+		ARGS			[1] msg=${1:-}
+						[2] col=${2:-0}
+	"
+	local	msg="${1:-}"
+	local	col="${2:-0}"
+
+	ansi::goto_col "${col}"
+	printf "%b" "${msg}"
+}
+
+function	ansi::goto_col()
+{
+	: "
+	INFO
+		LIB				ansi
+		FUNCTION		goto_col
+		DESC			move to the N column on the same line
+		ARGS			[1] col=${1:-0}
+	"
+	local	col="${1:-}"
+
+	printf "${DEFAULT_ANSI_ESC}%dG" "${col}"
 }
 
 ansi::toggle_color
