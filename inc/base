@@ -7,6 +7,7 @@ ${DIR_LIB_BASE}/
 	Base include file, those include:
 		- ${DIR_LIB_BASE}/ansi
 		- ${DIR_LIB_BASE}/print
+		- ${DIR_LIB_BASE}/log
 		- ${DIR_LIB_BASE}/utils
 		- ${DIR_LIB_BASE}/progress_bar
 		- ${DIR_LIB_BASE}/parse
@@ -16,6 +17,7 @@ ${DIR_LIB_BASE}/
 
 source ${DIR_LIB_BASE}/ansi
 source ${DIR_LIB_BASE}/print
+source ${DIR_LIB_BASE}/log
 source ${DIR_LIB_BASE}/utils
 source ${DIR_LIB_BASE}/progress_bar
 source ${DIR_LIB_BASE}/parse
