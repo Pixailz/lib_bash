@@ -1,0 +1,38 @@
+#!/bin/bash
+
+function	tui::init()
+{
+	declare -Ag	WORKER_LIST=()
+	declare -g	WORKER_NB=0
+	declare -g	TERM_COL=$(tput cols)
+	declare -g	TERM_ROW=$(tput lines)
+	ansi::print "2J"
+	ansi::print "H"
+}
+
+function	tui::worker_add()
+{
+	local	name="${1}"
+	local	pid="${2}"
+
+	WORKER_LIST+=([${1}]="${pid}")
+}
+
+function	tui::wait_for_worker()
+{
+	local	work_done=0
+
+	while [ ${work_done} ]; do
+		printf ""
+	done
+}
+
+function	tui::worker_load()
+{
+	local	name="${1}"
+	local	pos_x="${2}"
+	local	pos_y="${3:-}"
+
+	ansi::load "" "${pos_x}" "" &
+	tui::worker_add "${name}" ${!}
+}

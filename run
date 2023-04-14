@@ -2,19 +2,55 @@
 
 ## ⚠️ TEST ZONE ⚠️
 
+function    pg::new_progress_bar()
+{
+	# if [ ${#} -eq 0 ]; then
+	#     ansi::load "test loading" "6"
+	# else
+	#     ansi::down "test downloading" "0" "6"
+	# fi
+
+	local	tts=${1:-0.2}
+	local	index=0
+	local	pos_y
+
+	ansi::get_cursor_pos
+	pos_y="${CUR_POS_Y}"
+	ansi::set_cursor_pos "0" "${pos_y}"
+	printf "%b" "${PB_COLOR}"
+	ansi::print "2K"
+	while true; do
+		printf "%b" "${PG_SPLIT}${RST}"
+		ansi::print "1D"
+		sleep "${tts}"
+		printf "%b" "${PG_FULL}${RST}"
+		sleep "${tts}"
+		((index++))
+		[ "${index}" -eq "${PB_LEN}" ] && break
+	done
+	trap - SIGINT
+}
+
+function	dummy::while_loop()
+{
+	local	dot="."
+
+	while [ true ]; do
+		printf "hello"
+		sleep 1
+		ansi::print "5D"
+	done
+}
+
 function	test::entry()
 {
-	if [ ${#} -eq 0 ]; then
-		ansi::load "test loading" "6"
-	else
-		ansi::down "test downloading" "0" "6"
-	fi
+	tui::init
+	# dummy::while_loop &
+	# tui::worker_add "dummy" ${!}
 }
 
 ## ⚠️ END TEST ZONE ⚠️
 
 source ./.config
-
 parse::entry ${@}
-
 test::entry ${@}
