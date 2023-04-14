@@ -25,7 +25,7 @@ function	pb::print()
 	: "
 	INFO
 		LIB				pb
-		FUNCTION		init
+		FUNCTION		print
 		DESC			print progress bar according to the given filename
 		ARGS			[1] filename=${1}
 	"
