@@ -1,0 +1,16 @@
+#!/bin/bash
+
+: "
+${DIR_INC}/part/print
+	print include file, those include:
+		- ${DIR_SRC}/base/print
+depend on:
+		- ${DIR_INC}/part/ansi
+"
+
+[ "${INC_PROT_PRINT:-0}" == 1 ] && return || INC_PROT_PRINT=1
+
+# DEPENDENCIES
+source ${DIR_INC}/part/ansi
+
+source ${DIR_SRC}/base/print

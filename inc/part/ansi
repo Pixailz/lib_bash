@@ -1,9 +1,20 @@
 #!/bin/bash
 
+: "
+${DIR_INC}/part/ansi
+	ansi include file, those include:
+		- ${DIR_SRC}/ansi
+depend on:
+		- ${DIR_INC}/part/print
+"
+
+[ "${INC_PROT_ANSI:-0}" == 1 ] && return || INC_PROT_ANSI=1
+
+# DEPENDENCIES
+source ${DIR_INC}/part/print
+
 # ANSI CHAR CONFIG
-
 ## BASE
-
 NO_ANSI=0
 DEFAULT_ANSI_ESC="\x1b["
 BEG_ANSI="\001"
@@ -85,3 +96,5 @@ LOAD_3="⣾"
 LOAD_2="⣽"
 LOAD_1="⣻"
 LOAD_0="⢿"
+
+source ${DIR_SRC}/base/ansi

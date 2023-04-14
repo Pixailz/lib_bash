@@ -363,5 +363,3 @@ function	adb::wait_for_booted()
 		curr_state=$(${ADB} shell getprop sys.boot_completed)
 	done
 }
-
-adb::install

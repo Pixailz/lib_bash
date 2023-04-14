@@ -1,0 +1,18 @@
+#!/bin/bash
+
+: "
+${DIR_INC}/part/twrp
+	twrp include file, those include:
+		- ${DIR_SRC}/twrp
+depend on:
+		- ${DIR_INC}/part/adb
+"
+
+[ "${INC_PROT_TUI:-0}" == 1 ] && return || INC_PROT_TUI=1
+
+# DEPENDENCIES
+source ${DIR_INC}/part/adb
+
+source ${DIR_SRC}/android/twrp
+
+

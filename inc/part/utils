@@ -1,0 +1,16 @@
+#!/bin/bash
+
+: "
+${DIR_INC}/part/utils
+	utils include file, those include:
+		- ${DIR_SRC}/base/utils
+depend on:
+		- ${DIR_INC}/part/print
+"
+
+[ "${INC_PROT_UTILS:-0}" == 1 ] && return || INC_PROT_UTILS=1
+
+# DEPENDENCIES
+source ${DIR_INC}/part/print
+
+source ${DIR_SRC}/base/utils

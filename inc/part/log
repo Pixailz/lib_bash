@@ -1,0 +1,26 @@
+#!/bin/bash
+
+: "
+${DIR_INC}/part/log
+	log include file, those include:
+		- ${DIR_SRC}/log
+depend on:
+		- ${DIR_INC}/base
+"
+
+[ "${INC_PROT_LOG:-0}" == 1 ] && return || INC_PROT_LOG=1
+
+# DEPENDENCIES
+source ${DIR_INC}/base
+
+# CONFIG
+LOG_FILE="${DIR_BASE}/exec.log"
+LOG_TITLE_LENGTH=40
+#LOG_PAD_STR="___"
+#LOG_PAD_STR="..."
+#LOG_PAD_STR="   "
+#LOG_PAD_STR="[+]"
+#LOG_PAD_STR=" + "
+LOG_PAD_STR="   "
+
+source ${DIR_SRC}/log

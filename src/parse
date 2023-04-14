@@ -1,7 +1,5 @@
 #!/bin/bash
 
-source ${DIR_INC}/.config.parse
-
 function	parse::print_usage()
 {
 	: "

@@ -1,7 +1,5 @@
 #!/bin/bash
 
-source ${DIR_INC}/.config.ansi
-
 function	ansi::toggle_color()
 {
 	: "
@@ -256,8 +254,6 @@ function	ansi::load()
 	((pos_x++))
 	ansi::set_cursor_pos "$((${pos_x} + 1))" "${pos_y}"
 	printf "${title}"
-	trap "ansi::print '${ANSI['ENA_CUR']}\n'; exit" SIGINT SIGQUIT
-	ansi::print "${ANSI["DIS_CUR"]}"
 	ansi::set_cursor_pos "${pos_x}" "${pos_y}"
 	while true; do
 		case ${curr_char_var} in
@@ -274,8 +270,6 @@ function	ansi::load()
 		ansi::print "1D"
 		sleep ${LOAD_TTS}
 	done
-	ansi::print "${ANSI["ENA_CUR"]}"
-	trap - SIGINT SIGQUIT
 }
 
 ansi::toggle_color
