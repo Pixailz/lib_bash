@@ -97,4 +97,7 @@ LOAD_2="⣽"
 LOAD_1="⣻"
 LOAD_0="⢿"
 
+PG_SPLIT="╸"
+PG_FULL="━"
+
 source ${DIR_SRC}/base/ansi

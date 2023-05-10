@@ -56,7 +56,7 @@ function	ansi::toggle_color()
 	CLR_SCR_CUR_HOM="${CLR_SCR}${CUR_HOME}"
 
 	# OTHER LIB
-	PB_COLOR="${LC}"
+	PB_COLOR="${R}"
 	LOG_TITLE_DEFAULT_COLOR="${G}"
 	DOWN_COLOR="${O}"
 	LOAD_COLOR="${C}"

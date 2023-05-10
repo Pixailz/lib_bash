@@ -6,8 +6,9 @@ function	tui::init()
 	declare -g	WORKER_NB=0
 	declare -g	TERM_COL=$(tput cols)
 	declare -g	TERM_ROW=$(tput lines)
-	ansi::print "2J"
-	ansi::print "H"
+	declare -g	CURR_TERM=$(tty)
+	# ansi::print "2J"
+	# ansi::print "H"
 }
 
 function	tui::worker_add()
@@ -20,10 +21,9 @@ function	tui::worker_add()
 
 function	tui::wait_for_worker()
 {
-	local	work_done=0
-
-	while [ ${work_done} ]; do
-		printf ""
+	for pids in  ${WORKER_LIST[@]}; do
+		# printf "%s\n" ${pids}
+		wait ${pids}
 	done
 }
 
