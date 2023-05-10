@@ -247,15 +247,11 @@ function	ansi::load()
 	local	pos_y="${3:-}"
 	local	curr_char_var="LOAD_0"
 
-	if [ -z "${pos_y}" ]; then
-		ansi::get_cursor_pos
-		pos_y="${CUR_POS_Y}"
-	fi
-	((pos_x++))
-	ansi::set_cursor_pos "$((${pos_x} + 1))" "${pos_y}"
-	printf "${title}"
+	printf "posy : %s\n" ${pos_y} >> pos
 	ansi::set_cursor_pos "${pos_x}" "${pos_y}"
+	printf "  ${title}"
 	while true; do
+		# ansi::set_cursor_pos "${pos_x}" "${pos_y}"
 		case ${curr_char_var} in
 			LOAD_0) curr_char_var="LOAD_1" ;;
 			LOAD_1) curr_char_var="LOAD_2" ;;

@@ -3,20 +3,30 @@
 function	tui::init()
 {
 	declare -Ag	WORKER_LIST=()
+	declare -Ag	WORKER_POS_Y=()
 	declare -g	WORKER_NB=0
-	declare -g	TERM_COL=$(tput cols)
-	declare -g	TERM_ROW=$(tput lines)
-	declare -g	CURR_TERM=$(tty)
-	# ansi::print "2J"
-	# ansi::print "H"
+	declare -g	TUI_COL=$(tput cols)
+	declare -g	TUI_ROW=$(tput lines)
+	declare -g	TUI_TERM=$(tty)
+	declare -g	TUI_POS_X
+	declare -g	TUI_POS_Y
+	ansi::get_cursor_pos
+	TUI_POS_X=${CUR_POS_X}
+	TUI_POS_Y=${CUR_POS_Y}
+
+	stty -echo
+	ansi::print "?25l"
+	trap "ansi::print '?25h'; stty echo; exit" SIGINT
 }
 
 function	tui::worker_add()
 {
 	local	name="${1}"
-	local	pid="${2}"
+	local	pos_y="${2}"
+	local	function="${@:3}"
 
-	WORKER_LIST+=([${1}]="${pid}")
+	${function} "" ${pos_y} &
+	WORKER_LIST+=([${name}]="${!}")
 }
 
 function	tui::wait_for_worker()
@@ -27,12 +37,24 @@ function	tui::wait_for_worker()
 	done
 }
 
-function	tui::worker_load()
+function	tui::update_loading_bar()
 {
-	local	name="${1}"
-	local	pos_x="${2}"
-	local	pos_y="${3:-}"
+	for key in ${!WORKER_LIST[@]}; do
+		if [[ ${key} =~ prog_bar_* ]]; then
+			print "sigusr1\n"
+			kill -10 ${WORKER_LIST[${key}]}
+		fi
+	done
+}
 
-	ansi::load "" "${pos_x}" "" &
-	tui::worker_add "${name}" ${!}
+function	tui::add_loading_bar()
+{
+	local	name="${1:-}"
+	local	title="${2:-None}"
+	local	tts=${3:-0.01}
+	local	index=0
+
+	tui::worker_add "${name}" "${TUI_POS_Y}" ansi::load "${title}"
+	((TUI_POS_Y++))
+	# tui::update_loading_bar
 }

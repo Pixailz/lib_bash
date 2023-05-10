@@ -2,40 +2,6 @@
 
 ## ⚠️ TEST ZONE ⚠️
 
-function	pg::new_progress_bar()
-{
-	# if [ ${#} -eq 0 ]; then
-	#     ansi::load "test loading" "6"
-	# else
-	#     ansi::down "test downloading" "0" "6"
-	# fi
-
-	local	tts=${1:-0.01}
-	local	index=0
-
-	ansi::print "?25l"
-	trap "ansi::print '?25h'; stty -F ${CURR_TERM} echo; exit" SIGINT
-	stty -F ${CURR_TERM} -echo
-	printf "%b" "${PB_COLOR}"
-	ansi::print "2K"
-	while true; do
-		printf "%b" "${PG_SPLIT}"
-		ansi::print "1D"
-		sleep "${tts}"
-		printf "%b" "${PG_FULL}"
-		sleep "${tts}"
-		((index++))
-		[ "${index}" -eq "${PB_LEN}" ] && break
-	done
-	ansi::print "0G"
-	printf "%b" "${G}"
-	printf -- "${PG_FULL}%.0s" $(seq 1 ${PB_LEN})
-	printf "%b\n" "${RST}"
-	ansi::print "?25h"
-	stty -F ${CURR_TERM} echo
-	trap - SIGINT
-}
-
 # function	dummy::while_loop()
 # {
 # 	local	dot="."
@@ -50,10 +16,8 @@ function	pg::new_progress_bar()
 function	test::entry()
 {
 	tui::init
-	pg::new_progress_bar &
-	tui::worker_add "progress1" ${!}
-	pg::new_progress_bar &
-	tui::worker_add "progress2" ${!}
+	tui::add_loading_bar "pg_1" "Progress bar 1"
+	tui::add_loading_bar "pg_2" "Progress bar 2"
 	tui::wait_for_worker
 }
 
