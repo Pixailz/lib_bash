@@ -7,7 +7,7 @@ function	parse::print_usage()
 		LIB				parse
 		FUNCTION		print_usage
 		DESC			print line for parse::usage function
-		ARGS			PARSE_COL_LONG=${PARSE_COL_LONG}
+		ARG				PARSE_COL_LONG=${PARSE_COL_LONG}
 							> position of the long argument
 						PARSE_COL_DESC=${PARSE_COL_DESC}
 							> position of the description
@@ -90,7 +90,7 @@ function	parse::entry()
 		LIB				parse
 		FUNCTION		entry
 		DESC			parse args according
-		ARGS			SCRIPT_NAME=${SCRIPT_NAME}
+		ARG				SCRIPT_NAME=${SCRIPT_NAME}
 						PARSE_OPT_SHORT=${PARSE_OPT_SHORT}
 						PARSE_OPT_LONG=${PARSE_OPT_LONG}
 						PARSE_FUNC_VERSION=${PARSE_FUNC_VERSION}

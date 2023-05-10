@@ -149,7 +149,7 @@ function	adb::reboot()
 		LIB				adb
 		FUNCTION		reboot
 		DESC			reboot to specified mode
-		ARGS			[1] mode=${1:-2}
+		ARG				[1] mode=${1:-2}
 							> possible value specified value at adb::get_status
 	"
 	local	mode="${1:-2}"
@@ -236,7 +236,7 @@ function	adb::set_status()
 		LIB				adb
 		FUNCTION		set_status
 		DESC			set status to connected phone using adb
-		ARGS			[1] state=${1:-}
+		ARG				[1] state=${1:-}
 							> possible value specified value at adb::get_status
 	"
 	local	mode="${1:-2}"
@@ -280,7 +280,7 @@ function	adb::wait_for()
 		LIB				adb
 		FUNCTION		wait_for
 		DESC			print message and wait for a state
-		ARGS			[1] msg=${1:-}
+		ARG				[1] msg=${1:-}
 						[2] state=${2:-}
 							> possible value specified value at adb::get_status
 	"
@@ -309,7 +309,7 @@ function	adb::wait_for_not()
 		LIB				adb
 		FUNCTION		wait_for
 		DESC			print message and wait for none a state
-		ARGS			[1] msg=${1:-}
+		ARG				[1] msg=${1:-}
 						[2] state=${2:-}
 							> possible value specified value at adb::get_status
 	"

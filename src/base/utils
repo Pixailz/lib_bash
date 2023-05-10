@@ -7,7 +7,7 @@ function	utils::ask()
 		LIB				base
 		FUNCTION		ask
 		DESC			My version of ask (http://djm.me/ask)
-		ARGS			[1] message=${1}
+		ARG				[1] message=${1}
 							> question to ask
 						[2] default=${2:-NULL}
 							> default value to return
@@ -57,7 +57,7 @@ function	utils::choice()
 		DESC			prompt for all choice, read for user input. if correct
 						index is provided or q, to return, then return choice.
 						otherwise re prompt for a good choice
-		ARGS			[1] title=${1:-None}
+		ARG				[1] title=${1:-None}
 						[2] return_title=${2:-Return}
 							> str to print for 'returning'
 						[@:3] tmp=${@:3}

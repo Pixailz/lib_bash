@@ -8,7 +8,7 @@ function	log::print()
 		FUNCTION		print
 		DESC			Log MSG into LOG_FILE (${LOG_FILE}) or STDOUT, or both;
 						according to print_out
-		ARGS			[1] msg=${1:-}
+		ARG				[1] msg=${1:-}
 						[2] mode=${2:--1}
 							> could be either:
 								- -1	no format
@@ -64,7 +64,7 @@ function	log::main_title()
 		LIB				log
 		FUNCTION		main_title
 		DESC			wrapper of log::print to print a section
-		ARGS			[1] msg=${1:-}
+		ARG				[1] msg=${1:-}
 						[2] mode=${2:-3}
 						[3] title_color=${3:-${LOG_TITLE_DEFAULT_COLOR}}
 		RETURN_VALUE	None
@@ -122,7 +122,7 @@ function	log::nl()
 		LIB				log
 		FUNCTION		nl
 		DESC			wrapper of log::print to print a new line
-		ARGS			[0] MODE=${1:-1}
+		ARG				[0] MODE=${1:-1}
 		RETURN_VALUE	None
 	"
 	local	mode="${1}"

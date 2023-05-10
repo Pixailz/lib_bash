@@ -7,7 +7,7 @@ function	template::template_with_args_return()
 		LIB				template
 		FUNCTION		template_with_args_return
 		DESC			template function with no goal
-		ARGS			[1] MSG=${1}
+		ARG				[1] MSG=${1}
 						[2] MODE=${2:-1}
 							> maybe 0 to fail or 1 to pass, default to 1
 		RETURN_VALUE	STATUS
@@ -32,7 +32,7 @@ function	template::template_with_args()
 		LIB				template
 		FUNCTION		template_with_args
 		DESC			template function with no goal
-		ARGS			[1] MSG=${1}
+		ARG				[1] MSG=${1}
 						[2] MODE=${2:-1}
 							> maybe 0 to fail or 1 to pass, default to 1
 	"

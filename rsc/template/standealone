@@ -111,7 +111,7 @@ function	ansi::toggle_color()
 		DESC			Activate all color variable, and toggle ansi char
 						surrounding with begin and end char, depending on mode
 						and USE_ENCL_ANSI
-		ARGS			USE_ENCL_ANSI=${USE_ENCL_ANSI}
+		ARG				USE_ENCL_ANSI=${USE_ENCL_ANSI}
 						[1] enable=${2:-0}
 							> activate or desactive color
 						[1] surrounding_mode=${2:-0}
@@ -172,7 +172,7 @@ function	ansi::move_up_del_print()
 		LIB				ansi
 		FUNCTION		move_up_del_print
 		DESC			Move up N time AND del N line, with ansi char
-		ARGS			[1] msg=${1:-}
+		ARG				[1] msg=${1:-}
 						[2] number=${2:-1}
 	"
 	local	msg="${1:-}"
@@ -193,7 +193,7 @@ function	ansi::print_col()
 		LIB				ansi
 		FUNCTION		print_col
 		DESC			move to the N column and print a msg
-		ARGS			[1] msg=${1:-}
+		ARG				[1] msg=${1:-}
 						[2] col=${2:-0}
 	"
 	local	msg="${1:-}"
@@ -210,7 +210,7 @@ function	ansi::goto_col()
 		LIB				ansi
 		FUNCTION		goto_col
 		DESC			move to the N column on the same line
-		ARGS			[1] col=${1:-0}
+		ARG				[1] col=${1:-0}
 	"
 	local	col="${1:-}"
 
@@ -263,7 +263,7 @@ function	print::pass()
 		LIB				print
 		FUNCTION		pass
 		DESC			Print pass or failed message, default to pass
-		ARGS			[1] msg=${1:-}
+		ARG				[1] msg=${1:-}
 						[2] have_pass=${2:-1}
 	"
 	local	msg="${1:-}"
@@ -281,7 +281,7 @@ function	print::erro()
 		LIB				print
 		FUNCTION		erro
 		DESC			Print error and quit
-		ARGS			[1] msg=${1:-}
+		ARG				[1] msg=${1:-}
 	"
 	local	msg=${1:-}
 
@@ -295,7 +295,7 @@ function	print::erro_parse()
 		LIB				print
 		FUNCTION		erro_parse
 		DESC			Print parsing error, tips for calling help then exit
-		ARGS			SCRIPT_NAME=${SCRIPT_NAME}
+		ARG				SCRIPT_NAME=${SCRIPT_NAME}
 						[1] msg=${1:-}
 	"
 	local	msg="${1:-}"
@@ -311,7 +311,7 @@ function	print::errno_2()
 		LIB				print
 		FUNCTION		errno_2
 		DESC			Error message for not founding a file
-		ARGS			[1] file_path=${1}
+		ARG				[1] file_path=${1}
 	"
 	local	file_path="${1:-}"
 
@@ -343,7 +343,7 @@ function	utils::ask()
 		LIB				base
 		FUNCTION		ask
 		DESC			My version of ask (http://djm.me/ask)
-		ARGS			[1] message=${1}
+		ARG				[1] message=${1}
 							> question to ask
 						[2] default=${2:-NULL}
 							> default value to return
@@ -393,7 +393,7 @@ function	utils::choice()
 		DESC			prompt for all choice, read for user input. if correct
 						index is provided or q, to return, then return choice.
 						otherwise re prompt for a good choice
-		ARGS			[1] title=${1:-None}
+		ARG				[1] title=${1:-None}
 						[2] return_title=${2:-Return}
 							> str to print for 'returning'
 						[@:3] tmp=${@:3}
@@ -458,7 +458,7 @@ function	pb::done()
 		LIB				pb
 		FUNCTION		done
 		DESC			print done message and elapsed time from last pb::init
-		ARGS			[1] title=${1:-None}
+		ARG				[1] title=${1:-None}
 	"
 	local	title="${1:-None}"
 	local	elapsed=$(($(date +"%s%3N") - ${PB_BEGIN_TS}))
@@ -476,7 +476,7 @@ function	pb::print()
 		LIB				pb
 		FUNCTION		init
 		DESC			print progress bar according to the given filename
-		ARGS			[1] filename=${1}
+		ARG				[1] filename=${1}
 	"
 	local	filename="${1}"
 	((PB_INDEX++))
@@ -514,7 +514,7 @@ function	pb::init()
 		LIB				pb
 		FUNCTION		init
 		DESC			init progress bar
-		ARGS			[1] PB_ARRAY=${@}
+		ARG				[1] PB_ARRAY=${@}
 							> all choices
 	"
 	local	choices=(${@})
@@ -536,7 +536,7 @@ function	parse::print_usage()
 		LIB				parse
 		FUNCTION		print_usage
 		DESC			print line for parse::usage function
-		ARGS			PARSE_COL_LONG=${PARSE_COL_LONG}
+		ARG				PARSE_COL_LONG=${PARSE_COL_LONG}
 							> position of the long argument
 						PARSE_COL_DESC=${PARSE_COL_DESC}
 							> position of the description
@@ -619,7 +619,7 @@ function	parse::entry()
 		LIB				parse
 		FUNCTION		entry
 		DESC			parse args according
-		ARGS			SCRIPT_NAME=${SCRIPT_NAME}
+		ARG				SCRIPT_NAME=${SCRIPT_NAME}
 						PARSE_OPT_SHORT=${PARSE_OPT_SHORT}
 						PARSE_OPT_LONG=${PARSE_OPT_LONG}
 						PARSE_FUNC_VERSION=${PARSE_FUNC_VERSION}
@@ -681,7 +681,7 @@ function	log::print()
 		FUNCTION		print
 		DESC			Log MSG into LOG_FILE (${LOG_FILE}) or STDOUT, or both;
 						according to print_out
-		ARGS			[1] msg=${1:-}
+		ARG				[1] msg=${1:-}
 						[2] mode=${2:--1}
 							> could be either:
 								- -1	no format
@@ -737,7 +737,7 @@ function	log::main_title()
 		LIB				log
 		FUNCTION		main_title
 		DESC			wrapper of log::print to print a section
-		ARGS			[1] msg=${1:-}
+		ARG				[1] msg=${1:-}
 						[2] mode=${2:-3}
 						[3] title_color=${3:-${LOG_TITLE_DEFAULT_COLOR}}
 		RETURN_VALUE	None
@@ -795,7 +795,7 @@ function	log::nl()
 		LIB				log
 		FUNCTION		nl
 		DESC			wrapper of log::print to print a new line
-		ARGS			[0] MODE=${1:-1}
+		ARG				[0] MODE=${1:-1}
 		RETURN_VALUE	None
 	"
 	local	mode="${1}"

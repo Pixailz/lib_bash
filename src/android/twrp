@@ -7,7 +7,7 @@ function	twrp::install()
 		LIB				twrp
 		FUNCTION		install
 		DESC			guided install twrp
-		ARGS			[1] twrp_boot=${1:-${DFLT_TWRP_BOOT}}
+		ARG				[1] twrp_boot=${1:-${DFLT_TWRP_BOOT}}
 						[2] twrp_installer=${2:-${DFLT_TWRP_INST}}
 	"
 	local	twrp_boot="${1:-${DFLT_TWRP_BOOT}}"

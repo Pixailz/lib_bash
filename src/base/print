@@ -40,7 +40,7 @@ function	print::pass()
 		LIB				print
 		FUNCTION		pass
 		DESC			Print pass or failed message, default to pass
-		ARGS			[1] msg=${1:-}
+		ARG				[1] msg=${1:-}
 						[2] have_pass=${2:-1}
 	"
 	local	msg="${1:-}"
@@ -58,7 +58,7 @@ function	print::erro()
 		LIB				print
 		FUNCTION		erro
 		DESC			Print error and quit
-		ARGS			[1] msg=${1:-}
+		ARG				[1] msg=${1:-}
 	"
 	local	msg=${1:-}
 
@@ -72,7 +72,7 @@ function	print::erro_parse()
 		LIB				print
 		FUNCTION		erro_parse
 		DESC			Print parsing error, tips for calling help then exit
-		ARGS			SCRIPT_NAME=${SCRIPT_NAME}
+		ARG				SCRIPT_NAME=${SCRIPT_NAME}
 						[1] msg=${1:-}
 	"
 	local	msg="${1:-}"
@@ -88,7 +88,7 @@ function	print::errno_2()
 		LIB				print
 		FUNCTION		errno_2
 		DESC			Error message for not founding a file
-		ARGS			[1] file_path=${1}
+		ARG				[1] file_path=${1}
 	"
 	local	file_path="${1:-}"
 

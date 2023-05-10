@@ -9,7 +9,7 @@ function	ansi::toggle_color()
 		DESC			Activate all color variable, and toggle ansi char
 						surrounding with begin and end char, depending on mode
 						and USE_ENCL_ANSI
-		ARGS			USE_ENCL_ANSI=
+		ARG				USE_ENCL_ANSI=
 						[1] surrounding_mode=${1:-${USE_ENCL_ANSI}}
 							> activate or desactive surrounding ansi char,
 							if mode equal 0 or 1 respectively
@@ -69,7 +69,7 @@ function	ansi::move_up_del_print()
 		LIB				ansi
 		FUNCTION		move_up_del_print
 		DESC			Move up N time AND del N line, with ansi char
-		ARGS			[1] msg=${1:-}
+		ARG				[1] msg=${1:-}
 						[2] number=${2:-1}
 	"
 	local	msg="${1:-}"
@@ -90,7 +90,7 @@ function	ansi::print_col()
 		LIB				ansi
 		FUNCTION		print_col
 		DESC			move to the N column and print a msg
-		ARGS			[1] msg=${1:-}
+		ARG				[1] msg=${1:-}
 						[2] col=${2:-0}
 	"
 	local	msg="${1:-}"
@@ -107,7 +107,7 @@ function	ansi::set_cursor_pos()
 		LIB				ansi
 		FUNCTION		set_cursor_pos
 		DESC			move cursor at X or Y or both, pos on the screen
-		ARGS			[1] pos_x=${1:-}
+		ARG				[1] pos_x=${1:-}
 						[2] pos_y=${2:-}
 	"
 	local	pos_x="${1:-}"
@@ -163,7 +163,7 @@ function	ansi::print()
 		LIB				ansi
 		FUNCTION		print
 		DESC			print ansi code
-		ARGS			[1] code=${1}
+		ARG				[1] code=${1}
 						[2] esc=${2:-${DEFAULT_ANSI_ESC}}
 	"
 	local	code="${1}"
@@ -184,7 +184,7 @@ function	ansi::down()
 		LIB				ansi
 		FUNCTION		down
 		DESC			animation for downloading, at pos x,y
-		ARGS			[1] title=${1:-}
+		ARG				[1] title=${1:-}
 						[2] mode=${2:-0}
 							> could be either 1 or 0, right to left or left
 							to right
@@ -236,7 +236,7 @@ function	ansi::load()
 		LIB				ansi
 		FUNCTION		load
 		DESC			animation for downloading, at pos x,y
-		ARGS			[1] title=${1:-}
+		ARG				[1] title=${1:-}
 						[2] pos_x=${2:-0}
 						[3] pos_y=${3:-}
 							> if arg not provided, set pos_y to the CUR_POS_Y
