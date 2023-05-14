@@ -141,7 +141,7 @@ function	parse::entry()
 		esac
 		shift
 	done
-	print::info "Remaining args"
+	[ ! -z "${1}" ] && print::info "Remaining args"
 	while [ -v 1 ]  && [ ! -z "${1}" ]; do
 		print::info "${1}"
 		shift

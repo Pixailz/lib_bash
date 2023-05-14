@@ -2,23 +2,35 @@
 
 ## ⚠️ TEST ZONE ⚠️
 
-# function	dummy::while_loop()
-# {
-# 	local	dot="."
+function	tui::reset()
+{
+	stty "${TUI_OLD_TERM}"
+	trap - SIGINT exit
+	return
+}
 
-# 	while [ true ]; do
-# 		ansi::print "u"
-# 		printf "hello"
-# 		sleep 1
-# 	done
-# }
+function	tui::init()
+{
+	declare -g	TUI_CUR_TERM=$(tty)
+	declare -g	TUI_OLD_TERM=$(stty -g)
+	declare -g	TUI_COL=$(tput cols)
+	declare -g	TUI_ROW=$(tput lines)
+
+	stty -icanon -echo
+	trap "tui::reset" SIGINT exit
+}
+
+function	create::task()
+{
+	true
+}
 
 function	test::entry()
 {
 	tui::init
-	tui::add_loading_bar "pg_1" "Progress bar 1"
-	tui::add_loading_bar "pg_2" "Progress bar 2"
-	tui::wait_for_worker
+	printf "test\n" &
+	printf "test\n" &
+	tui::reset
 }
 
 ## ⚠️ END TEST ZONE ⚠️
