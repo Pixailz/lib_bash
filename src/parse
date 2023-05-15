@@ -48,28 +48,6 @@ function	parse::print_infos()
 	ansi::print_col "${SCRIPT_LINK}\n" "${PARSE_COL_LAST_SEC}"
 }
 
-function	parse::usage()
-{
-	: "
-	INFO
-		LIB				parse
-		FUNCTION		usage
-		DESC			print usage and exit with non zero
-	"
-	printf "%b: ${SCRIPT_NAME} " "${P_USAGE}"
-	printf "[-hv]\n\n"
-	printf "    1. Base\n"
-	parse::print_usage "h" "help" "Display the help then exit."
-	parse::print_usage "" "version" "Display the version then exit."
-	parse::print_usage "" "no-color" "disable all color"
-	parse::print_usage "v" "" "Set verbose mode to 1 (Normal)"
-	parse::print_usage "vv" "" "Set verbose mode to 2 (Include)"
-	parse::print_usage "vvv" "" "Set verbose mode to 3 (Not used)"
-	printf "\x0a"
-	parse::print_infos
-	exit
-}
-
 function	parse::version()
 {
 	: "
@@ -83,68 +61,263 @@ function	parse::version()
 	exit
 }
 
-function	parse::entry()
+function	parse::usage_create()
 {
 	: "
 	INFO
 		LIB				parse
-		FUNCTION		entry
-		DESC			parse args according
-		ARG				SCRIPT_NAME=${SCRIPT_NAME}
+		FUNCTION		usage_create
+		DESC			print create usage and exit with non zero
+	"
+
+	# opt_usage
+	printf "%b: ${SCRIPT_NAME} " "${P_USAGE}"
+	printf "create user_name [[-p|--pass] user_pass] | \n"
+	# desc
+	printf "\tscripts to manage openvpn server docker\n"
+
+	printf "\n\tCreate \n"
+	printf "\t\tcreate user certificate\n"
+	parse::print_usage "p" "pass" "specify user password"
+	printf "\n"
+	parse::print_infos
+}
+
+function	parse::usage_run()
+{
+	: "
+	INFO
+		LIB				parse
+		FUNCTION		usage_run
+		DESC			print run usage and exit with non zero
+	"
+
+	# opt_usage
+	printf "%b: ${SCRIPT_NAME} " "${P_USAGE}"
+	printf "run [[-c|--config] config_path] \n"
+	# desc
+	printf "\tscripts to manage openvpn server docker\n"
+
+	printf "\n\tRun \n"
+	printf "\t\trun server\n"
+	parse::print_usage "c" "config" "config file path for openvpn"
+	printf "\n"
+	parse::print_infos
+}
+
+function	parse::usage_main()
+{
+	: "
+	INFO
+		LIB				parse
+		FUNCTION		usage_main
+		DESC			print main usage and exit with non zero
+	"
+	# opt_usage
+	printf "%b: ${SCRIPT_NAME} " "${P_USAGE}"
+	printf "[--ca-pass ca_pass][--server-pass server_pass] | \n"
+	printf "create user_name [[-p|--pass] user_pass] | \n"
+	printf "run [[-c|--config] config_path] \n"
+	# desc
+	printf "\tscripts to manage openvpn server docker\n"
+
+	printf "\n\t1. Commun\n"
+	printf "\t\tflag available everywhere\n"
+	parse::print_usage "h" "help" "Display the help then exit."
+	parse::print_usage "" "version" "Display the version then exit."
+	parse::print_usage "" "no-color" "disable all color"
+
+	printf "\n\t2. Base\n"
+	printf "\t\tupdate config (default: ${SERVER_CONFIG})\n"
+	parse::print_usage "" "ca-pass" "update ca_pass"
+	parse::print_usage "" "server-pass" "update server_pass"
+
+	printf "\n\t3. Create \n"
+	printf "\t\tcreate user certificate\n"
+	parse::print_usage "p" "pass" "specify user password"
+
+	printf "\n\t4. Run \n"
+	printf "\t\trun server\n"
+	parse::print_usage "c" "config" "config file path for openvpn"
+	printf "\n"
+	parse::print_infos
+}
+
+function	parse::usage()
+{
+	: "
+	INFO
+		LIB				parse
+		FUNCTION		usage_main
+		DESC			print usage and exit with non zero
+		ARGS			[1] mode=${1:-0}
+						[2] error=${2:-None}
+	"
+	local	mode="${1:-0}"
+	local	error="${2:-None}"
+
+	[ "${error}" != "None" ] && print::erro "${error}"
+
+	if [ "${mode}" == 0 ]; then
+		parse::usage_main
+	elif [ "${mode}" == 1 ]; then
+		parse::usage_create
+	elif [ "${mode}" == 2 ]; then
+		parse::usage_run
+	fi
+	exit 1
+}
+function	parse::opt()
+{
+	: "
+	INFO
+		LIB				parse
+		FUNCTION		opt
+		DESC			parse optional args given a mode
+		ARGS			[1] opt_mode=${1:-0}
+						SCRIPT_NAME=${SCRIPT_NAME}
 						PARSE_OPT_SHORT=${PARSE_OPT_SHORT}
 						PARSE_OPT_LONG=${PARSE_OPT_LONG}
 						PARSE_FUNC_VERSION=${PARSE_FUNC_VERSION}
 						PARSE_FUNC_HELP=${PARSE_FUNC_HELP}
-		RETURN_VALUE	return set or not set variable, according to your use
-						REQUIRED
-						OPTIONAL
-						DEBUG
-						NO_ANSI
+		RETURN_VALUE	return set or not set variable, according to opt_* mode
 	"
-	local	args="${@}"
+	local	opt_mode="${1:-0}"
+	local	args="${@:2}"
 
-	TEMP=$(getopt --name "${SCRIPT_NAME}"										\
-				  --alternative													\
-				  --shell bash													\
-				  --options ${PARSE_OPT_SHORT}									\
-				  --longoptions ${PARSE_OPT_LONG}								\
-				  -- "${args}"													)
-
-	eval set -- "${TEMP}"
-	unset TEMP
 	while true; do
-		case "${1:-}" in
-			'--version') ${PARSE_FUNC_VERSION} ; exit ;;
-			'-h'|'--help') ${PARSE_FUNC_HELP} ; exit ;;
-			'--no-color') NO_ANSI=1;;
-			'--required-opt')
-				print::info "set-var"
-				shift
-				REQUIRED=${1:-DEFAULT_VALUE}
-			;;
-			'--optional-opt')
-				print::info "set-var"
-				shift
-				OPTIONAL=${1:-DEFAULT_VALUE}
-			;;
-			'-v') DEBUG=1 ;;
-			'--vv') DEBUG=2 ;;
-			'--vvv') DEBUG=3 ;;
-			'--')
-				shift
-				break
-			;;
-			*)
-				print::warn "Internal error"
-				break
-			;;
+		TEMP=$(getopt --name "${SCRIPT_NAME}"										\
+					--shell bash													\
+					--options ${PARSE_OPT_SHORT}									\
+					--longoptions ${PARSE_OPT_LONG}								\
+					-- ${@} 2>${TMP_ERROR})
+
+		ERROR=$(perl -ne "print if s|${SCRIPT_NAME}: (.*?) .*'(.*)'.*|\1,\2|" ${TMP_ERROR})
+		rm ${TMP_ERROR}
+
+		if [ ! -z "${ERROR}" ]; then
+			ERROR_TYPE=${ERROR/,*}
+			ERROR_ARG=${ERROR/*,}
+			case "${ERROR_TYPE}" in
+				"unrecognized")
+					print::warn "Unrecognized option '${ERROR_ARG}', see --help for me info"
+					;;
+				"option")
+					print::warn "Option '${ERROR_ARG/ *}' need args, see --help for me info"
+					;;
+			esac
+			parse::usage "${opt_mode}"
+		fi
+
+		eval set -- "${TEMP}"
+		unset TEMP
+
+		case "${1:-}" in								# default_opt
+			'-v'|'--version')	eval "${PARSE_FUNC_VERSION}" ; exit ;;
+			'-h'|'--help')		eval "${PARSE_FUNC_HELP}" ; exit ;;
+			'--no-color')		NO_COLOR=1 ; shift ; continue ;;
+			'--')				shift ; break ;;
 		esac
-		shift
-	done
-	[ ! -z "${1}" ] && print::info "Remaining args"
-	while [ -v 1 ]  && [ ! -z "${1}" ]; do
-		print::info "${1}"
-		shift
+		if [ "${opt_mode}" -eq 1 ]; then				# opt_create
+			case "${1:-}" in
+				'-p'|'--pass')
+					parse::have_arg "${1}" "${2:-}" "USER_PASS"
+					shift
+				;;
+				*)
+					print::warn "Internal error"
+					break
+				;;
+			esac
+			shift
+		elif [ "${opt_mode}" -eq 2 ]; then				# opt_run
+			case "${1:-}" in
+				'-c'|'--config')
+					parse::have_arg "${1}" "${2:-}" "CONFIG_PATH"
+					shift
+				;;
+				*)
+					print::warn "Internal error"
+					break
+				;;
+			esac
+			shift
+		else											# opt_main
+			case "${1:-}" in
+				'--ca-pass')
+					printf "value %s\n" ${2:-}
+					parse::have_arg "${1}" "${2:-}" "CA_PASS"
+					config::set "ca_pass" "${CA_PASS}"
+					print::pass "successfully update password (ca_pass)"
+					shift
+				;;
+				'--server-pass')
+					printf "value %s\n" ${2:-}
+					parse::have_arg "${1}" "${2:-}" "SERVER_PASS"
+					config::set "server_pass" "${SERVER_PASS}"
+					print::pass "successfully update password (server_pass)"
+					shift
+				;;
+				*)
+					print::warn "Internal error"
+					break
+				;;
+			esac
+			shift
+		fi
 	done
 }
 
+function	parse::entry()
+{
+	DO_CREATE=0
+	DO_RUN=0
+	CONFIG_PATH="${SERVER_CONFIG}"
+
+	if [ ${#} -ne 0 ]; then
+		if [ -x "${1}" ]; then
+			${1}
+			exit $?
+		else
+			case "${1:-}" in
+				"create")
+					DO_CREATE=1
+					shift
+
+					if [[ ${1} =~ -.* ]]; then
+						case ${1} in
+							'-h'|'--help')		;;
+							'-v'|'--version')	;;
+							*)
+								print::warn "create opt need an arg, see --help"
+								print::usage 1
+							;;
+						esac
+					else
+						USER_NAME="${1}"
+						shift
+					fi
+					USER_PASS=""
+					PARSE_FUNC_HELP="print::usage 1"
+					PARSE_OPT_SHORT="hvp:"
+					PARSE_OPT_LONG="help,version,no-color,pass::"
+					parse::opt 1 ${@}
+				;;
+				"run")
+					DO_RUN=1
+					shift
+					PARSE_FUNC_HELP="print::usage 2"
+					PARSE_OPT_SHORT="hvc::"
+					PARSE_OPT_LONG="help,version,no-color,config::"
+					parse::opt 2 ${@}
+				;;
+				*)
+					PARSE_FUNC_HELP="print::usage"
+					PARSE_OPT_SHORT="hv"
+					PARSE_OPT_LONG="help,version,no-color,ca-pass:,server-pass:"
+					parse::opt 0 ${@}
+				;;
+			esac
+		fi
+	fi
+}

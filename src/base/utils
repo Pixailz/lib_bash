@@ -108,3 +108,31 @@ function	utils::choice()
 		fi
 	done
 }
+
+function	utils::move_file()
+{
+	local	src="${1}"
+	local	dst="${2}"
+	local	dst_folder="${2%/*}"
+	local	tmp
+	local	do_copy=1
+
+	if [ "${FORCE_INSTALL}" == "" ] && [ -f ${dst} ]; then
+		utils::ask "file ${R}${2##*/}${RST} exist, do you wan't to overwrite it" "y"
+		[ "${?}" == 0 ] && do_copy=0
+	fi
+	if [ "${do_copy}" == 1 ]; then
+		if [ ! -d "${dst_folder}" ]; then
+			print::warn "folder ${O}.${dst_folder}${RST} don't exist, creating"
+			mkdir -p ${dst_folder}
+		fi
+		cp -f ${src} ${dst}
+		if [ "${?}" == 0 ]; then
+			print::pass "copied ${G}.${src/${DIR_MODULE}/}${RST} to ${G}${dst}${RST}."
+		else
+			print::pass "copy ${R}failed${RST}." 1
+		fi
+	else
+		print::warn "configuration ${O}skiped${RST}."
+	fi
+}

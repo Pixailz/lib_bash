@@ -25,4 +25,9 @@ PARSE_FUNC_HELP="parse::usage"
 PARSE_FUNC_VERSION="parse::print_infos"
 PARSE_FUNC_INVALID_OPT="parse::invalid"
 
+TMP_ERROR="${DIR_BASE}/tmp.error"
+
+## TEMPLATE not needed
+SERVER_CONFIG="config.conf"
+
 source ${DIR_SRC}/parse
