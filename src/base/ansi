@@ -39,13 +39,13 @@ function	ansi::toggle_color()
 
 	BL_R="${BL}${R}"
 
-	P_INFO="[${LC}INFO ${RST}]"
-	P_WARN="[${O}WARN ${RST}]"
-	P_QUES="[${B}QUEST${RST}]"
-	P_PASS="[${G}PASS ${RST}]"
+	P_INFO="[${LC}INFO${RST}]"
+	P_WARN="[${O}WARN${RST}]"
+	P_QUES="[${B}QUES${RST}]"
+	P_PASS="[${G}PASS${RST}]"
 	P_FAIL="[${R}FAIL${RST}]"
-	P_ERRO="[${R}ERROR${RST}]"
-	P_USAGE="[${G}USAGE${RST}]"
+	P_ERRO="[${R}ERRO${RST}]"
+	P_USAGE="[${G}USAG${RST}]"
 
 	SUCCESS="[${G}+${RST}]"
 	FAILED="[${R}-${RST}]"
