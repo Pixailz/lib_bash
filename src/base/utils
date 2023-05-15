@@ -117,7 +117,7 @@ function	utils::move_file()
 	local	tmp
 	local	do_copy=1
 
-	if [ "${FORCE_INSTALL}" == "" ] && [ -f ${dst} ]; then
+	if [ "${FORCE_MOVE:-}" != "1" ] && [ -f ${dst} ]; then
 		utils::ask "file ${R}${2##*/}${RST} exist, do you wan't to overwrite it" "y"
 		[ "${?}" == 0 ] && do_copy=0
 	fi
