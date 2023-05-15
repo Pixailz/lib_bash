@@ -1,0 +1,18 @@
+#!/bin/bash
+
+INSTALL_DIR="${HOME}/.local/lib"
+
+function	setup::prepare()
+{
+	[ -f "${INSTALL_DIR}" ] && rm -f "${INSTALL_DIR}"
+	[ ! -d "${INSTALL_DIR}" ] && mkdir -p "${INSTALL_DIR}"
+	[ -d "${INSTALL_DIR}/lib_bash" ] && rm -rf "${INSTALL_DIR}/lib_bash"
+}
+
+function	setup::install()
+{
+	cp -r "${PWD}" "${INSTALL_DIR}"
+}
+
+setup::prepare
+setup::install
