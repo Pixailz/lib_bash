@@ -30,21 +30,21 @@ USE_ENCL_ANSI=1
 declare -gA ANSI
 ANSI=(
 		# COLOR
-	["RST"]="0m"			# RESET
-	["G"]="38:2::1:200:1m"	# GREEN
-	["R"]="38;5;196m"		# RED
-	["B"]="34m"				# BLUE
-	["Y"]="33m"				# YELLOW
-	["C"]="36m"				# CYAN
-	["M"]="35m"				# MAGENTA
-	["O"]="38;5;214m"		# ORANGE
-	["LG"]="92m"			# LIGHT GREEN
-	["LY"]="93m"			# LIGHT_YELLOW
-	["LB"]="94m"			# LIGHT_BLUE
-	["LM"]="95m"			# LIGHT_MAGENTA
-	["LC"]="96m"			# LIGHT_CYAN
+	["RST"]="0m"		# RESET
+	["G"]="38;5;40m"	# GREEN
+	["R"]="38;5;196m"	# RED
+	["B"]="34m"			# BLUE
+	["Y"]="33m"			# YELLOW
+	["C"]="36m"			# CYAN
+	["M"]="35m"			# MAGENTA
+	["O"]="38;5;214m"	# ORANGE
+	["LG"]="92m"		# LIGHT GREEN
+	["LY"]="93m"		# LIGHT_YELLOW
+	["LB"]="94m"		# LIGHT_BLUE
+	["LM"]="95m"		# LIGHT_MAGENTA
+	["LC"]="96m"		# LIGHT_CYAN
 		# MODIFIER
-	["BL"]="05m"			# BLINKING
+	["BL"]="05m"		# BLINKING
 		# CURSOR THING
 	["ENA_CUR"]="?25h"
 	["DIS_CUR"]="?25l"
@@ -57,13 +57,6 @@ ANSI=(
 ## UNICODE CHAR
 
 ### Box char
-# BOX_HO="\xe2\x95\x90"	# ═
-# BOX_VE="\xe2\x95\x91"	# ║
-# BOX_UL="\xe2\x95\x94"	# ╔
-# BOX_UR="\xe2\x95\x97"	# ╗
-# BOX_LL="\xe2\x95\x9a"	# ╚
-# BOX_LR="\xe2\x95\x9d"	# ╝
-
 BOX_HO="═"
 BOX_VE="║"
 BOX_UL="╔"
