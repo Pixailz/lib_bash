@@ -30,21 +30,21 @@ USE_ENCL_ANSI=1
 declare -gA ANSI
 ANSI=(
 		# COLOR
-	["RST"]="0m"		# RESET
-	["G"]="38;5;82m"	# GREEN
-	["R"]="38;5;196m"	# RED
-	["B"]="34m"	# BLUE
-	["Y"]="33m"			# YELLOW
-	["C"]="36m"			# CYAN
-	["M"]="35m"			# MAGENTA
-	["O"]="38;5;214m"	# ORANGE
-	["LG"]="92m"		# LIGHT GREEN
-	["LY"]="93m"		# LIGHT_YELLOW
-	["LB"]="94m"		# LIGHT_BLUE
-	["LM"]="95m"		# LIGHT_MAGENTA
-	["LC"]="96m"		# LIGHT_CYAN
+	["RST"]="0m"			# RESET
+	["G"]="38:2::1:200:1m"	# GREEN
+	["R"]="38;5;196m"		# RED
+	["B"]="34m"				# BLUE
+	["Y"]="33m"				# YELLOW
+	["C"]="36m"				# CYAN
+	["M"]="35m"				# MAGENTA
+	["O"]="38;5;214m"		# ORANGE
+	["LG"]="92m"			# LIGHT GREEN
+	["LY"]="93m"			# LIGHT_YELLOW
+	["LB"]="94m"			# LIGHT_BLUE
+	["LM"]="95m"			# LIGHT_MAGENTA
+	["LC"]="96m"			# LIGHT_CYAN
 		# MODIFIER
-	["BL"]="05m"		# BLINKING
+	["BL"]="05m"			# BLINKING
 		# CURSOR THING
 	["ENA_CUR"]="?25h"
 	["DIS_CUR"]="?25l"
