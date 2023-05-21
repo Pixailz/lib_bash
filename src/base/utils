@@ -173,7 +173,7 @@ function	utils::update_repo()
 	local	current_commit_id
 	local	latest_commit_id
 
-	print::info "Checking if repo is updated ${LC}${dst_dir}/${git_repo}${RST}"
+	print::info "Checking if (${LC}${dst_dir}/${git_repo}${RST}) is updated "
 	if [ -d "${dst_dir}/${git_repo}" ]; then
 		cd "${dst_dir}/${git_repo}"
 		current_branch=$(git rev-parse --abbrev-ref HEAD)
