@@ -111,6 +111,15 @@ function	utils::choice()
 
 function	utils::move_file()
 {
+	: "
+	INFO
+		LIB				utils
+		FUNCTION		move_file
+		DESC			move a file from src to dst, ask for overwriting if it
+						exist
+		ARG				[1] src=${1}
+						[2] dst=${2}
+	"
 	local	src="${1}"
 	local	dst="${2}"
 	local	dst_folder="${2%/*}"
@@ -134,5 +143,56 @@ function	utils::move_file()
 		fi
 	else
 		print::warn "configuration ${O}skiped${RST}."
+	fi
+}
+
+function	utils::mkdir()
+{
+	: "
+	INFO
+		LIB				utils
+		FUNCTION		mkdir
+		DESC			make a dir at specified path, if path is a file then
+						remove it, and the create the path
+		ARG				[1] dir_path=${1}
+	"
+	local	dir_path="${1}"
+
+	[ -f "${dir_path}" ] && rm -f "${dir_path}"
+	[ ! -d "${dir_path}" ] && mkdir -p "${dir_path}"
+}
+
+function	utils::update_repo()
+{
+	local	git_link="${1}"
+	local	git_repo="${git_link/*\/}"
+	local	git_user="${git_link/\/${git_repo}}"
+	local	git_user="${git_user/https:\/\/github\.com\/}"
+	local	dst_dir="${2}"
+	local	current_branch
+	local	current_commit_id
+	local	latest_commit_id
+
+	print::info "Checking if repo is updated ${LC}${dst_dir}/${git_repo}${RST}"
+	if [ -d "${dst_dir}/${git_repo}" ]; then
+		cd "${dst_dir}/${git_repo}"
+		current_branch=$(git rev-parse --abbrev-ref HEAD)
+		current_commit_id=$(git rev-parse HEAD)
+		latest_commit_id=$(curl -# -H "Accept: application/vnd.github.VERSION.sha" \
+			https://api.github.com/repos/${git_user}/${git_repo}/commits/${current_branch})
+		if [ "${current_commit_id}" != "${latest_commit_id}" ]; then
+			print::warn "Not up-to-date, updating"
+			git reset --hard "origin/${current_branch}" && git pull ; true
+			print::info "Relaunch the script to make the update effective"
+			exit 1
+		else
+			print::pass "Already up-to-date (${LC}${current_commit_id::7}${RST})"
+		fi
+		cd - 1>/dev/null
+	else
+		cd "${dst_dir}"
+		print::info "Repo not found, cloning it."
+		git clone "${git_link}"
+		cd - 1>/dev/null
 	fi
 }
