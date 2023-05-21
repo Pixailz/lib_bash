@@ -37,4 +37,6 @@ function	test::entry()
 
 source ./.config
 parse::entry ${@}
-test::entry
+# test::entry
+
+log::main_title "${R}this${RST} is a test title" 1 "" 1

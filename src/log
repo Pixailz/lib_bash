@@ -72,7 +72,8 @@ function	log::main_title()
 	local	msg="${1:-}"
 	local	mode="${2:-3}"
 	local	title_color="${3:-${LOG_TITLE_DEFAULT_COLOR}}"
-	local	section_str=""
+	local	enable_date="${4:-}"
+	local	section_str
 	local	date
 	local	section
 	local	msg_len
@@ -89,9 +90,7 @@ function	log::main_title()
 		printf -v CL[0] "%0.s " $(seq 1 ${center_splited})
 		printf -v CR[0] "%0.s " $(seq 1 ${center_splited}) 1
 	fi
-
-	printf -v date " %(%X %x)T"
-
+	printf -v date " %(%H:%m:%y %x)T"
 	center_off=$((${LOG_TITLE_LENGTH} - ${#date}))
 	center_splited=$(( (${center_off} - 2) / 2 ))
 	if [ $(( ${center_off} % 2)) == 0 ]; then
@@ -103,10 +102,14 @@ function	log::main_title()
 	fi
 	section[0]="${title_color}${BOX_UL}${vertical_offset}${BOX_UR}\n"
 	section[1]="${BOX_VE}${CL[0]}${RST}${1}${title_color}${CR[0]}${BOX_VE}\n"
-	section[2]="${BOX_VE}${CL[1]}${RST}${date}${title_color}${CR[1]}${BOX_VE}\n"
-	section[3]="${BOX_LL}${vertical_offset}${BOX_LR}${RST}"
+	if [ "${enable_date}" == "1" ]; then
+		section[2]="${BOX_VE}${CL[1]}${RST}${date}${title_color}${CR[1]}${BOX_VE}\n"
+		section[3]="${BOX_LL}${vertical_offset}${BOX_LR}${RST}"
+	else
+		section[2]="${BOX_LL}${vertical_offset}${BOX_LR}${RST}"
+	fi
 	for index in $(seq 0 $((${#section[@]} - 1))); do
-		section_str="${section_str}${section[${index}]}"
+		section_str="${section_str:-}${section[${index}]}"
 	done
 	if [ "${USE_ENCL_ANSI}" == 1 ]; then
 		section_str=$(printf "%b" "${section_str}" | tr -d '\001\002')
