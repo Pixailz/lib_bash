@@ -16,7 +16,7 @@ source ${DIR_INC}/part/print
 # ANSI CHAR CONFIG
 ## BASE
 NO_ANSI=0
-DEFAULT_ANSI_ESC="\x1b["
+ESC="\x1b"
 BEG_ANSI="\001"
 END_ANSI="\002"
 
@@ -30,28 +30,29 @@ USE_ENCL_ANSI=1
 declare -gA ANSI
 ANSI=(
 		# COLOR
-	["RST"]="0m"		# RESET
-	["G"]="38;5;40m"	# GREEN
-	["R"]="38;5;196m"	# RED
-	["B"]="34m"			# BLUE
-	["Y"]="33m"			# YELLOW
-	["C"]="36m"			# CYAN
-	["M"]="35m"			# MAGENTA
-	["O"]="38;5;214m"	# ORANGE
-	["LG"]="92m"		# LIGHT GREEN
-	["LY"]="93m"		# LIGHT_YELLOW
-	["LB"]="94m"		# LIGHT_BLUE
-	["LM"]="95m"		# LIGHT_MAGENTA
-	["LC"]="96m"		# LIGHT_CYAN
+	["RST"]="[0m"		# RESET
+	["G"]="[38;5;40m"	# GREEN
+	["R"]="[38;5;196m"	# RED
+	["B"]="[34m"			# BLUE
+	["Y"]="[33m"			# YELLOW
+	["C"]="[36m"			# CYAN
+	["M"]="[35m"			# MAGENTA
+	["O"]="[38;5;214m"	# ORANGE
+	["LG"]="[92m"		# LIGHT GREEN
+	["LY"]="[93m"		# LIGHT_YELLOW
+	["LB"]="[94m"		# LIGHT_BLUE
+	["LM"]="[95m"		# LIGHT_MAGENTA
+	["LC"]="[96m"		# LIGHT_CYAN
 		# MODIFIER
-	["BL"]="05m"		# BLINKING
+	["BL"]="[05m"		# BLINKING
 		# CURSOR THING
-	["ENA_CUR"]="?25h"
-	["DIS_CUR"]="?25l"
-	["DEL_LIN"]="2K"
-	["MOV_1UP"]="1F"
-	["CLR_SCR"]="2J"
-	["CUR_HOME"]="H"
+	["ENA_CUR"]="[?25h"
+	["DIS_CUR"]="[?25l"
+	["DEL_LIN"]="[2K"
+	["MOV_1UP"]="[1F"
+	["CLR_SCR"]="[2J"
+	["CUR_HOME"]="[H"
+	["POS_REQ"]="[6n"
 )
 
 ## UNICODE CHAR

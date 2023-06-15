@@ -2,41 +2,67 @@
 
 ## ⚠️ TEST ZONE ⚠️
 
-function	tui::reset()
-{
-	stty "${TUI_OLD_TERM}"
-	trap - SIGINT exit
-	return
-}
+# function	tui::reset()
+# {
+# 	stty "${TUI_OLD_TERM}"
+# 	trap - SIGINT exit
+# 	return
+# }
 
-function	tui::init()
-{
-	declare -g	TUI_CUR_TERM=$(tty)
-	declare -g	TUI_OLD_TERM=$(stty -g)
-	declare -g	TUI_COL=$(tput cols)
-	declare -g	TUI_ROW=$(tput lines)
+# function	tui::init()
+# {
+# 	declare -g	TUI_CUR_TERM=$(tty)
+# 	declare -g	TUI_OLD_TERM=$(stty -g)
+# 	declare -g	TUI_COL=$(tput cols)
+# 	declare -g	TUI_ROW=$(tput lines)
 
-	stty -icanon -echo
-	trap "tui::reset" SIGINT exit
-}
+# 	stty -icanon -echo
+# 	trap "tui::reset" SIGINT exit
+# }
 
-function	create::task()
+# function	create::task()
+# {
+# 	true
+# }
+
+# function	test::entry()
+# {
+# 	tui::init
+# 	printf "test\n" &
+# 	printf "test\n" &
+# 	tui::reset
+# }
+
+function	test::clock()
 {
-	true
+	local	x y
+	local	cur_tty="${1:-$(tty)}"
+	local	path_cur_pos="/run/"
+
+	while [ : ]; do
+		printf "x: %d | y: %d\n" "${CUR_POS_X}" "${CUR_POS_Y}"
+		sleep 1
+	done
 }
 
 function	test::entry()
 {
-	tui::init
-	printf "test\n" &
-	printf "test\n" &
-	tui::reset
+	test::clock "$(tty)" &
+
+	trap "kill $!" 2
+	wait $!
 }
 
 ## ⚠️ END TEST ZONE ⚠️
 
 source ./.config
-parse::entry ${@}
+# parse::entry ${@}
 # test::entry
 
-log::main_title "${R}this${RST} is a test title" 1 "" 1
+# utils::update_repo "git@github.com:Pixailz/lib_bash" "./"
+# utils::update_repo "https://github.com/Pixailz/lib_bash" "./"
+
+ansi::get_cursor_pos
+
+printf "X_POS : %s\n" "${CUR_POS_X}"
+printf "Y_POS : %s\n" "${CUR_POS_Y}"

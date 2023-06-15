@@ -13,12 +13,12 @@ function	ansi::toggle_color()
 						[1] surrounding_mode=${1:-${USE_ENCL_ANSI}}
 							> activate or desactive surrounding ansi char,
 							if mode equal 0 or 1 respectively
-						[2] esc=${2:-${DEFAULT_ANSI_ESC}}
+						[2] esc=${2:-${ESC}}
 							> provide an ansi esc_char, otherwise use default
 	"
 	local	no_ansi="${NO_ANSI:-0}"
 	local	surrounding_mode="${1:-${USE_ENCL_ANSI}}"
-	local	esc="${2:-${DEFAULT_ANSI_ESC}}"
+	local	esc="${2:-${ESC}}"
 	local	end_esc=""
 
 	if [ "${surrounding_mode}" -eq 1 ]; then
@@ -149,11 +149,11 @@ function	ansi::get_cursor_pos()
 	exec < /dev/tty
 	oldstty=$(stty -g)
 	stty raw -echo min 0
-	tput u7
+	printf "${POS_REQ}"
 	IFS=';' read -r -d R -a pos
 	stty "${oldstty}"
-	CUR_POS_X=$((${pos[1]}))
-	CUR_POS_Y=$((${pos[0]:2}))			# strip off the esc-[
+	CUR_POS_X="${pos[1]}"
+	CUR_POS_Y="${pos[0]:2}"			# strip off the esc-[
 }
 
 function	ansi::print()
@@ -164,10 +164,10 @@ function	ansi::print()
 		FUNCTION		print
 		DESC			print ansi code
 		ARG				[1] code=${1}
-						[2] esc=${2:-${DEFAULT_ANSI_ESC}}
+						[2] esc=${2:-${ESC}}
 	"
 	local	code="${1}"
-	local	esc="${2:-${DEFAULT_ANSI_ESC}}"
+	local	esc="${2:-${ESC}}"
 	local	end_esc=""
 
 	if [ "${USE_ENCL_ANSI}" -eq 1 ]; then

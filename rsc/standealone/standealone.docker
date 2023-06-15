@@ -29,7 +29,7 @@ SCRIPT_LINK="https://github.com/Pixailz/lib_bash"
 
 # ANSI CONFIG
 NO_COLOR=0
-DEFAULT_ANSI_ESC="\033["
+ESC="\033["
 
 ## set enclosed ansi char, help to count printable character displayed, for
 ## centered text for exemple
@@ -117,12 +117,12 @@ function	ansi::toggle_color()
 						[1] surrounding_mode=${2:-0}
 							> activate or desactive surrounding ansi char,
 							if mode equal 0 or 1 respectively
-						[2] esc=${3:-${DEFAULT_ANSI_ESC}}
+						[2] esc=${3:-${ESC}}
 							> provide an ansi esc_char, otherwise use default
 	"
 	local	no_color="${NO_COLOR:-0}"
 	local	surrounding_mode="${1:-0}"
-	local	esc="${2:-${DEFAULT_ANSI_ESC}}"
+	local	esc="${2:-${ESC}}"
 	local	end_esc=""
 	local	beg_ansi="\001"
 	local	end_ansi="\002"
@@ -214,7 +214,7 @@ function	ansi::goto_col()
 	"
 	local	col="${1:-}"
 
-	printf "${DEFAULT_ANSI_ESC}%dG" "${col}"
+	printf "${ESC}%dG" "${col}"
 }
 
 #<

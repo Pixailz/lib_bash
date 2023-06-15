@@ -164,15 +164,28 @@ function	utils::mkdir()
 
 function	utils::update_repo()
 {
+	: "
+	INFO
+		LIB				utils
+		FUNCTION		update_repo
+		DESC			update a repo given a path
+		ARG				[1] git_link=${1}
+						[2] dst_dir=${2}
+	"
 	local	git_link="${1}"
 	local	git_repo="${git_link/*\/}"
 	local	git_user="${git_link/\/${git_repo}}"
-	local	git_user="${git_user/https:\/\/github\.com\/}"
 	local	dst_dir="${2}"
+	local	git_user
 	local	current_branch
 	local	current_commit_id
 	local	latest_commit_id
 
+	if [ "$(head -c3 <<<"${git_link}")" == "git" ]; then
+		git_user="${git_user/git@github.com:}"
+	else
+		git_user="${git_user/https:\/\/github\.com\/}"
+	fi
 	print::info "Checking if (${LC}${dst_dir}/${git_repo}${RST}) is updated "
 	if [ -d "${dst_dir}/${git_repo}" ]; then
 		cd "${dst_dir}/${git_repo}"
