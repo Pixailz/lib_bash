@@ -90,7 +90,7 @@ function	log::main_title()
 		printf -v CL[0] "%0.s " $(seq 1 ${center_splited})
 		printf -v CR[0] "%0.s " $(seq 1 ${center_splited}) 1
 	fi
-	printf -v date " %(%H:%m:%y %x)T"
+	printf -v date "%(%H:%m:%y %x)T"
 	center_off=$((${LOG_TITLE_LENGTH} - ${#date}))
 	center_splited=$(( (${center_off} - 2) / 2 ))
 	if [ $(( ${center_off} % 2)) == 0 ]; then

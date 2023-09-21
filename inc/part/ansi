@@ -17,8 +17,8 @@ source ${DIR_INC}/part/print
 ## BASE
 NO_ANSI=0
 ESC="\x1b"
-BEG_ANSI="\001"
-END_ANSI="\002"
+BEG_ANSI="\x01"
+END_ANSI="\x02"
 
 LOAD_TTS=0.2
 DOWN_TTS=0.2
