@@ -131,7 +131,7 @@ function	ansi::set_cursor_pos()
 		pos_x="${pos_x}"
 		pos_y="${pos_y}"
 	fi
-	ansi::print "${pos_y};${pos_x}H"
+	ansi::print "[${pos_y};${pos_x}H"
 }
 
 function	ansi::get_cursor_pos()
