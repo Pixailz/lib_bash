@@ -135,7 +135,7 @@ function	utils::move_file()
 			print::warn "folder ${O}.${dst_folder}${RST} don't exist, creating"
 			mkdir -p ${dst_folder}
 		fi
-		cp -f ${src} ${dst}
+		cp -rf ${src} ${dst}
 		if [ "${?}" == 0 ]; then
 			print::pass "copied ${G}.${src/${DIR_MODULE}/}${RST} to ${G}${dst}${RST}."
 		else
