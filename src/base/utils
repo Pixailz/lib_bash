@@ -197,7 +197,6 @@ function	utils::update_repo()
 			print::warn "Not up-to-date, updating"
 			git reset --hard "origin/${current_branch}" && git pull ; true
 			print::info "Relaunch the script to make the update effective"
-			exit 1
 		else
 			print::pass "Already up-to-date (${LC}${current_commit_id::7}${RST})"
 		fi
