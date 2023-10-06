@@ -10,6 +10,3 @@ if [ ! -d "${DIR_LIB_BASH}" ]; then
 else
 	echo "lib bash is installed"
 fi
-
-## source lib_bash
-source "${DIR_LIB_BASH}/.config"

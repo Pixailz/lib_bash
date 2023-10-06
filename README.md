@@ -3,7 +3,21 @@ My library for bash scripts / progams
 
 ## How to install
 
+> CLI
+
 `bash -c "$(curl -sL https://bit.ly/lib_bash)"`
+
+> In script
+
+```bash
+# install lib_bash
+DIR_LIB_BASH="${HOME}/.local/lib/lib_bash"
+[ ! -d "${DIR_LIB_BASH}" ] && \
+	bash -c "$(curl -sL https://bit.ly/lib_bash)"
+
+# source .config
+. "${DIR_LIB_BASH}/.config"
+```
 
 ## Rules of the lib
 
