@@ -16,7 +16,7 @@ DIR_LIB_BASH="${HOME}/.local/lib/lib_bash"
 	bash -c "$(curl -sL https://bit.ly/lib_bash)"
 
 # source .config
-. "${DIR_LIB_BASH}/.config"
+[ ! "${LIBBASH_SOURCED}" ] && . "${DIR_LIB_BASH}/.config"
 ```
 
 ## Rules of the lib
