@@ -10,3 +10,6 @@ if [ ! -d "${DIR_LIB_BASH}" ]; then
 else
 	echo "lib bash is installed"
 fi
+
+. "${DIR_LIB_BASH}/.config"
+base::update
