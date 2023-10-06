@@ -5,8 +5,10 @@ DIR_LIB="${HOME}/.local/lib"
 DIR_LIB_BASH="${DIR_LIB}/lib_bash"
 [ ! -d "${DIR_LIB}" ] && mkdir -p "${DIR_LIB}"
 if [ ! -d "${DIR_LIB_BASH}" ]; then
-	printf "lib bash is not installed installing it.\n"
+	echo "lib bash is not installed installing it."
 	git clone https://github.com/Pixailz/lib_bash "${DIR_LIB_BASH}"
+else
+	echo "lib bash is installed"
 fi
 
 ## source lib_bash
