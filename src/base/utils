@@ -209,5 +209,8 @@ function	utils::update_repo()
 	fi
 }
 
+function	base::update()
+{ utils::update_repo "${SCRIPT_LINK}" "${DIR_INSTALL}"; }
+
 function	dry::exec()
 { [ "${DRY_RUN}" ] && echo "${*}" || ${@}; return ${?}; }
