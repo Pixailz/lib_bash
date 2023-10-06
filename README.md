@@ -9,7 +9,8 @@ My library for bash scripts / progams
 
 ## TODO
 
-1. make traps for cleaning stuff, handling error
+1. rewrite how parsing work
+  - should use getopt in a while loop
 
 ### ANDROID
 
@@ -24,5 +25,4 @@ My library for bash scripts / progams
 
 #### TODO
 
-1. make my own nethunter kernel
-2. build nethunter package for android 13 lineage
+1. build nethunter package for android 13 lineage
