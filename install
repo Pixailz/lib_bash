@@ -1,8 +1,9 @@
 #!/bin/bash
 
 ## install lib_bash
-DIR_LIB_BASH="${HOME}/.local/lib/lib_bash"
-[ ! -d "${HOME}/.local/lib" ] && mkdir -p "${HOME}/.local/lib"
+DIR_LIB="${HOME}/.local/lib"
+DIR_LIB_BASH="${DIR_LIB}/lib_bash"
+[ ! -d "${DIR_LIB}" ] && mkdir -p "${DIR_LIB}"
 if [ ! -d "${DIR_LIB_BASH}" ]; then
 	printf "lib bash is not installed installing it.\n"
 	git clone https://github.com/Pixailz/lib_bash "${DIR_LIB_BASH}"
