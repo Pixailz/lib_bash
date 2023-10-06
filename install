@@ -1,18 +1,12 @@
 #!/bin/bash
 
-INSTALL_DIR="${HOME}/.local/lib"
+## install lib_bash
+DIR_LIB_BASH="${HOME}/.local/lib/lib_bash"
+[ ! -d "${HOME}/.local/lib" ] && mkdir -p "${HOME}/.local/lib"
+if [ ! -d "${DIR_LIB_BASH}" ]; then
+	printf "lib bash is not installed installing it.\n"
+	git clone https://github.com/Pixailz/lib_bash "${DIR_LIB_BASH}"
+fi
 
-function	setup::prepare()
-{
-	[ -f "${INSTALL_DIR}" ] && rm -f "${INSTALL_DIR}"
-	[ ! -d "${INSTALL_DIR}" ] && mkdir -p "${INSTALL_DIR}"
-	[ -d "${INSTALL_DIR}/lib_bash" ] && rm -rf "${INSTALL_DIR}/lib_bash"
-}
-
-function	setup::install()
-{
-	cp -r "${PWD}" "${INSTALL_DIR}"
-}
-
-setup::prepare
-setup::install
+## source lib_bash
+source "${DIR_LIB_BASH}/.config"

@@ -1,6 +1,10 @@
 # lib_bash
 My library for bash scripts / progams
 
+## How to install
+
+`bash -c "$(curl -sL https://bit.ly/lib_bash)"`
+
 ## Rules of the lib
 
 1. each function must be commented like this [template](./rsc/template/comment.fonction.tmp)

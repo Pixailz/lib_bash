@@ -65,13 +65,13 @@ function	print::erro()
 	printf "%b %b%b\n" "${P_ERRO}" "${msg}" "${RST}"
 }
 
-function	print::erro_parse()
+function	print::err::usage()
 {
 	: "
 	INFO
 		LIB				print
-		FUNCTION		erro_parse
-		DESC			Print parsing error, tips for calling help then exit
+		FUNCTION		err::usage
+		DESC			print usage
 		ARG				SCRIPT_NAME=${SCRIPT_NAME}
 						[1] msg=${1:-}
 	"
@@ -81,12 +81,12 @@ function	print::erro_parse()
 	printf "Try '%s --help' for more information.\n" "${SCRIPT_NAME}"
 }
 
-function	print::errno_2()
+function	print::err::no_such_file()
 {
 	: "
 	INFO
 		LIB				print
-		FUNCTION		errno_2
+		FUNCTION		err::no_such_file
 		DESC			Error message for not founding a file
 		ARG				[1] file_path=${1}
 	"

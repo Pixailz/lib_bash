@@ -12,8 +12,8 @@ function	test::print()
 	print::pass "${msg}"
 	print::pass "${msg}" 0
 	print::erro "${msg}"
-	print::erro_parse "${msg}"
-	print::errno_2 "${msg}"
+	print::err::usage "${msg}"
+	print::err::no_such_file "${msg}"
 	print::pause
 }
 
