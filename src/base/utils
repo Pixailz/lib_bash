@@ -208,3 +208,6 @@ function	utils::update_repo()
 		cd - 1>/dev/null
 	fi
 }
+
+function	dry::exec()
+{ [ "${DRY_RUN}" ] && echo "${*}" || ${@}; return ${?}; }
