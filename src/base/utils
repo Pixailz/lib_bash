@@ -146,6 +146,42 @@ function	utils::move_file()
 	fi
 }
 
+function	utils::move_dir()
+{
+	: "
+	INFO
+		LIB				utils
+		FUNCTION		move_dir
+		DESC			move a dir from src to dst, ask for overwriting if it
+						exist
+		ARG				[1] src=${1}
+						[2] dst=${2}
+	"
+	local	src="${1}"
+	local	dst="${2}"
+	local	tmp
+	local	do_copy=1
+
+	if [ "${FORCE_MOVE:-}" != "1" ] && [ -d ${dst} ]; then
+		utils::ask "file ${RED}${2##*/}${RST} exist, do you wan't to overwrite it" "y"
+		[ "${?}" == 0 ] && do_copy=0
+	fi
+	if [ "${do_copy}" == 1 ]; then
+		if [ ! -d "${dst}" ]; then
+			print::warn "folder ${ORA}.${dst}${RST} don't exist, creating"
+			mkdir -p ${dst}
+		fi
+		cp -rf ${src} ${dst}
+		if [ "${?}" == 0 ]; then
+			print::pass "copied ${GRE}.${src/${DIR_MODULE}/}${RST} to ${GRE}${dst}${RST}."
+		else
+			print::pass "copy ${RED}failed${RST}." 1
+		fi
+	else
+		print::warn "configuration ${ORA}skiped${RST}."
+	fi
+}
+
 function	utils::mkdir()
 {
 	: "
