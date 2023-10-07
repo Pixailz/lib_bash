@@ -214,7 +214,7 @@ function	dry::run()
 	if [ "${DRY_RUN}" ]; then
 		printf "${P_DRY_RUN}: %b\n" "${*}"
 	else
-		${@}
+		${*}
 		return ${?}
 	fi
 }

@@ -117,7 +117,7 @@ FONT_CHAR=(
 )
 
 # if not monospaced font, pad the icon with a space
-[ "${HAVE_MONO_FONT}" != "1" ] && UNI_PAD="" || UNI_PAD=" "
+[ "${HAVE_MONO_FONT}" == "1" ] && UNI_PAD="" || UNI_PAD=" "
 
 for key in ${!FONT_CHAR[@]}; do
 	declare -g "${key}"="${FONT_CHAR[${key}]}${UNI_PAD}"
