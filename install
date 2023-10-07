@@ -9,7 +9,6 @@ if [ ! -d "${DIR_LIB_BASH}" ]; then
 	git clone https://github.com/Pixailz/lib_bash "${DIR_LIB_BASH}"
 else
 	echo "lib bash is installed"
+	. "${DIR_LIB_BASH}/.config"
+	base::update
 fi
-
-. "${DIR_LIB_BASH}/.config"
-base::update

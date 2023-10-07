@@ -1,4 +1,5 @@
 #!/bin/bash
+: ${LOG_FILE?}
 
 function	log::print()
 {
