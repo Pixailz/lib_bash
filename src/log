@@ -49,7 +49,7 @@ function	log::print()
 	elif [ "${print_out}" == 2 ]; then
 		echo "${msg}" >> "${LOG_FILE}"
 	elif [ "${print_out}" == 3 ]; then
-		echo "${msg}" | tee -a >> "${LOG_FILE}"
+		echo "${msg}" |& tee -a "${LOG_FILE}"
 	fi
 }
 
