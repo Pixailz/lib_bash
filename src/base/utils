@@ -211,7 +211,7 @@ function	utils::update_repo()
 
 function	dry::run()
 {
-	if [ "${DRY_RUN}" ]; then
+	if [ "${DRY_RUN:-}" ]; then
 		echo -e "${P_DRY_RUN}: $(tr '\n' ' ' <<< ${*})"
 	else
 		${@}
