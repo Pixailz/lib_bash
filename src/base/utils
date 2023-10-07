@@ -212,9 +212,9 @@ function	utils::update_repo()
 function	dry::run()
 {
 	if [ "${DRY_RUN}" ]; then
-		printf "${P_DRY_RUN}: %b\n" "${*}"
+		printf "${P_DRY_RUN}: %s\n" "${@}"
 	else
-		${*}
+		${@}
 		return ${?}
 	fi
 }
