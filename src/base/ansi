@@ -45,7 +45,7 @@ function	ansi::toggle_color()
 	P_PASS="[${GRE}PASS${RST}]"
 	P_FAIL="[${RED}FAIL${RST}]"
 	P_ERRO="[${RED}ERRO${RST}]"
-	P_DRY_RUN="[${ORA}DRYR${RST}]"
+	P_DRY_RUN="[${ORA}DRYRUN${RST}]"
 	P_USAGE="[${GRE}USAG${RST}]"
 
 	SUCCESS="[${GRE}+${RST}]"

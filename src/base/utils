@@ -212,7 +212,7 @@ function	utils::update_repo()
 function	dry::run()
 {
 	if [ "${DRY_RUN}" ]; then
-		printf "${P_DRY_RUN}: %s\n" "${@}"
+		echo -e "${P_DRY_RUN}: $(tr '\n' ' ' <<< ${*})"
 	else
 		${@}
 		return ${?}
