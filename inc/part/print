@@ -11,6 +11,6 @@ depend on:
 [ "${INC_PROT_PRINT:-0}" == 1 ] && return || INC_PROT_PRINT=1
 
 # DEPENDENCIES
-source ${DIR_INC}/part/ansi
+source "${DIR_INC}/part/ansi"
 
-source ${DIR_SRC}/base/print
+source "${DIR_SRC}/base/print"

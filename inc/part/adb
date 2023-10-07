@@ -11,6 +11,6 @@ depend on:
 [ "${INC_PROT_ADB:-0}" == 1 ] && return || INC_PROT_ADB=1
 
 # DEPENDENCIES
-source ${DIR_INC}/base
+source "${DIR_INC}/base"
 
-source ${DIR_SRC}/android/adb
+source "${DIR_SRC}/android/adb"

@@ -37,29 +37,30 @@ function	ansi::toggle_color()
 
 	# COMPOSITE
 
-	BL_R="${BL}${R}"
+	BL_R="${BLI}${RED}"
 
-	P_INFO="[${LC}INFO${RST}]"
-	P_WARN="[${O}WARN${RST}]"
-	P_QUES="[${B}QUES${RST}]"
-	P_PASS="[${G}PASS${RST}]"
-	P_FAIL="[${R}FAIL${RST}]"
-	P_ERRO="[${R}ERRO${RST}]"
-	P_USAGE="[${G}USAG${RST}]"
+	P_INFO="[${LCYA}INFO${RST}]"
+	P_WARN="[${ORA}WARN${RST}]"
+	P_QUES="[${BLU}QUES${RST}]"
+	P_PASS="[${GRE}PASS${RST}]"
+	P_FAIL="[${RED}FAIL${RST}]"
+	P_ERRO="[${RED}ERRO${RST}]"
+	P_DRY_RUN="[${ORA}DRYR${RST}]"
+	P_USAGE="[${GRE}USAG${RST}]"
 
-	SUCCESS="[${G}+${RST}]"
-	FAILED="[${R}-${RST}]"
-	INFO="[${B}*${RST}]"
-	WARN="[${O}*${RST}]"
+	SUCCESS="[${GRE}+${RST}]"
+	FAILED="[${RED}-${RST}]"
+	INFO="[${BLU}*${RST}]"
+	WARN="[${ORA}*${RST}]"
 
 	MOV_BEG_DEL_LIN="${MOV_1UP}${DEL_LIN}"
 	CLR_SCR_CUR_HOM="${CLR_SCR}${CUR_HOME}"
 
 	# OTHER LIB
-	PB_COLOR="${R}"
-	LOG_TITLE_DEFAULT_COLOR="${G}"
-	DOWN_COLOR="${O}"
-	LOAD_COLOR="${C}"
+	PB_COLOR="${RED}"
+	LOG_TITLE_DEFAULT_COLOR="${GRE}"
+	DOWN_COLOR="${ORA}"
+	LOAD_COLOR="${CYA}"
 }
 
 function	ansi::move_up_del_print()

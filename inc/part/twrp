@@ -11,8 +11,8 @@ depend on:
 [ "${INC_PROT_TUI:-0}" == 1 ] && return || INC_PROT_TUI=1
 
 # DEPENDENCIES
-source ${DIR_INC}/part/adb
+source "${DIR_INC}/part/adb"
 
-source ${DIR_SRC}/android/twrp
+source "${DIR_SRC}/android/twrp"
 
 

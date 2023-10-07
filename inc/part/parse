@@ -11,7 +11,7 @@ depend on:
 [ "${INC_PROT_PARSE:-0}" == 1 ] && return || INC_PROT_PARSE=1
 
 # DEPENDENCIES
-source ${DIR_INC}/base
+source "${DIR_INC}/base"
 
 # CONFIG
 PARSE_OPT_SHORT="vh"
@@ -30,4 +30,4 @@ TMP_ERROR="${DIR_BASE}/tmp.error"
 ## TEMPLATE not needed
 SERVER_CONFIG="config.conf"
 
-source ${DIR_SRC}/parse
+source "${DIR_SRC}/parse"

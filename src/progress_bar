@@ -13,9 +13,9 @@ function	pb::done()
 	local	elapsed=$(($(date +"%s%3N") - ${PB_BEGIN_TS}))
 
 	printf "${MOV_BEG_DEL_LIN}${MOV_BEG_DEL_LIN}"
-	printf "(${B}%${#PB_LENGTH}d${RST}/${R}%d${RST}) " "${PB_INDEX}" "${PB_LENGTH}"
-	printf "%s: ${G}DONE${RST} " "${title}"
-	printf "(${R}elapsed${RST}: %dms)\n" "${elapsed}"
+	printf "(${BLU}%${#PB_LENGTH}d${RST}/${RED}%d${RST}) " "${PB_INDEX}" "${PB_LENGTH}"
+	printf "%s: ${GRE}DONE${RST} " "${title}"
+	printf "(${RED}elapsed${RST}: %dms)\n" "${elapsed}"
 }
 
 function	pb::print()
@@ -46,7 +46,7 @@ function	pb::print()
 	if [ ${PB_INDEX} -ne 1 ]; then
 		printf "${MOV_BEG_DEL_LIN}${MOV_BEG_DEL_LIN}"
 	fi
-	printf "(${B}%${#PB_LENGTH}d${RST}/${R}%d${RST}) %s\n" "${PB_INDEX}" "${PB_LENGTH}" "${filename}"
+	printf "(${BLU}%${#PB_LENGTH}d${RST}/${RED}%d${RST}) %s\n" "${PB_INDEX}" "${PB_LENGTH}" "${filename}"
 	printf "%3d%% " "${curr_pourcentage}"
 	printf "[${PB_COLOR}%s${RST}]\n" "${pb_full}${pb_empty}"
 }

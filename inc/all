@@ -14,12 +14,12 @@ ${DIR_INC}/part/*
 "
 
 # BASE PART
-source ${DIR_INC}/base
+source "${DIR_INC}/base"
 # ANDROID PART
-source ${DIR_INC}/android
+source "${DIR_INC}/android"
 
 # ORTHER
-source ${DIR_INC}/part/log
-source ${DIR_INC}/part/tui
-source ${DIR_INC}/part/progress_bar
-source ${DIR_INC}/part/parse
+source "${DIR_INC}/part/log"
+source "${DIR_INC}/part/tui"
+source "${DIR_INC}/part/progress_bar"
+source "${DIR_INC}/part/parse"

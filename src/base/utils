@@ -80,10 +80,10 @@ function	utils::choice()
 		index=0
 		for item in "${choices[@]}"; do
 			let "index_plus_one=index+1"
-			printf "\t[${R}%0${choice_length}d${RST}] %b\n" "${index_plus_one}" "${item}"
+			printf "\t[${RED}%0${choice_length}d${RST}] %b\n" "${index_plus_one}" "${item}"
 			index="${index_plus_one}"
 		done
-		printf "\n\t[${R}q${RST}]%s\n\n" "${return_title}"
+		printf "\n\t[${RED}q${RST}]%s\n\n" "${return_title}"
 		read -p "choice> "		\
 			 -n "${choice_length}"	\
 			 choice
@@ -127,22 +127,22 @@ function	utils::move_file()
 	local	do_copy=1
 
 	if [ "${FORCE_MOVE:-}" != "1" ] && [ -f ${dst} ]; then
-		utils::ask "file ${R}${2##*/}${RST} exist, do you wan't to overwrite it" "y"
+		utils::ask "file ${RED}${2##*/}${RST} exist, do you wan't to overwrite it" "y"
 		[ "${?}" == 0 ] && do_copy=0
 	fi
 	if [ "${do_copy}" == 1 ]; then
 		if [ ! -d "${dst_folder}" ]; then
-			print::warn "folder ${O}.${dst_folder}${RST} don't exist, creating"
+			print::warn "folder ${ORA}.${dst_folder}${RST} don't exist, creating"
 			mkdir -p ${dst_folder}
 		fi
 		cp -rf ${src} ${dst}
 		if [ "${?}" == 0 ]; then
-			print::pass "copied ${G}.${src/${DIR_MODULE}/}${RST} to ${G}${dst}${RST}."
+			print::pass "copied ${GRE}.${src/${DIR_MODULE}/}${RST} to ${GRE}${dst}${RST}."
 		else
-			print::pass "copy ${R}failed${RST}." 1
+			print::pass "copy ${RED}failed${RST}." 1
 		fi
 	else
-		print::warn "configuration ${O}skiped${RST}."
+		print::warn "configuration ${ORA}skiped${RST}."
 	fi
 }
 
@@ -186,7 +186,7 @@ function	utils::update_repo()
 	else
 		git_user="${git_user/https:\/\/github\.com\/}"
 	fi
-	print::info "Checking if (${LC}${dst_dir}/${git_repo}${RST}) is updated "
+	print::info "Checking if (${LCYA}${dst_dir}/${git_repo}${RST}) is updated "
 	if [ -d "${dst_dir}/${git_repo}" ]; then
 		cd "${dst_dir}/${git_repo}"
 		current_branch=$(git rev-parse --abbrev-ref HEAD)
@@ -198,7 +198,7 @@ function	utils::update_repo()
 			git reset --hard "origin/${current_branch}" && git pull ; true
 			print::info "Relaunch the script to make the update effective"
 		else
-			print::pass "Already up-to-date (${LC}${current_commit_id::7}${RST})"
+			print::pass "Already up-to-date (${LCYA}${current_commit_id::7}${RST})"
 		fi
 		cd - 1>/dev/null
 	else
@@ -209,8 +209,12 @@ function	utils::update_repo()
 	fi
 }
 
-function	base::update()
-{ utils::update_repo "${SCRIPT_LINK}" "${DIR_INSTALL}"; }
-
-function	dry::exec()
-{ [ "${DRY_RUN}" ] && echo "${*}" || ${@}; return ${?}; }
+function	dry::run()
+{
+	if [ "${DRY_RUN}" ]; then
+		printf "${P_DRY_RUN}: %b\n" "${*}"
+	else
+		${@}
+		return ${?}
+	fi
+}

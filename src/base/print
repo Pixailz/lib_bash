@@ -92,7 +92,7 @@ function	print::err::no_such_file()
 	"
 	local	file_path="${1:-}"
 
-	print::warn "No such file or directory (${O}${1}${RST})."
+	print::warn "No such file or directory (${ORA}${1}${RST})."
 }
 
 function	print::pause()

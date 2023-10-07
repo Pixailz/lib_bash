@@ -142,27 +142,27 @@ function	ansi::toggle_color()
 	fi
 
 	# COMPOSITE
-	BL_R="${BL}${R}"
+	BL_R="${BLI}${RED}"
 
-	P_INFO="[${LC}INFO ${RST}]"
-	P_WARN="[${O}WARN ${RST}]"
-	P_QUES="[${B}QUEST${RST}]"
-	P_PASS="[${G}PASS ${RST}]"
-	P_FAIL="[${R}FAIL${RST}]"
-	P_ERRO="[${R}ERROR${RST}]"
-	P_USAGE="[${G}USAGE${RST}]"
+	P_INFO="[${LCYA}INFO ${RST}]"
+	P_WARN="[${ORA}WARN ${RST}]"
+	P_QUES="[${BLU}QUEST${RST}]"
+	P_PASS="[${GRE}PASS ${RST}]"
+	P_FAIL="[${RED}FAIL${RST}]"
+	P_ERRO="[${RED}ERROR${RST}]"
+	P_USAGE="[${GRE}USAGE${RST}]"
 
-	SUCCESS="[${G}+${RST}]"
-	FAILED="[${R}-${RST}]"
-	INFO="[${B}*${RST}]"
-	WARN="[${O}*${RST}]"
+	SUCCESS="[${GRE}+${RST}]"
+	FAILED="[${RED}-${RST}]"
+	INFO="[${BLU}*${RST}]"
+	WARN="[${ORA}*${RST}]"
 
 	MOV_BEG_DEL_LIN="${MOV_1UP}${DEL_LIN}"
 	CLR_SCR_CUR_HOM="${CLR_SCR}${CUR_HOME}"
 
 	# OTHER LIB
-	PB_COLOR="${LC}"
-	LOG_TITLE_DEFAULT_COLOR=${G}
+	PB_COLOR="${LCYA}"
+	LOG_TITLE_DEFAULT_COLOR=${GRE}
 }
 
 function	ansi::move_up_del_print()
@@ -315,7 +315,7 @@ function	print::err::no_such_file()
 	"
 	local	file_path="${1:-}"
 
-	print::warn "No such file or directory (${O}${1}${RST})."
+	print::warn "No such file or directory (${ORA}${1}${RST})."
 }
 
 function	print::pause()
@@ -416,10 +416,10 @@ function	utils::choice()
 		index=0
 		for item in "${choices[@]}"; do
 			let "index_plus_one=index+1"
-			printf "\t[${R}%0${choice_length}d${RST}] %b\n" "${index_plus_one}" "${item}"
+			printf "\t[${RED}%0${choice_length}d${RST}] %b\n" "${index_plus_one}" "${item}"
 			index="${index_plus_one}"
 		done
-		printf "\n\t[${R}q${RST}]%s\n\n" "${return_title}"
+		printf "\n\t[${RED}q${RST}]%s\n\n" "${return_title}"
 		read -p "choice> "		\
 			 -n "${choice_length}"	\
 			 choice
@@ -464,9 +464,9 @@ function	pb::done()
 	local	elapsed=$(($(date +"%s%3N") - ${PB_BEGIN_TS}))
 
 	printf "${MOV_BEG_DEL_LIN}${MOV_BEG_DEL_LIN}"
-	printf "(${B}%${#PB_LENGTH}d${RST}/${R}%d${RST}) " "${PB_INDEX}" "${PB_LENGTH}"
-	printf "%s: ${G}DONE${RST} " "${title}"
-	printf "(${R}elapsed${RST}: %dms)\n" "${elapsed}"
+	printf "(${BLU}%${#PB_LENGTH}d${RST}/${RED}%d${RST}) " "${PB_INDEX}" "${PB_LENGTH}"
+	printf "%s: ${GRE}DONE${RST} " "${title}"
+	printf "(${RED}elapsed${RST}: %dms)\n" "${elapsed}"
 }
 
 function	pb::print()
@@ -503,7 +503,7 @@ function	pb::print()
 	if [ ${PB_INDEX} -ne 1 ]; then
 		printf "${MOV_BEG_DEL_LIN}${MOV_BEG_DEL_LIN}"
 	fi
-	printf "(${B}%${#PB_LENGTH}d${RST}/${R}%d${RST}) %s\n" "${PB_INDEX}" "${PB_LENGTH}" "${filename}"
+	printf "(${BLU}%${#PB_LENGTH}d${RST}/${RED}%d${RST}) %s\n" "${PB_INDEX}" "${PB_LENGTH}" "${filename}"
 	printf "%s[${PB_COLOR}%s${RST}]\n" "${curr_pourcentage}" "${pb_full}${pb_empty}"
 }
 

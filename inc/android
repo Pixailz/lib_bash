@@ -12,7 +12,7 @@ depend on:
 [ "${INC_PROT_ANDROID:-0}" == 1 ] && return || INC_PROT_ANDROID=1
 
 # DEPENDENCIES
-source ${DIR_INC}/base
+source "${DIR_INC}/base"
 
 DIR_ANDROID="${DIR_SRC}/android"
 PT_DIR="${DIR_ANDROID}/file/platform-tools"
@@ -24,7 +24,7 @@ DFLT_TWRP_INST="${DIR_ANDROID}/file/twrp-installer-3.7.0_9-0-fajita.zip"
 
 TTS_ADB=1
 
-source ${DIR_SRC}/android/adb
-source ${DIR_SRC}/android/twrp
+source "${DIR_SRC}/android/adb"
+source "${DIR_SRC}/android/twrp"
 
 

@@ -1,0 +1,12 @@
+#!/bin/bash
+
+function	cli::update()
+{ utils::update_repo "${SCRIPT_LINK}" "${DIR_INSTALL}"; }
+
+function	cli::load()
+{
+	source "${DIR_BASE}/.config";
+}
+
+function	cli::unload()
+{ :; } # TODO

@@ -11,12 +11,12 @@ depend on:
 [ "${INC_PROT_ANSI:-0}" == 1 ] && return || INC_PROT_ANSI=1
 
 # DEPENDENCIES
-source ${DIR_INC}/part/print
+source "${DIR_INC}/part/print"
 
 # ANSI CHAR CONFIG
 ## BASE
 NO_ANSI=0
-ESC="\x1b"
+ESC="\e"
 BEG_ANSI="\x01"
 END_ANSI="\x02"
 
@@ -30,21 +30,29 @@ USE_ENCL_ANSI=1
 declare -gA ANSI
 ANSI=(
 		# COLOR
-	["RST"]="[0m"		# RESET
-	["G"]="[38;5;40m"	# GREEN
-	["R"]="[38;5;196m"	# RED
-	["B"]="[34m"			# BLUE
-	["Y"]="[33m"			# YELLOW
-	["C"]="[36m"			# CYAN
-	["M"]="[35m"			# MAGENTA
-	["O"]="[38;5;214m"	# ORANGE
-	["LG"]="[92m"		# LIGHT GREEN
-	["LY"]="[93m"		# LIGHT_YELLOW
-	["LB"]="[94m"		# LIGHT_BLUE
-	["LM"]="[95m"		# LIGHT_MAGENTA
-	["LC"]="[96m"		# LIGHT_CYAN
+	["RST"]="[00m"			# RESET
+	["WHI"]="[38;5;15m"		# WHITE
+	["GRA"]="[38;5;242m"	# GRAY
+	["BLA"]="[38;5;16m"		# BLACK
+
+	["GRE"]="[38;5;40m"		# GREEN
+	["RED"]="[38;5;196m"	# RED
+	["BLU"]="[34m"			# BLUE
+	["YEL"]="[33m"			# YELLOW
+	["CYA"]="[36m"			# CYAN
+	["MAG"]="[35m"			# MAGENTA
+	["PUR"]="[38;5;93m"		# PURPLE
+	["PIN"]="[38;5;207m"	# PINK
+	["ORA"]="[38;5;208m"	# ORANGE
+
+	["LGRE"]="[92m"			# LIGHT GREEN
+	["LYEL"]="[93m"			# LIGHT_YELLOW
+	["LBLU"]="[94m"			# LIGHT_BLUE
+	["LMAG"]="[95m"			# LIGHT_MAGENTA
+	["LCYA"]="[96m"			# LIGHT_CYAN
 		# MODIFIER
-	["BL"]="[05m"		# BLINKING
+	["BLI"]="[05m"			# BLINKING
+	["BOL"]="[01m"			# BOLD
 		# CURSOR THING
 	["ENA_CUR"]="[?25h"
 	["DIS_CUR"]="[?25l"
@@ -94,4 +102,25 @@ LOAD_0="⢿"
 PG_SPLIT="╸"
 PG_FULL="━"
 
-source ${DIR_SRC}/base/ansi
+declare -gA FONT_CHAR
+FONT_CHAR=(
+	["LOGO_DOCKER"]="󰡨"
+	["LOGO_UBUNTU"]=""
+	["LOGO_DEBIAN"]=""
+	["LOGO_TERMUX"]=""
+	["LOGO_KALI"]=""
+	["LOGO_ALPINE"]=""
+	["LOGO_ARCH"]="󰣇"
+	["LOGO_SSH"]=""
+	["LOGO_APPLE"]=""
+	["LOGO_GIT"]=""
+)
+
+# if not monospaced font, pad the icon with a space
+[ "${HAVE_MONO_FONT}" != "1" ] && UNI_PAD="" || UNI_PAD=" "
+
+for key in ${!FONT_CHAR[@]}; do
+	declare -g "${key}"="${FONT_CHAR[${key}]}${UNI_PAD}"
+done
+
+source "${DIR_SRC}/base/ansi"

@@ -1,0 +1,34 @@
+name: CI (LibBash)
+
+on:
+  pull_request:
+    # paths:
+    #   - 'inc/**/**'
+    #   - 'src/**/**'
+    #   - '.config'
+    #   - 'install'
+
+jobs:
+  info:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 💬 github
+        run: |+
+          echo "Who launched: ${{ github.actor }}"
+          echo "On branch:    ${{ github.ref_name }}"
+          echo "Commit sha:   ${{ github.sha }}"
+          echo "Vars"
+
+      - name: 💬 bash version
+        run: bash --help
+
+      - name: 💬 bash vars
+        run: env
+
+  do-part:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    uses: ./.github/workflows/CI-install.yaml
+    with:
+      mode: ${{ matrix.os }}

@@ -9,7 +9,7 @@ function	test::log()
 	local	old_log_pad_str="${LOG_PAD_STR}"
 
 	# all default
-	log::print "THIS IS A LOGGED AND PRINTED TEXT"
+	log::print "no_format" "THIS IS A LOGGED AND PRINTED TEXT"
 	# no format (DEFAULT)
 	log::print "THIS IS A LOGGED AND PRINTED TEXT" -1
 	# failed
@@ -48,12 +48,12 @@ function	test::log()
 	# stdout only
 	log::main_title "THIS IS A TITLE" 1
 	# Specify color
-	log::main_title "THIS IS A TITLE" 1 "${O}"
+	log::main_title "THIS IS A TITLE" 1 "${ORA}"
 
 	# print main_title with colors in title
 	## have to toggle ANSI enclosing one by pass one to ansi::toggle
 	ansi::toggle 1
-	log::main_title "${R}BIG${RST} ${B}TITLE${RST}" 3
+	log::main_title "${RED}BIG${RST} ${BLU}TITLE${RST}" 3
 	## disable ANSI enclosing
 	ansi::toggle
 }

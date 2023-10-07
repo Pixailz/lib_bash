@@ -6,9 +6,11 @@ ${DIR_INC}/
 		- ${DIR_INC}/ansi
 		- ${DIR_INC}/print
 		- ${DIR_INC}/utils
+		- ${DIR_INC}/cli
 "
 
 # BASE PART
-source ${DIR_INC}/part/ansi
-source ${DIR_INC}/part/print
-source ${DIR_INC}/part/utils
+source "${DIR_INC}/part/ansi"
+source "${DIR_INC}/part/print"
+source "${DIR_INC}/part/utils"
+source "${DIR_INC}/part/cli"

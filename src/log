@@ -33,28 +33,23 @@ function	log::print()
 	local	offset_tab=""
 
 	while [ "${offset}" -gt 0 ]; do
-		offset_tab="${offset_tab}${LOG_PAD_STR}"
+		offset_tab="${offset_tab}${LOG_PAD_STR:-}"
 		offset=$((${offset} - 1))
 	done
-	if [ "${mode}" == -1 ]; then
-		first_part="${msg}"
-	elif [ "${mode}" == 0 ]; then
-		first_part="${FAILED}${msg}"
-	elif [ "${mode}" == 1 ]; then
-		first_part="${SUCCESS}${msg}"
-	elif [ "${mode}" == 2 ]; then
-		first_part="${INFO}${msg}"
-	elif [ "${mode}" == 3 ]; then
-		first_part="${WARN}${msg}"
-	fi
+	case "${mode}" in
+		"-1") first_part="${msg}";;
+		"0") first_part="${FAILED}${msg}";;
+		"1") first_part="${SUCCESS}${msg}";;
+		"2") first_part="${INFO}${msg}";;
+		"3") first_part="${WARN}${msg}";;
+	esac
 	msg=$(printf "%s" "${first_part}" | sed "s|^|${offset_tab}|")
 	if [ "${print_out}" == 1 ]; then
-		printf "%b\n" "${msg}"
+		echo "${msg}"
 	elif [ "${print_out}" == 2 ]; then
-		printf "%b\n" "${msg}" >> ${LOG_FILE}
+		echo "${msg}" >> "${LOG_FILE}"
 	elif [ "${print_out}" == 3 ]; then
-		printf "%b\n" "${msg}"
-		printf "%b\n" "${msg}" >> ${LOG_FILE}
+		echo "${msg}" | tee -a >> "${LOG_FILE}"
 	fi
 }
 

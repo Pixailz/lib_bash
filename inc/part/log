@@ -11,7 +11,7 @@ depend on:
 [ "${INC_PROT_LOG:-0}" == 1 ] && return || INC_PROT_LOG=1
 
 # DEPENDENCIES
-source ${DIR_INC}/base
+source "${DIR_INC}/base"
 
 # CONFIG
 LOG_FILE="${DIR_BASE}/exec.log"
@@ -23,4 +23,4 @@ LOG_TITLE_LENGTH=$(tput cols)
 #LOG_PAD_STR=" + "
 LOG_PAD_STR="   "
 
-source ${DIR_SRC}/log
+source "${DIR_SRC}/log"

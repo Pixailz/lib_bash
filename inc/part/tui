@@ -11,8 +11,8 @@ depend on:
 [ "${INC_PROT_TUI:-0}" == 1 ] && return || INC_PROT_TUI=1
 
 # DEPENDENCIES
-source ${DIR_INC}/base
+source "${DIR_INC}/base"
 
 declare -A WAIT_LIST=()
 
-source ${DIR_SRC}/tui
+source "${DIR_SRC}/tui"

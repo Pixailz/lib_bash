@@ -11,7 +11,7 @@ depend on:
 [ "${INC_PROT_PROGRESS_BAR:-0}" == 1 ] && return || INC_PROT_PROGRESS_BAR=1
 
 # DEPENDENCIES
-source ${DIR_INC}/base
+source "${DIR_INC}/base"
 
 # ANSI CHAR CONFIG
 PB_LEN=40
@@ -23,4 +23,4 @@ PB_BEGIN_TS=""
 PB_LENGTH=""
 PB_INDEX=""
 
-source ${DIR_SRC}/progress_bar
+source "${DIR_SRC}/progress_bar"

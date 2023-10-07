@@ -1,0 +1,44 @@
+name: CI (LibBash:install)
+
+on:
+  workflow_call:
+    inputs:
+      os:
+        description: "in which os be run the test"
+        type: string
+
+jobs:
+
+  test-install:
+    runs-on: ${{ inputs.os }}
+    steps:
+
+      - name: "🧹 [WINDOWS]: Cleaning up previous run"
+        if: ${{ startsWith(inputs.os, 'windows') }}
+        run: echo WINDOWS
+
+      - name: "🧹 [UBUNTU]: Cleaning up previous run"
+        if: ${{ startsWith(inputs.os, 'ubuntu') }}
+        run: echo UBUNTU
+
+      - name: "🧹 [MACOS]: Cleaning up previous run"
+        if: ${{ startsWith(inputs.os, 'macos') }}
+        run: echo MACOS
+
+      - name: "☁️ Retrieve repo"
+        uses: actions/checkout@v3
+
+      # - name: "🔧 Export compose file var (prod)"
+      #   if: inputs.mode == 'prod'
+      #   run: echo "DOCKER_COMPOSE_FILE=docker-compose.yaml" >> $GITHUB_ENV
+
+      # - name: "🔧 Export compose file var (dev)"
+      #   if: inputs.mode == 'dev'
+      #   run: echo "DOCKER_COMPOSE_FILE=docker-compose-dev.yaml" >> $GITHUB_ENV
+
+      # - name: "🔧 Setup .env"
+      #   run: printf "${{ vars.SETUP_STR }}\n" | ./setup
+
+      # - name: "🤖 Build ${{ inputs.mode }}"
+      #   timeout-minutes: 5
+      #   run: docker compose -f ${DOCKER_COMPOSE_FILE} build

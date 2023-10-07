@@ -1,0 +1,18 @@
+#!/bin/bash
+
+: "
+${DIR_INC}/part/cli
+	cli include file, those include:
+		- ${DIR_SRC}/cli
+depend on:
+		- ${DIR_INC}/base/utils
+"
+
+[ "${INC_PROT_CLI:-0}" == 1 ] && return || INC_PROT_CLI=1
+
+# DEPENDENCIES
+source "${DIR_INC}/part/utils"
+
+declare -gA CLI_FUNCTION
+
+source "${DIR_SRC}/base/cli"

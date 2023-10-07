@@ -17,13 +17,17 @@ DIR_LIB_BASH="${HOME}/.local/lib/lib_bash"
 
 # source .config
 [ ! "${LIBBASH_SOURCED}" ] && . "${DIR_LIB_BASH}/.config"
+
+# test if work, in this case update lib_bash
+cli::update
 ```
 
 ## Rules of the lib
 
-1. each function must be commented like this [template](./rsc/template/comment.fonction.tmp)
+
+~~1. each function must be commented like this [template](./rsc/template/comment.fonction.tmp)
 2. each part of the lib have is own include file AND can be included multiple times
-3. for more details on each function of the lib, test [dir](./test/) is here to help you
+3. for more details on each function of the lib, test [dir](./test/) is here to help you~~
 
 ## TODO
 
