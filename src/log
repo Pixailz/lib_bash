@@ -38,18 +38,18 @@ function	log::print()
 	done
 	case "${mode}" in
 		"-1") first_part="${msg}";;
-		"0") first_part="${FAILED}${msg}";;
-		"1") first_part="${SUCCESS}${msg}";;
-		"2") first_part="${INFO}${msg}";;
-		"3") first_part="${WARN}${msg}";;
+		"0") first_part="${FAILED} ${msg}";;
+		"1") first_part="${SUCCESS} ${msg}";;
+		"2") first_part="${INFO} ${msg}";;
+		"3") first_part="${WARN} ${msg}";;
 	esac
 	msg=$(printf "%s" "${first_part}" | sed "s|^|${offset_tab}|")
 	if [ "${print_out}" == 1 ]; then
-		echo "${msg}"
+		echo -e "${msg}"
 	elif [ "${print_out}" == 2 ]; then
-		echo "${msg}" >> "${LOG_FILE}"
+		echo -e "${msg}" >> "${LOG_FILE}"
 	elif [ "${print_out}" == 3 ]; then
-		echo "${msg}" |& tee -a "${LOG_FILE}"
+		echo -e "${msg}" |& tee -a "${LOG_FILE}"
 	fi
 }
 
