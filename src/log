@@ -18,16 +18,16 @@ function	log::print()
 								- info		info
 								- ques		for questions
 								- warn		warn
-						[3] print_out=${3:-3}
+						[3] offset=${3:-0}
+							> number of ${LOG_PAD_STR} to print
+						[4] print_out=${4:-3}
 							> could be either:
 								- 1		only print
 								- 2		only log
 								- 3		both
-						[4] offset=${4:-0}
-							> number of ${LOG_PAD_STR} to print
 	"
 	local	msg="${1:-}"
-	local	mode="${2:--1}"
+	local	mode="${2:-raw}"
 	local	offset="${3:-0}"
 	local	print_out="${4:-3}"
 	local	first_part
@@ -45,13 +45,13 @@ function	log::print()
 		"ques") first_part="${L_QUES} ${msg}";;
 		"warn") first_part="${L_WARN} ${msg}";;
 	esac
-	msg=$(printf "%s" "${first_part}" | sed "s|^|${offset_tab}|")
+	msg="$(echo -e "${first_part}" | sed "s|^|${offset_tab}|")"
 	if [ "${print_out}" == 1 ]; then
-		echo -e "${msg}"
+		echo "${msg}"
 	elif [ "${print_out}" == 2 ]; then
-		echo -e "${msg}" >> "${LOG_FILE}"
+		echo "${msg}" >> "${LOG_FILE}"
 	elif [ "${print_out}" == 3 ]; then
-		echo -e "${msg}" |& tee -a "${LOG_FILE}"
+		echo "${msg}" |& tee -a "${LOG_FILE}"
 	fi
 }
 
@@ -113,7 +113,7 @@ function	log::main_title()
 		section_str=$(printf "%b" "${section_str}" | tr -d '\001\002')
 		ansi::toggle_color
 	fi
-	log::print "${section_str}" -1 0 "${mode}"
+	log::print "${section_str}" raw 0 "${mode}"
 }
 
 function	log::nl()

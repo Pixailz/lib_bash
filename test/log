@@ -2,40 +2,42 @@
 
 source ./.config
 
-source ${DIR_INC}/log
+source "${DIR_INC}/part/log"
 
 function	test::log()
 {
 	local	old_log_pad_str="${LOG_PAD_STR}"
 
 	# all default
-	log::print "no_format" "THIS IS A LOGGED AND PRINTED TEXT"
+	log::print "THIS IS A LOGGED AND PRINTED TEXT"
 	# no format (DEFAULT)
-	log::print "THIS IS A LOGGED AND PRINTED TEXT" -1
+	log::print "THIS IS A LOGGED AND PRINTED TEXT" raw
 	# failed
-	log::print "THIS IS A LOGGED AND PRINTED TEXT" 0
+	log::print "THIS IS A LOGGED AND PRINTED TEXT" fail
 	# success
-	log::print "THIS IS A LOGGED AND PRINTED TEXT" 1
+	log::print "THIS IS A LOGGED AND PRINTED TEXT" pass
 	# info
-	log::print "THIS IS A LOGGED AND PRINTED TEXT" 2
+	log::print "THIS IS A LOGGED AND PRINTED TEXT" info
+	# ques
+	log::print "THIS IS A LOGGED AND PRINTED TEXT" ques
 	# warn
-	log::print "THIS IS A LOGGED AND PRINTED TEXT" 3
+	log::print "THIS IS A LOGGED AND PRINTED TEXT" warn
 
 	# padding 0 (DEFAULT)
-	log::print "THIS IS A LOGGED AND PRINTED TEXT" 1 0
+	log::print "THIS IS A LOGGED AND PRINTED TEXT" fail 0
 	# padding 1
-	log::print "THIS IS A LOGGED AND PRINTED TEXT" 1 1
+	log::print "THIS IS A LOGGED AND PRINTED TEXT" fail 1
 	# changing LOG_PAD_STR
 	LOG_PAD_STR="[+]"
-	log::print "THIS IS A LOGGED AND PRINTED TEXT" 1 2
+	log::print "THIS IS A LOGGED AND PRINTED TEXT" fail  2
 	LOG_PAD_STR="${old_log_pad_str}"
 
 	# both (DEFAULT)
-	log::print "THIS IS A LOGGED AND PRINTED TEXT" -1 0 3
+	log::print "THIS IS A LOGGED AND PRINTED TEXT" raw 0 3
 	# only file
-	log::print "THIS IS A LOGGED TEXT" -1 0 2
+	log::print "THIS IS A LOGGED TEXT" raw 0 2
 	# only stdout
-	log::print "THIS IS A PRINTED TEXT" -1 0 1
+	log::print "THIS IS A PRINTED TEXT" raw 0 1
 
 
 
@@ -50,12 +52,7 @@ function	test::log()
 	# Specify color
 	log::main_title "THIS IS A TITLE" 1 "${ORA}"
 
-	# print main_title with colors in title
-	## have to toggle ANSI enclosing one by pass one to ansi::toggle
-	ansi::toggle 1
 	log::main_title "${RED}BIG${RST} ${BLU}TITLE${RST}" 3
-	## disable ANSI enclosing
-	ansi::toggle
 }
 
 test::log
