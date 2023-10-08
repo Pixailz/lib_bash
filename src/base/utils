@@ -126,23 +126,23 @@ function	utils::move_file()
 	local	tmp
 	local	do_copy=1
 
-	if [ "${FORCE_MOVE:-}" != "1" ] && [ -f ${dst} ]; then
+	if [ "${FORCE_MOVE:-}" != "1" ] && [ -f "${dst}" ]; then
 		utils::ask "file ${RED}${2##*/}${RST} exist, do you wan't to overwrite it" "y"
 		[ "${?}" == 0 ] && do_copy=0
 	fi
 	if [ "${do_copy}" == 1 ]; then
 		if [ ! -d "${dst_folder}" ]; then
-			log::print "folder ${ORA}.${dst_folder}${RST} don't exist, creating" warn
-			mkdir -p ${dst_folder}
+			log::warn "folder ${ORA}.${dst_folder}${RST} don't exist, creating" 0 1
+			mkdir -p "${dst_folder}"
 		fi
-		cp -rf ${src} ${dst}
+		cp -rf "${src}" "${dst}"
 		if [ "${?}" == 0 ]; then
-			log::print "copied ${GRE}.${src/${DIR_MODULE}/}${RST} to ${GRE}${dst}${RST}." pass
+			log::pass "copied ${GRE}.${src/${DIR_MODULE}/}${RST} to ${GRE}${dst}${RST}." 0 1
 		else
-			log::print "copy ${RED}failed${RST}." pass
+			log::fail "copy ${RED}failed${RST}." 0 1
 		fi
 	else
-		log::print "configuration ${ORA}skiped${RST}." warn
+		log::warn "configuration ${ORA}skiped${RST}." 0 1
 	fi
 }
 
@@ -165,26 +165,29 @@ function	utils::move_dir()
 	local	tmp
 	local	do_copy=1
 
-	if [ "${FORCE_MOVE:-}" != "1" ] && [ -d ${dst} ]; then
+	if [ "${FORCE_MOVE:-}" != "1" ] && [ -d "${dst}" ]; then
 		utils::ask "file ${RED}${2##*/}${RST} exist, do you wan't to overwrite it" "y"
 		[ "${?}" == 0 ] && do_copy=0
 	fi
 	if [ "${do_copy}" == 1 ]; then
 		if [ ! -d "${dst}" ]; then
-			print::warn "folder ${ORA}.${dst}${RST} don't exist, creating"
-			mkdir -p ${dst}
+			log::warn "folder ${ORA}.${dst}${RST} don't exist, creating" 0 1
+			mkdir -p "${dst}"
 		fi
-		if [ "${with_folder}" == "y" ]; then
-			src="${src}/*"
-		fi
-		cp -rf ${src} ${dst}
-		if [ "${?}" == 0 ]; then
-			print::pass "copied ${GRE}.${src/${PWD}/}${RST} to ${GRE}${dst}${RST}."
+		if [ "${in_folder}" == "y" ]; then
+			for dir in $(/usr/bin/ls -A "${src}"); do
+				cp -rf "${src}/${dir}" "${dst}";
+			done
 		else
-			print::pass "copy ${RED}failed${RST}." 1
+			cp -rf ${src[@]} "${dst}"
+		fi
+		if [ "${?}" == 0 ]; then
+			log::pass "copied ${GRE}.${src/${PWD}/}${RST} to ${GRE}${dst}${RST}." 0 1
+		else
+			log::fail "copy ${RED}failed${RST}." 0 1
 		fi
 	else
-		print::warn "configuration ${ORA}skiped${RST}."
+		log::warn "configuration ${ORA}skiped${RST}." 0 1
 	fi
 }
 
@@ -253,10 +256,33 @@ function	utils::update_repo()
 
 function	dry::run()
 {
+	: "
+	INFO
+		LIB				dry
+		FUNCTION		run
+		DESC			print or exec a command, given the DRY_RUN env value
+		ARG				[@] cmd=${@?}
+	"
 	if [ "${DRY_RUN:-}" ]; then
 		echo -e "${P_DRY_RUN}: $(tr '\n' ' ' <<< ${*})"
 	else
 		${@}
 		return ${?}
 	fi
+}
+
+function	is::installed()
+{
+	: "
+	INFO
+		LIB				is
+		FUNCTION		installed
+		DESC			check whether a package is installed
+		ARG				[1] package_name=${1?}
+		RETURN			0 on success, 1 on failure
+	"
+	local	package_name="${1}"
+
+	test -x "$(type -P ${package_name})"
+	return ${?}
 }
