@@ -48,10 +48,11 @@ function	ansi::toggle_color()
 	P_DRY_RUN="[${ORA}DRYRUN${RST}]"
 	P_USAGE="[${GRE}USAG${RST}]"
 
-	SUCCESS="[${GRE}+${RST}]"
-	FAILED="[${RED}-${RST}]"
-	INFO="[${BLU}*${RST}]"
-	WARN="[${ORA}*${RST}]"
+	L_SUCCESS="[${GRE}+${RST}]"
+	L_FAILED="[${RED}-${RST}]"
+	L_INFO="[${BLU}*${RST}]"
+	L_QUES="[${LCYA}?${RST}]"
+	L_WARN="[${ORA}*${RST}]"
 
 	MOV_BEG_DEL_LIN="${MOV_1UP}${DEL_LIN}"
 	CLR_SCR_CUR_HOM="${CLR_SCR}${CUR_HOME}"

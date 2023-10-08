@@ -12,18 +12,19 @@ function	log::print()
 		ARG				[1] msg=${1:-}
 						[2] mode=${2:--1}
 							> could be either:
-								- -1	no format
-								- 0		failed
-								- 1		success
-								- 2		info
-								- 3		warn
-						[3] offset=${3:-0}
-							> number of ${LOG_PAD_STR} to print
-						[4] print_out=${4:-3}
+								- raw	no format
+								- fail		failed
+								- pass		success
+								- info		info
+								- ques		for questions
+								- warn		warn
+						[3] print_out=${3:-3}
 							> could be either:
 								- 1		only print
 								- 2		only log
 								- 3		both
+						[4] offset=${4:-0}
+							> number of ${LOG_PAD_STR} to print
 	"
 	local	msg="${1:-}"
 	local	mode="${2:--1}"
@@ -37,11 +38,12 @@ function	log::print()
 		offset=$((${offset} - 1))
 	done
 	case "${mode}" in
-		"-1") first_part="${msg}";;
-		"0") first_part="${FAILED} ${msg}";;
-		"1") first_part="${SUCCESS} ${msg}";;
-		"2") first_part="${INFO} ${msg}";;
-		"3") first_part="${WARN} ${msg}";;
+		"raw") first_part="${msg}";;
+		"fail") first_part="${L_FAILED} ${msg}";;
+		"pass") first_part="${L_SUCCESS} ${msg}";;
+		"info") first_part="${L_INFO} ${msg}";;
+		"ques") first_part="${L_QUES} ${msg}";;
+		"warn") first_part="${L_WARN} ${msg}";;
 	esac
 	msg=$(printf "%s" "${first_part}" | sed "s|^|${offset_tab}|")
 	if [ "${print_out}" == 1 ]; then

@@ -33,6 +33,8 @@ cli::update
 
 1. rewrite how parsing work
   - should use getopt in a while loop
+1. rewrite how print work
+  - from now this is just printing char one by one, the goal is to have a buffer
 
 ### ANDROID
 

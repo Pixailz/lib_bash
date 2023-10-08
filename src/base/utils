@@ -153,12 +153,15 @@ function	utils::move_dir()
 		LIB				utils
 		FUNCTION		move_dir
 		DESC			move a dir from src to dst, ask for overwriting if it
-						exist
-		ARG				[1] src=${1}
-						[2] dst=${2}
+						exist. if in_folder i y, don't take src folder as base,
+						but src/*
+		ARG				[1] src=${1?}
+						[2] dst=${2?}
+						[3] in_folder=${3}
 	"
 	local	src="${1}"
 	local	dst="${2}"
+	local	in_folder="${3:-n}"
 	local	tmp
 	local	do_copy=1
 
@@ -171,9 +174,12 @@ function	utils::move_dir()
 			print::warn "folder ${ORA}.${dst}${RST} don't exist, creating"
 			mkdir -p ${dst}
 		fi
+		if [ "${with_folder}" == "y" ]; then
+			src="${src}/*"
+		fi
 		cp -rf ${src} ${dst}
 		if [ "${?}" == 0 ]; then
-			print::pass "copied ${GRE}.${src/${DIR_MODULE}/}${RST} to ${GRE}${dst}${RST}."
+			print::pass "copied ${GRE}.${src/${PWD}/}${RST} to ${GRE}${dst}${RST}."
 		else
 			print::pass "copy ${RED}failed${RST}." 1
 		fi
