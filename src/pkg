@@ -1,0 +1,84 @@
+#!/bin/bash
+
+function	pkg::not_implemented_yet()
+{
+	log::fail "${RED}${OS_ID}${RST} not implemented yet, aborting"
+}
+
+function	pkg::init()
+{
+	: "
+	INFO
+		LIB				pkg
+		FUNCTION		init
+		DESC			set all needed variables
+	"
+	case ${OS_ID} in
+		ubuntu|kali|debian)
+			PKG_MODE="debian"
+		;;
+		arch)
+			PKG_MODE="arch"
+		;;
+		*)
+			PKG_MODE=""
+		;;
+	esac
+}
+
+function	pkg::install()
+{
+	[ "${PKG_MODE}" == "" ] && pkg::not_implemented_yet && return
+	case ${PKG_MODE} in
+		"debian")
+			sudo "${PKG_APT_BASE}" ${PKG_APT_OPT[@]} install ${@}
+		;;
+		"arch")
+			sudo "${PKG_PAC_BASE}" ${PKG_PAC_OPT[@]} -S ${@}
+		;;
+	esac
+}
+
+function	pkg::update()
+{
+	local	unused_package
+
+	[ "${PKG_MODE}" == "" ] && pkg::not_implemented_yet && return
+	case ${PKG_MODE} in
+		"debian")
+			sudo "${PKG_APT_BASE}" ${PKG_APT_OPT[@]} update
+			sudo "${PKG_APT_BASE}" ${PKG_APT_OPT[@]} upgrade
+			sudo "${PKG_APT_BASE}" ${PKG_APT_OPT[@]} autoremove --purge
+		;;
+		"arch")
+			sudo "${PKG_PAC_BASE}" ${PKG_PAC_OPT[@]} -Syu
+			unused_package=($(sudo "${PKG_PAC_BASE}" -Qdtq))
+			if [ "${#unused_package[@]}" != 0 ]; then
+				sudo "${PKG_PAC_BASE}" ${PKG_PAC_OPT[@]} -Rs ${unused_package[@]}
+			fi
+		;;
+	esac
+	if [ -f /var/run/reboot-required ]; then
+		printf " rebooting in...\n"
+		utils::ask "Reboot required, do you wan't to reboot ?" "n" && \
+			do_reboot="y" || do_reboot="n"
+		if [ "${do_reboot}" == "y" ]; then
+			sudo shutdown --reboot now
+		fi
+	fi
+}
+
+function	pkg::remove()
+{
+	[ "${PKG_MODE}" == "" ] && pkg::not_implemented_yet && return
+	case ${PKG_MODE} in
+		"debian")
+			sudo "${PKG_APT_BASE}" ${PKG_APT_OPT[@]} autoremove --purge ${@}
+		;;
+		"arch")
+			sudo "${PKG_PAC_BASE}" ${PKG_PAC_OPT[@]} -Rs ${@}
+		;;
+	esac
+}
+
+pkg::init

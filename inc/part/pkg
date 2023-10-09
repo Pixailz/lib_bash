@@ -1,0 +1,33 @@
+#!/bin/bash
+
+: "
+${DIR_INC}/part/pkg
+	pkg include file, those include:
+		- ${DIR_SRC}/pkg
+depend on:
+		- ${DIR_INC}/base
+"
+
+[ "${INC_PROT_PKG:-0}" == 1 ] && return || INC_PROT_PKG=1
+
+# DEPENDENCIES
+source "${DIR_INC}/base"
+
+# CONFIG
+
+PKG_MODE=""
+
+# DEBIAN
+PKG_APT_BASE="apt -y"
+PKG_APT_OPT=(
+	"-y"
+)
+
+# ARCH
+PKG_PAC_BASE="pacman"
+PKG_YAY_BASE="yay"
+PKG_PAC_OPT=(
+	"--noconfirm"
+)
+
+source "${DIR_SRC}/pkg"

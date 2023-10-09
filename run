@@ -62,7 +62,10 @@ source ./.config
 # utils::update_repo "git@github.com:Pixailz/lib_bash" "./"
 # utils::update_repo "https://github.com/Pixailz/lib_bash" "./"
 
-ansi::get_cursor_pos
+# ansi::get_cursor_pos
 
-printf "X_POS : %s\n" "${CUR_POS_X}"
-printf "Y_POS : %s\n" "${CUR_POS_Y}"
+# printf "X_POS : %s\n" "${CUR_POS_X}"
+# printf "Y_POS : %s\n" "${CUR_POS_Y}"
+
+pkg::install "vim"
+pkg::update "vim"
