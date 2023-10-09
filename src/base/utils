@@ -286,3 +286,6 @@ function	is::installed()
 	test -x "$(type -P ${package_name})"
 	return ${?}
 }
+
+function curl::wrap()
+{ dry::run curl --location --progress-bar "${1}" --output "${2}"; }
