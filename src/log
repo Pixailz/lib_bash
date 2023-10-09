@@ -18,18 +18,18 @@ function	log::print()
 								- info		info
 								- ques		for questions
 								- warn		warn
-						[3] offset=${3:-0}
-							> number of ${LOG_PAD_STR} to print
-						[4] print_out=${4:-3}
+						[3] print_out=${3:-3}
 							> could be either:
 								- 1		only print
 								- 2		only log
 								- 3		both
+						[4] offset=${4:-${LOG_LEVEL}}
+							> number of ${LOG_PAD_STR} to print
 	"
 	local	msg="${1:-}"
 	local	mode="${2:-raw}"
-	local	offset="${3:-0}"
-	local	print_out="${4:-3}"
+	local	print_out="${3:-3}"
+	local	offset="${4:-${LOG_LEVEL:-0}}"
 	local	first_part
 	local	offset_tab=""
 
@@ -63,19 +63,19 @@ function	log::raw()
 		FUNCTION		raw
 		DESC			wrapper to log::print
 		ARG				[1] msg=${1:-}
-						[2] offset=${2:-0}
-							> number of ${LOG_PAD_STR} to print
-						[3] print_out=${3:-3}
+						[2] print_out=${3:-3}
 							> could be either:
 								- 1		only print
 								- 2		only log
 								- 3		both
+						[3] offset=${2:-0}
+							> number of ${LOG_PAD_STR} to print
 	"
 	local	msg="${1:-}"
-	local	offset="${2:-0}"
-	local	print_out="${3:-3}"
+	local	print_out="${2:-3}"
+	local	offset="${3:-}"
 
-	log::print "${msg}" raw "${offset}" "${print_out}"
+	log::print "${msg}" raw "${print_out}" ${offset}
 }
 
 function	log::fail()
@@ -86,19 +86,19 @@ function	log::fail()
 		FUNCTION		fail
 		DESC			wrapper to log::print
 		ARG				[1] msg=${1:-}
-						[2] offset=${2:-0}
-							> number of ${LOG_PAD_STR} to print
-						[3] print_out=${3:-3}
+						[2] print_out=${3:-3}
 							> could be either:
 								- 1		only print
 								- 2		only log
 								- 3		both
+						[3] offset=${2:-0}
+							> number of ${LOG_PAD_STR} to print
 	"
 	local	msg="${1:-}"
-	local	offset="${2:-0}"
-	local	print_out="${3:-3}"
+	local	print_out="${2:-3}"
+	local	offset="${3:-}"
 
-	log::print "${msg}" fail "${offset}" "${print_out}"
+	log::print "${msg}" fail "${print_out}" ${offset}
 }
 
 function	log::pass()
@@ -109,19 +109,19 @@ function	log::pass()
 		FUNCTION		pass
 		DESC			wrapper to log::print
 		ARG				[1] msg=${1:-}
-						[2] offset=${2:-0}
-							> number of ${LOG_PAD_STR} to print
-						[3] print_out=${3:-3}
+						[2] print_out=${3:-3}
 							> could be either:
 								- 1		only print
 								- 2		only log
 								- 3		both
+						[3] offset=${2:-0}
+							> number of ${LOG_PAD_STR} to print
 	"
 	local	msg="${1:-}"
-	local	offset="${2:-0}"
-	local	print_out="${3:-3}"
+	local	print_out="${2:-3}"
+	local	offset="${3:-}"
 
-	log::print "${msg}" pass "${offset}" "${print_out}"
+	log::print "${msg}" pass "${print_out}" ${offset}
 }
 
 function	log::info()
@@ -132,19 +132,19 @@ function	log::info()
 		FUNCTION		info
 		DESC			wrapper to log::print
 		ARG				[1] msg=${1:-}
-						[2] offset=${2:-0}
-							> number of ${LOG_PAD_STR} to print
-						[3] print_out=${3:-3}
+						[2] print_out=${3:-3}
 							> could be either:
 								- 1		only print
 								- 2		only log
 								- 3		both
+						[3] offset=${2:-0}
+							> number of ${LOG_PAD_STR} to print
 	"
 	local	msg="${1:-}"
-	local	offset="${2:-0}"
-	local	print_out="${3:-3}"
+	local	print_out="${2:-3}"
+	local	offset="${3:-}"
 
-	log::print "${msg}" info "${offset}" "${print_out}"
+	log::print "${msg}" info "${print_out}" ${offset}
 }
 
 function	log::ques()
@@ -155,19 +155,19 @@ function	log::ques()
 		FUNCTION		ques
 		DESC			wrapper to log::print
 		ARG				[1] msg=${1:-}
-						[2] offset=${2:-0}
-							> number of ${LOG_PAD_STR} to print
-						[3] print_out=${3:-3}
+						[2] print_out=${3:-3}
 							> could be either:
 								- 1		only print
 								- 2		only log
 								- 3		both
+						[3] offset=${2:-0}
+							> number of ${LOG_PAD_STR} to print
 	"
 	local	msg="${1:-}"
-	local	offset="${2:-0}"
-	local	print_out="${3:-3}"
+	local	print_out="${2:-3}"
+	local	offset="${3:-}"
 
-	log::print "${msg}" ques "${offset}" "${print_out}"
+	log::print "${msg}" ques "${print_out}" ${offset}
 }
 
 function	log::warn()
@@ -178,19 +178,19 @@ function	log::warn()
 		FUNCTION		warn
 		DESC			wrapper to log::print
 		ARG				[1] msg=${1:-}
-						[2] offset=${2:-0}
-							> number of ${LOG_PAD_STR} to print
-						[3] print_out=${3:-3}
+						[2] print_out=${3:-3}
 							> could be either:
 								- 1		only print
 								- 2		only log
 								- 3		both
+						[3] offset=${2:-0}
+							> number of ${LOG_PAD_STR} to print
 	"
 	local	msg="${1:-}"
-	local	offset="${2:-0}"
-	local	print_out="${3:-3}"
+	local	print_out="${2:-3}"
+	local	offset="${3:-}"
 
-	log::print "${msg}" warn "${offset}" "${print_out}"
+	log::print "${msg}" warn "${print_out}" ${offset}
 }
 
 function	log::main_title()
@@ -251,7 +251,7 @@ function	log::main_title()
 		section_str=$(printf "%b" "${section_str}" | tr -d '\001\002')
 		ansi::toggle_color
 	fi
-	log::raw "${section_str}" 0 "${mode}"
+	log::raw "${section_str}" "${mode}"
 }
 
 function	log::nl()
@@ -266,5 +266,5 @@ function	log::nl()
 	"
 	local	mode="${1}"
 
-	log::raw "" 0 "${mode}"
+	log::raw "" "${mode}"
 }

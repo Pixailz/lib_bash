@@ -22,5 +22,6 @@ LOG_TITLE_LENGTH=$(tput cols)
 #LOG_PAD_STR="[+]"
 #LOG_PAD_STR=" + "
 LOG_PAD_STR="   "
+LOG_LEVEL=0
 
 source "${DIR_SRC}/log"
