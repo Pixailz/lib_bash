@@ -284,7 +284,11 @@ function	is::installed()
 	local	package_name="${1}"
 
 	test -x "$(type -P ${package_name})"
-	return ${?}
+	if [ "${?}" == 0 ]; then
+		echo 1
+	else
+		echo 0
+	fi
 }
 
 function curl::wrap()
