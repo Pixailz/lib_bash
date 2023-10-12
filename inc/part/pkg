@@ -18,7 +18,7 @@ source "${DIR_INC}/base"
 PKG_MODE=""
 
 # DEBIAN
-PKG_APT_BASE="apt -y"
+PKG_APT_BASE="apt"
 PKG_APT_OPT=(
 	"-y"
 )
