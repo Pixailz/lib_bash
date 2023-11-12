@@ -114,7 +114,7 @@ FONT_CHAR=(
 	["LOGO_SSH"]=""
 	["LOGO_APPLE"]=""
 	["LOGO_GIT"]=""
-	["LOGO_WSL"]="󰨡"
+	["LOGO_WINDOWS"]=""
 )
 
 # if not monospaced font, pad the icon with a space
