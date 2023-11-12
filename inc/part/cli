@@ -48,6 +48,9 @@ else
 	fi
 fi
 
+IS_WSL_INSTANCE="$(grep -i "Microsoft" /proc/version)"
+
+export IS_WSL_INSTANCE
 export OS_ID
 
 source "${DIR_SRC}/base/cli"
