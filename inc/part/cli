@@ -18,7 +18,6 @@ if [ $(type -t termux-setup-storage) ]; then
 	OS_ID="termux"
 else
 	if [ -f /etc/os-release ]; then
-		OS_ID=$(. /etc/os-release && printf "${ID}")
 		# ubuntu
 		# debian
 		# alpine
@@ -38,6 +37,7 @@ else
 		# ol (oracle linux)
 		# photon
 		# clear-linux-os
+		OS_ID=$(. /etc/os-release && printf "${ID}")
 		if [ -z "${OS_ID}" ]; then
 			case "$(. /etc/os-release && echo "${NAME}")" in
 				"BlackArch")			OS_ID=blackarch	;;

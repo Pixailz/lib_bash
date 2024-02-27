@@ -53,6 +53,11 @@ ANSI=(
 		# MODIFIER
 	["BLI"]="[05m"			# BLINKING
 	["BOL"]="[01m"			# BOLD
+	["DIM"]="[02m"			# DIMMED
+	["ITA"]="[03m"			# ITALIC
+	["UND"]="[04m"			# UNDERLINE
+	["BLI"]="[05m"			# BLINKING
+	["REV"]="[07m"			# REVERSE
 		# CURSOR THING
 	["ENA_CUR"]="[?25h"
 	["DIS_CUR"]="[?25l"
