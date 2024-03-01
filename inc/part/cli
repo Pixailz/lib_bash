@@ -48,7 +48,7 @@ else
 	fi
 fi
 
-IS_WSL_INSTANCE="$(grep -i "Microsoft" /proc/version)"
+IS_WSL_INSTANCE="$(grep -i "Microsoft" /proc/version 2>&1 >/dev/null || true)"
 
 export IS_WSL_INSTANCE
 export OS_ID
