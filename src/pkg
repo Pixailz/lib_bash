@@ -26,9 +26,12 @@ function	pkg::init()
 	esac
 }
 
+function	pkg::is_installed()
+{ type -t ${1} &>/dev/null return ${?}; }
+
 function	pkg::install()
 {
-	[ "${PKG_MODE}" == "" ] && pkg::not_implemented_yet && return
+	[ "${PKG_MODE}" == "" ] && { pkg::not_implemented_yet; return; }
 	case ${PKG_MODE} in
 		"debian")
 			sudo "${PKG_APT_BASE}" ${PKG_APT_OPT[@]} install ${@}
@@ -43,7 +46,7 @@ function	pkg::update()
 {
 	local	unused_package
 
-	[ "${PKG_MODE}" == "" ] && pkg::not_implemented_yet && return
+	[ "${PKG_MODE}" == "" ] && { pkg::not_implemented_yet; return; }
 	case ${PKG_MODE} in
 		"debian")
 			sudo "${PKG_APT_BASE}" ${PKG_APT_OPT[@]} update
@@ -59,7 +62,7 @@ function	pkg::update()
 		;;
 	esac
 	if [ -f /var/run/reboot-required ]; then
-		printf " rebooting in...\n"
+		local	do_reboot
 		utils::ask "Reboot required, do you wan't to reboot ?" "n" && \
 			do_reboot="y" || do_reboot="n"
 		if [ "${do_reboot}" == "y" ]; then
@@ -70,7 +73,7 @@ function	pkg::update()
 
 function	pkg::remove()
 {
-	[ "${PKG_MODE}" == "" ] && pkg::not_implemented_yet && return
+	[ "${PKG_MODE}" == "" ] && { pkg::not_implemented_yet; return; }
 	case ${PKG_MODE} in
 		"debian")
 			sudo "${PKG_APT_BASE}" ${PKG_APT_OPT[@]} autoremove --purge ${@}
