@@ -26,9 +26,6 @@ function	pkg::init()
 	esac
 }
 
-function	pkg::is_installed()
-{ type -t ${1} &>/dev/null return ${?}; }
-
 function	pkg::install()
 {
 	[ "${PKG_MODE}" == "" ] && { pkg::not_implemented_yet; return; }
