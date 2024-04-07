@@ -26,8 +26,6 @@ PKG_APT_OPT=(
 # ARCH
 PKG_PAC_BASE="pacman"
 PKG_YAY_BASE="yay"
-PKG_PAC_OPT=(
-	"--noconfirm"
-)
+PKG_PAC_OPT=()
 
 source "${DIR_SRC}/pkg"

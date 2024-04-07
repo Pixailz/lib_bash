@@ -34,7 +34,7 @@ function	pkg::install()
 			sudo "${PKG_APT_BASE}" ${PKG_APT_OPT[@]} install ${@}
 		;;
 		"arch")
-			sudo "${PKG_PAC_BASE}" ${PKG_PAC_OPT[@]} -S ${@}
+			sudo "${PKG_PAC_BASE}" ${PKG_PAC_OPT[@]} -Sy --needed ${@}
 		;;
 	esac
 }
