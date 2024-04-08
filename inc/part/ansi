@@ -117,6 +117,7 @@ FONT_CHAR=(
 	["LOGO_ALPINE"]=""
 	["LOGO_ARCH"]="󰣇"
 	["LOGO_SSH"]=""
+	["LOGO_PY"]=""
 	["LOGO_APPLE"]=""
 	["LOGO_GIT"]=""
 	["LOGO_WINDOWS"]=""
